@@ -1,0 +1,2104 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DataPraat.ai — Praten met je data, in gewone taal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --bg: #FCFBF8;
+    --paper: #FFFFFF;
+    --ink: #2A2724;
+    --ink-soft: #5E5A53;
+    --ink-mute: #8F8A80;
+    --ink-faint: #B3ADA3;
+    --line: #E5E3DD;
+    --line-soft: #EEECE7;
+    --line-strong: #D4D1CB;
+    --primary: #4338CA;
+    --primary-soft: #6366F1;
+    --primary-tint: #EEF2FF;
+    --primary-tint-2: #E0E4FB;
+    --primary-ink: #3151B0;
+    --success: #5E8A6D;
+    --success-tint: #E5EDDF;
+    --success-strong: #3D5C4A;
+    --warning: #A8702A;
+    --warning-tint: #F4ECD4;
+    --warning-strong: #8A5A26;
+    --destructive: #A85050;
+    --destructive-tint: #F2DDDA;
+    --f-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+    --f-serif: "Fraunces", ui-serif, Georgia, serif;
+    --f-mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: var(--f-sans);
+    color: var(--ink);
+    background: var(--bg);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    font-feature-settings: "ss01", "cv11";
+    line-height: 1.5;
+  }
+
+  a { color: inherit; text-decoration: none; }
+  button { font-family: inherit; }
+
+  /* ============ NAV ============ */
+  .nav {
+    position: sticky; top: 0; z-index: 50;
+    background: rgba(252, 251, 248, 0.88);
+    backdrop-filter: saturate(1.2) blur(12px);
+    -webkit-backdrop-filter: saturate(1.2) blur(12px);
+    border-bottom: 1px solid var(--line-soft);
+  }
+  .nav-inner {
+    max-width: 1240px; margin: 0 auto;
+    padding: 16px 32px;
+    display: flex; align-items: center; gap: 32px;
+  }
+  .brand {
+    display: flex; align-items: center; gap: 10px;
+    font-weight: 700;
+    font-size: 17px;
+    letter-spacing: -0.02em;
+  }
+  .brand svg { display: block; }
+  .nav-links {
+    display: flex; gap: 24px;
+    font-size: 13.5px;
+    color: var(--ink-soft);
+    margin-left: 24px;
+  }
+  .nav-links a { transition: color .15s; }
+  .nav-links a:hover { color: var(--ink); }
+  .nav-cta { margin-left: auto; display: flex; gap: 10px; align-items: center; }
+
+  /* ============ BUTTONS ============ */
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 10px 18px;
+    font-size: 13.5px;
+    font-weight: 500;
+    border-radius: 8px;
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: all .15s ease;
+    letter-spacing: -0.005em;
+    background: none;
+    white-space: nowrap;
+  }
+  .btn.primary {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+  }
+  .btn.primary:hover { background: var(--primary-ink); border-color: var(--primary-ink); }
+  .btn.ghost {
+    color: var(--ink);
+    border-color: var(--line-strong);
+    background: var(--paper);
+  }
+  .btn.ghost:hover { border-color: var(--ink-mute); }
+  .btn.link {
+    color: var(--primary);
+    padding: 10px 0;
+  }
+  .btn.link:hover { color: var(--primary-ink); }
+  .btn.lg { padding: 14px 24px; font-size: 15px; border-radius: 10px; }
+  .btn .arrow { transition: transform .15s; }
+  .btn:hover .arrow { transform: translateX(2px); }
+
+  /* ============ HERO ============ */
+  .hero {
+    max-width: 1240px; margin: 0 auto;
+    padding: 88px 32px 72px;
+    display: grid;
+    grid-template-columns: 1.05fr 1fr;
+    gap: 72px;
+    align-items: center;
+  }
+  .eyebrow {
+    display: inline-flex; align-items: center; gap: 10px;
+    font-family: var(--f-mono);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--primary-ink);
+    padding: 6px 12px;
+    background: var(--primary-tint);
+    border-radius: 999px;
+    font-weight: 500;
+    margin-bottom: 24px;
+  }
+  .eyebrow .dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--primary);
+    box-shadow: 0 0 0 3px rgba(99,102,241,0.25);
+    animation: pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { box-shadow: 0 0 0 3px rgba(99,102,241,0.25); }
+    50% { box-shadow: 0 0 0 6px rgba(99,102,241,0.05); }
+  }
+  .hero h1 {
+    font-family: var(--f-serif);
+    font-weight: 400;
+    font-size: clamp(44px, 5.4vw, 72px);
+    line-height: 1.02;
+    letter-spacing: -0.03em;
+    margin: 0 0 24px;
+    text-wrap: balance;
+  }
+  .hero h1 em {
+    font-style: italic;
+    color: var(--primary);
+    font-weight: 500;
+  }
+  .hero-sub {
+    font-size: 18px;
+    line-height: 1.55;
+    color: var(--ink-soft);
+    margin: 0 0 32px;
+    max-width: 520px;
+    text-wrap: pretty;
+  }
+  .hero-cta { display: flex; gap: 12px; flex-wrap: wrap; }
+  .hero-trust {
+    margin-top: 36px;
+    padding-top: 24px;
+    border-top: 1px solid var(--line);
+    display: flex; gap: 28px;
+    font-size: 12px;
+    color: var(--ink-mute);
+  }
+  .hero-trust b { color: var(--ink); font-weight: 600; display: block; font-size: 13px; }
+
+  /* ======== HERO VISUAL: chat demo ======== */
+  .demo-card {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    box-shadow:
+      0 1px 2px rgba(42,39,36,0.04),
+      0 12px 32px rgba(42,39,36,0.08),
+      0 32px 80px rgba(67,56,202,0.08);
+    overflow: hidden;
+    position: relative;
+  }
+  .demo-head {
+    display: flex; align-items: center; gap: 10px;
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--line);
+    background: var(--bg);
+  }
+  .demo-head .dots { display: flex; gap: 6px; }
+  .demo-head .dots span {
+    width: 10px; height: 10px; border-radius: 50%;
+    background: var(--line-strong);
+  }
+  .demo-head .dots span:first-child { background: #E5A07A; }
+  .demo-head .dots span:nth-child(2) { background: #E5CE7A; }
+  .demo-head .dots span:last-child { background: #9EBF9E; }
+  .demo-head .title {
+    font-family: var(--f-mono);
+    font-size: 11px;
+    color: var(--ink-mute);
+    letter-spacing: 0.06em;
+  }
+  .demo-ctx {
+    display: flex; gap: 6px;
+    padding: 10px 18px;
+    border-bottom: 1px solid var(--line-soft);
+    background: #FAF9F5;
+  }
+  .ctx-chip {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 3px 10px;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    font-size: 11px;
+    color: var(--ink-soft);
+    font-family: var(--f-mono);
+  }
+  .ctx-chip .k { color: var(--ink-mute); }
+  .ctx-chip b { color: var(--ink); font-weight: 500; }
+  .demo-body {
+    padding: 20px 18px 18px;
+    display: flex; flex-direction: column; gap: 14px;
+    min-height: 360px;
+  }
+  .msg-user {
+    align-self: flex-end;
+    background: var(--primary-tint);
+    color: var(--ink);
+    padding: 10px 14px;
+    border-radius: 14px 14px 4px 14px;
+    font-size: 13.5px;
+    max-width: 80%;
+    border: 1px solid #DCE1FA;
+  }
+  .msg-ai {
+    align-self: flex-start;
+    max-width: 92%;
+  }
+  .msg-ai-text {
+    background: var(--bg);
+    border: 1px solid var(--line);
+    padding: 12px 14px;
+    border-radius: 14px 14px 14px 4px;
+    font-size: 13px;
+    line-height: 1.55;
+    color: var(--ink);
+  }
+  .msg-ai-text b { color: var(--ink); font-weight: 600; }
+  .msg-ai-text em { color: var(--primary); font-style: normal; font-weight: 500; }
+  .inline-chart {
+    margin-top: 10px;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 12px 14px 10px;
+  }
+  .chart-title {
+    font-size: 11px;
+    font-family: var(--f-mono);
+    color: var(--ink-mute);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    display: flex; justify-content: space-between;
+  }
+  .bars { display: flex; align-items: flex-end; gap: 6px; height: 80px; }
+  .bar {
+    flex: 1;
+    background: var(--primary-tint);
+    border-radius: 3px 3px 0 0;
+    position: relative;
+    transition: height .5s ease;
+  }
+  .bar.peak { background: var(--primary); }
+  .bar-labels {
+    display: flex; gap: 6px;
+    margin-top: 6px;
+    font-size: 10px;
+    font-family: var(--f-mono);
+    color: var(--ink-mute);
+  }
+  .bar-labels span { flex: 1; text-align: center; }
+  .trust-inline {
+    display: inline-flex; align-items: center; gap: 6px;
+    margin-top: 10px;
+    padding: 4px 9px;
+    background: var(--success-tint);
+    color: var(--success-strong);
+    border-radius: 999px;
+    font-size: 11px;
+    font-family: var(--f-mono);
+    font-weight: 500;
+  }
+  .trust-inline .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--success); }
+
+  .typing {
+    align-self: flex-start;
+    display: inline-flex; gap: 4px;
+    padding: 12px 14px;
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: 14px 14px 14px 4px;
+  }
+  .typing span {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--ink-faint);
+    animation: bounce 1.2s ease-in-out infinite;
+  }
+  .typing span:nth-child(2) { animation-delay: 0.15s; }
+  .typing span:nth-child(3) { animation-delay: 0.3s; }
+  @keyframes bounce {
+    0%, 60%, 100% { transform: translateY(0); opacity: 0.5; }
+    30% { transform: translateY(-4px); opacity: 1; }
+  }
+
+  .demo-input {
+    display: flex; gap: 8px;
+    padding: 12px 14px;
+    border-top: 1px solid var(--line);
+    background: var(--bg);
+  }
+  .demo-input input {
+    flex: 1;
+    border: 1px solid var(--line);
+    background: var(--paper);
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-family: var(--f-sans);
+    font-size: 13px;
+    color: var(--ink);
+    outline: none;
+    transition: border-color .15s;
+  }
+  .demo-input input:focus { border-color: var(--primary); }
+  .demo-input .send {
+    padding: 10px 12px;
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    display: inline-flex; align-items: center;
+  }
+
+  /* ============ LOGO STRIP ============ */
+  .logos {
+    max-width: 1240px; margin: 0 auto;
+    padding: 16px 32px 64px;
+    text-align: center;
+  }
+  .logos .k {
+    font-family: var(--f-mono);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--ink-mute);
+    margin-bottom: 20px;
+  }
+  .logos-row {
+    display: flex; flex-wrap: wrap;
+    justify-content: center;
+    gap: 40px 56px;
+    color: var(--ink-faint);
+    font-family: var(--f-serif);
+    font-size: 17px;
+    letter-spacing: -0.01em;
+  }
+  .logos-row .logo-item {
+    display: inline-flex; align-items: center; gap: 8px;
+    opacity: 0.7;
+    transition: opacity .2s, color .2s;
+  }
+  .logos-row .logo-item:hover { opacity: 1; color: var(--ink-soft); }
+  .logos-row .logo-item .circ {
+    width: 20px; height: 20px; border-radius: 50%;
+    border: 1.5px solid currentColor;
+  }
+
+  /* ============ SECTION ============ */
+  section.block {
+    max-width: 1240px; margin: 0 auto;
+    padding: 96px 32px;
+    border-top: 1px solid var(--line);
+  }
+  .sec-kicker {
+    font-family: var(--f-mono);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--primary-ink);
+    font-weight: 500;
+    margin-bottom: 14px;
+  }
+  .sec-title {
+    font-family: var(--f-serif);
+    font-weight: 400;
+    font-size: clamp(32px, 3.6vw, 46px);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin: 0 0 18px;
+    max-width: 780px;
+    text-wrap: balance;
+  }
+  .sec-title em { color: var(--primary); font-style: italic; font-weight: 500; }
+  .sec-sub {
+    font-size: 17px;
+    line-height: 1.55;
+    color: var(--ink-soft);
+    max-width: 640px;
+    margin: 0 0 56px;
+    text-wrap: pretty;
+  }
+
+  /* Problem / Answer split */
+  .split {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    overflow: hidden;
+    background: var(--paper);
+  }
+  .split > div {
+    padding: 36px 40px;
+  }
+  .split > div:first-child {
+    border-right: 1px solid var(--line);
+    background: #FCF9F4;
+  }
+  .split > div:last-child {
+    background: linear-gradient(180deg, #F8F8FE 0%, #FFFFFF 100%);
+  }
+  .split-tag {
+    display: inline-flex; align-items: center;
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-family: var(--f-mono);
+    font-size: 10.5px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-weight: 500;
+    margin-bottom: 18px;
+  }
+  .split-tag.problem { background: var(--destructive-tint); color: var(--destructive); }
+  .split-tag.answer { background: var(--success-tint); color: var(--success-strong); }
+  .split h3 {
+    font-family: var(--f-serif);
+    font-weight: 400;
+    font-size: 26px;
+    line-height: 1.25;
+    letter-spacing: -0.015em;
+    margin: 0 0 16px;
+  }
+  .split p {
+    font-size: 14.5px;
+    line-height: 1.65;
+    color: var(--ink-soft);
+    margin: 0 0 12px;
+  }
+  .split p:last-child { margin-bottom: 0; }
+  .split p b { color: var(--ink); font-weight: 600; }
+
+  /* Feature grid */
+  .features {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+  .feat {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 28px 28px 30px;
+    transition: border-color .15s, transform .15s;
+  }
+  .feat:hover { border-color: var(--line-strong); }
+  .feat .num {
+    font-family: var(--f-mono);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    color: var(--primary-ink);
+    text-transform: uppercase;
+    font-weight: 500;
+    margin-bottom: 14px;
+  }
+  .feat h4 {
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: -0.015em;
+    margin: 0 0 10px;
+    line-height: 1.3;
+  }
+  .feat p {
+    font-size: 13.5px;
+    line-height: 1.6;
+    color: var(--ink-soft);
+    margin: 0 0 16px;
+  }
+  .feat .demo-mini {
+    background: var(--bg);
+    border: 1px solid var(--line-soft);
+    border-radius: 8px;
+    padding: 12px;
+    font-family: var(--f-mono);
+    font-size: 11px;
+    color: var(--ink-soft);
+    line-height: 1.55;
+  }
+  .feat .demo-mini .user {
+    color: var(--primary);
+    margin-bottom: 4px;
+  }
+  .feat .demo-mini .ai {
+    color: var(--ink);
+  }
+  .feat .demo-mini .src {
+    color: var(--ink-mute);
+    font-size: 10px;
+    margin-top: 6px;
+    border-top: 1px dashed var(--line);
+    padding-top: 6px;
+  }
+
+  /* How it works */
+  .steps {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 4px;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    overflow: hidden;
+    background: var(--line);
+  }
+  .step {
+    background: var(--paper);
+    padding: 28px 24px 32px;
+    display: flex; flex-direction: column;
+    gap: 10px;
+  }
+  .step .n {
+    width: 32px; height: 32px;
+    display: inline-grid; place-items: center;
+    background: var(--primary-tint);
+    color: var(--primary-ink);
+    border-radius: 8px;
+    font-family: var(--f-mono);
+    font-size: 13px;
+    font-weight: 600;
+  }
+  .step h5 {
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    margin: 4px 0 0;
+  }
+  .step p {
+    font-size: 13px;
+    color: var(--ink-soft);
+    line-height: 1.55;
+    margin: 0;
+  }
+
+  /* Trust block */
+  .trust-grid {
+    display: grid;
+    grid-template-columns: 1.3fr 1fr;
+    gap: 48px;
+    align-items: start;
+  }
+  .badges {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+  .badge {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 18px 20px 20px;
+  }
+  .badge .k {
+    display: flex; align-items: center; gap: 8px;
+    font-family: var(--f-mono);
+    font-size: 10.5px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--success-strong);
+    font-weight: 500;
+    margin-bottom: 10px;
+  }
+  .badge .k .check {
+    width: 16px; height: 16px;
+    border-radius: 50%;
+    background: var(--success-tint);
+    display: inline-grid; place-items: center;
+    color: var(--success-strong);
+  }
+  .badge h5 {
+    font-size: 14.5px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    margin: 0 0 6px;
+  }
+  .badge p {
+    font-size: 12.5px;
+    line-height: 1.55;
+    color: var(--ink-soft);
+    margin: 0;
+  }
+
+  /* Metrics strip */
+  .metrics {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    background: var(--paper);
+    overflow: hidden;
+  }
+  .metric {
+    padding: 28px 28px 30px;
+    border-right: 1px solid var(--line);
+  }
+  .metric:last-child { border-right: none; }
+  .metric .k {
+    font-family: var(--f-mono);
+    font-size: 10.5px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 10px;
+  }
+  .metric .v {
+    font-size: 40px;
+    font-weight: 600;
+    letter-spacing: -0.03em;
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+  .metric .v sup { font-size: 20px; color: var(--ink-mute); font-weight: 500; vertical-align: super; margin-left: 2px; }
+  .metric .p {
+    font-size: 12.5px;
+    color: var(--ink-soft);
+    line-height: 1.45;
+  }
+
+  /* Testimonial */
+  .testimonial {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 56px;
+    background: var(--primary-tint);
+    border: 1px solid #DCE1FA;
+    border-radius: 20px;
+    padding: 48px 56px;
+    align-items: center;
+  }
+  .testimonial blockquote {
+    font-family: var(--f-serif);
+    font-weight: 400;
+    font-size: 28px;
+    line-height: 1.35;
+    letter-spacing: -0.015em;
+    margin: 0;
+    color: var(--ink);
+    text-wrap: pretty;
+  }
+  .testimonial blockquote em {
+    color: var(--primary);
+    font-style: italic;
+    font-weight: 500;
+  }
+  .testimonial .sig {
+    border-left: 1px solid #CFD4F0;
+    padding-left: 32px;
+  }
+  .testimonial .sig b {
+    font-size: 15px;
+    font-weight: 600;
+    display: block;
+    color: var(--ink);
+    margin-bottom: 2px;
+  }
+  .testimonial .sig .role {
+    font-size: 13px;
+    color: var(--ink-soft);
+    line-height: 1.5;
+  }
+  .testimonial .sig .tag {
+    margin-top: 12px;
+    font-family: var(--f-mono);
+    font-size: 10.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--primary-ink);
+  }
+
+  /* ============ CTA SECTION (demo + newsletter) ============ */
+  section.cta-block {
+    background: linear-gradient(180deg, #FAF8F2 0%, #FFFFFF 100%);
+    border-top: 1px solid var(--line);
+  }
+  .cta-wrap {
+    max-width: 1240px; margin: 0 auto;
+    padding: 96px 32px;
+    display: grid;
+    grid-template-columns: 1.3fr 1fr;
+    gap: 48px;
+    align-items: start;
+  }
+
+  /* Demo booking form */
+  .demo-form {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 1px 2px rgba(42,39,36,0.04), 0 8px 24px rgba(42,39,36,0.05);
+  }
+  .form-head {
+    padding: 28px 32px 24px;
+    border-bottom: 1px solid var(--line);
+    background: linear-gradient(180deg, #FFFFFF 0%, #FAFAF7 100%);
+  }
+  .form-head .k {
+    font-family: var(--f-mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--primary-ink);
+    font-weight: 500;
+    margin-bottom: 8px;
+  }
+  .form-head h3 {
+    font-family: var(--f-serif);
+    font-weight: 400;
+    font-size: 28px;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    margin: 0 0 8px;
+  }
+  .form-head p {
+    font-size: 14px;
+    color: var(--ink-soft);
+    margin: 0;
+    line-height: 1.55;
+  }
+  .form-stepper {
+    display: flex;
+    padding: 16px 32px;
+    gap: 8px;
+    border-bottom: 1px solid var(--line-soft);
+    font-family: var(--f-mono);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    color: var(--ink-mute);
+  }
+  .form-stepper .sstep {
+    display: flex; align-items: center; gap: 8px;
+    flex: 1;
+  }
+  .form-stepper .sstep .n {
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    display: inline-grid; place-items: center;
+    border: 1px solid var(--line-strong);
+    background: var(--paper);
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--ink-mute);
+    transition: all .2s;
+  }
+  .form-stepper .sstep.active .n {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+  }
+  .form-stepper .sstep.done .n {
+    background: var(--success-tint);
+    color: var(--success-strong);
+    border-color: var(--success-tint);
+  }
+  .form-stepper .sstep.active { color: var(--ink); }
+  .form-stepper .sstep.done { color: var(--success-strong); }
+  .form-stepper .bar {
+    flex: 1; height: 1px; background: var(--line);
+    align-self: center;
+  }
+  .form-body {
+    padding: 28px 32px 32px;
+  }
+
+  label.field { display: block; margin-bottom: 18px; }
+  label.field .lab {
+    display: block;
+    font-size: 12.5px;
+    font-weight: 500;
+    color: var(--ink);
+    margin-bottom: 7px;
+    letter-spacing: -0.005em;
+  }
+  label.field .lab .opt {
+    font-family: var(--f-mono);
+    font-size: 10px;
+    color: var(--ink-mute);
+    font-weight: 400;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-left: 6px;
+  }
+  label.field input,
+  label.field select,
+  label.field textarea {
+    width: 100%;
+    border: 1px solid var(--line-strong);
+    background: var(--paper);
+    padding: 11px 14px;
+    border-radius: 8px;
+    font-family: var(--f-sans);
+    font-size: 14px;
+    color: var(--ink);
+    outline: none;
+    transition: border-color .15s, box-shadow .15s;
+  }
+  label.field input:focus,
+  label.field select:focus,
+  label.field textarea:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(67,56,202,0.1);
+  }
+  label.field input.err,
+  label.field select.err { border-color: var(--destructive); }
+  label.field .errmsg {
+    color: var(--destructive);
+    font-size: 11.5px;
+    margin-top: 6px;
+    display: none;
+  }
+  label.field.has-err .errmsg { display: block; }
+  label.field textarea { resize: vertical; min-height: 80px; }
+
+  .fieldrow { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+  /* Slot picker */
+  .slots-label {
+    font-size: 12.5px;
+    font-weight: 500;
+    margin-bottom: 10px;
+  }
+  .slots-weeks {
+    display: flex; gap: 6px; margin-bottom: 14px;
+  }
+  .week-tab {
+    padding: 7px 12px;
+    border: 1px solid var(--line-strong);
+    background: var(--paper);
+    border-radius: 999px;
+    font-family: var(--f-mono);
+    font-size: 11px;
+    color: var(--ink-soft);
+    cursor: pointer;
+    transition: all .15s;
+  }
+  .week-tab:hover { border-color: var(--ink-mute); }
+  .week-tab.active {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+  }
+  .slot-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+  }
+  .slot {
+    padding: 10px 6px;
+    border: 1px solid var(--line-strong);
+    background: var(--paper);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all .15s;
+    text-align: center;
+  }
+  .slot .day {
+    font-family: var(--f-mono);
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 3px;
+  }
+  .slot .time {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ink);
+    font-variant-numeric: tabular-nums;
+  }
+  .slot:hover:not(.disabled) {
+    border-color: var(--primary);
+    background: var(--primary-tint);
+  }
+  .slot.selected {
+    border-color: var(--primary);
+    background: var(--primary);
+    color: white;
+  }
+  .slot.selected .day { color: rgba(255,255,255,0.7); }
+  .slot.selected .time { color: white; }
+  .slot.disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    text-decoration: line-through;
+  }
+
+  .form-foot {
+    display: flex; justify-content: space-between; align-items: center;
+    gap: 12px;
+    margin-top: 8px;
+  }
+
+  /* Success state */
+  .success-state {
+    padding: 48px 40px;
+    text-align: center;
+  }
+  .success-state .check {
+    width: 56px; height: 56px;
+    margin: 0 auto 20px;
+    background: var(--success-tint);
+    border-radius: 50%;
+    display: grid; place-items: center;
+    color: var(--success-strong);
+  }
+  .success-state h3 {
+    font-family: var(--f-serif);
+    font-weight: 400;
+    font-size: 28px;
+    margin: 0 0 12px;
+    letter-spacing: -0.02em;
+  }
+  .success-state p {
+    font-size: 15px;
+    color: var(--ink-soft);
+    margin: 0 auto 24px;
+    max-width: 420px;
+    line-height: 1.55;
+  }
+  .success-state .summary {
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 16px 20px;
+    text-align: left;
+    margin: 0 auto;
+    max-width: 380px;
+    font-size: 13px;
+    line-height: 1.8;
+    color: var(--ink-soft);
+  }
+  .success-state .summary b { color: var(--ink); font-weight: 600; margin-right: 8px; }
+
+  /* Newsletter card */
+  .newsletter {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 32px;
+    position: sticky; top: 96px;
+  }
+  .newsletter .ic {
+    width: 40px; height: 40px;
+    background: var(--primary-tint);
+    color: var(--primary-ink);
+    border-radius: 10px;
+    display: grid; place-items: center;
+    margin-bottom: 18px;
+  }
+  .newsletter h4 {
+    font-family: var(--f-serif);
+    font-weight: 400;
+    font-size: 22px;
+    line-height: 1.25;
+    letter-spacing: -0.015em;
+    margin: 0 0 10px;
+  }
+  .newsletter > p {
+    font-size: 13.5px;
+    line-height: 1.55;
+    color: var(--ink-soft);
+    margin: 0 0 20px;
+  }
+  .nl-form { display: flex; flex-direction: column; gap: 12px; }
+  .nl-form input {
+    width: 100%;
+    border: 1px solid var(--line-strong);
+    background: var(--paper);
+    padding: 11px 14px;
+    border-radius: 8px;
+    font-family: var(--f-sans);
+    font-size: 14px;
+    outline: none;
+    transition: all .15s;
+  }
+  .nl-form input:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(67,56,202,0.1);
+  }
+  .nl-form input.err { border-color: var(--destructive); }
+  .nl-tags {
+    display: flex; flex-wrap: wrap; gap: 6px;
+    margin-bottom: 4px;
+  }
+  .nl-tag {
+    padding: 5px 10px;
+    border: 1px solid var(--line-strong);
+    background: var(--paper);
+    border-radius: 999px;
+    font-size: 11.5px;
+    color: var(--ink-soft);
+    cursor: pointer;
+    transition: all .15s;
+    font-family: var(--f-sans);
+  }
+  .nl-tag:hover { border-color: var(--ink-mute); }
+  .nl-tag.on {
+    background: var(--primary-tint);
+    border-color: var(--primary-tint-2);
+    color: var(--primary-ink);
+    font-weight: 500;
+  }
+  .nl-form button { width: 100%; justify-content: center; }
+  .nl-form .meta {
+    font-family: var(--f-mono);
+    font-size: 10.5px;
+    color: var(--ink-mute);
+    letter-spacing: 0.04em;
+    line-height: 1.5;
+    text-align: left;
+  }
+  .nl-success {
+    padding: 20px 0 8px;
+    text-align: left;
+  }
+  .nl-success .check {
+    width: 36px; height: 36px;
+    background: var(--success-tint);
+    color: var(--success-strong);
+    border-radius: 50%;
+    display: grid; place-items: center;
+    margin-bottom: 12px;
+  }
+  .nl-success h5 {
+    font-size: 17px;
+    font-weight: 600;
+    margin: 0 0 6px;
+    letter-spacing: -0.01em;
+  }
+  .nl-success p {
+    font-size: 13px;
+    color: var(--ink-soft);
+    line-height: 1.55;
+    margin: 0;
+  }
+
+  /* FAQ */
+  .faq {
+    display: flex; flex-direction: column;
+    border-top: 1px solid var(--line);
+  }
+  .faq-item {
+    border-bottom: 1px solid var(--line);
+  }
+  .faq-q {
+    width: 100%;
+    padding: 24px 0;
+    background: none;
+    border: none;
+    text-align: left;
+    display: flex; align-items: center; justify-content: space-between;
+    cursor: pointer;
+    font-size: 17px;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+    transition: color .15s;
+  }
+  .faq-q:hover { color: var(--primary); }
+  .faq-q .plus {
+    width: 20px; height: 20px;
+    position: relative;
+    flex-shrink: 0;
+    transition: transform .25s;
+  }
+  .faq-q .plus::before, .faq-q .plus::after {
+    content: "";
+    position: absolute;
+    background: var(--ink-soft);
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  .faq-q .plus::before { width: 12px; height: 1.5px; }
+  .faq-q .plus::after { width: 1.5px; height: 12px; transition: transform .25s; }
+  .faq-item.open .faq-q .plus::after { transform: translate(-50%, -50%) rotate(90deg); }
+  .faq-a {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height .3s ease;
+    color: var(--ink-soft);
+    font-size: 15px;
+    line-height: 1.65;
+  }
+  .faq-item.open .faq-a { max-height: 400px; }
+  .faq-a-inner { padding: 0 0 28px; max-width: 760px; }
+
+  /* Footer */
+  footer.site {
+    background: var(--ink);
+    color: #C6C2BC;
+    padding: 64px 32px 28px;
+  }
+  .foot-inner {
+    max-width: 1240px; margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1.4fr 1fr 1fr 1fr;
+    gap: 48px;
+    padding-bottom: 48px;
+    border-bottom: 1px solid #3D3A35;
+  }
+  .foot-brand { display: flex; flex-direction: column; gap: 16px; }
+  .foot-brand .brand-row {
+    display: flex; align-items: center; gap: 10px;
+    color: #FAFAF7;
+    font-weight: 700;
+    font-size: 18px;
+    letter-spacing: -0.02em;
+  }
+  .foot-brand p {
+    font-size: 13px;
+    color: #9B978F;
+    line-height: 1.6;
+    max-width: 320px;
+    margin: 0;
+  }
+  footer.site h6 {
+    color: #FAFAF7;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: -0.005em;
+    margin: 0 0 14px;
+  }
+  footer.site ul { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 10px; }
+  footer.site ul a {
+    font-size: 13px;
+    color: #9B978F;
+    transition: color .15s;
+  }
+  footer.site ul a:hover { color: #FAFAF7; }
+  .foot-bottom {
+    max-width: 1240px; margin: 24px auto 0;
+    display: flex; justify-content: space-between;
+    font-family: var(--f-mono);
+    font-size: 11px;
+    color: #7A7670;
+    letter-spacing: 0.04em;
+  }
+
+  /* Responsive */
+  @media (max-width: 960px) {
+    .hero { grid-template-columns: 1fr; padding: 56px 24px; gap: 40px; }
+    .nav-links { display: none; }
+    .split { grid-template-columns: 1fr; }
+    .split > div:first-child { border-right: none; border-bottom: 1px solid var(--line); }
+    .features { grid-template-columns: 1fr; }
+    .steps { grid-template-columns: 1fr 1fr; }
+    .trust-grid { grid-template-columns: 1fr; gap: 32px; }
+    .badges { grid-template-columns: 1fr; }
+    .metrics { grid-template-columns: 1fr 1fr; }
+    .metric { border-right: none; border-bottom: 1px solid var(--line); }
+    .metric:nth-child(odd) { border-right: 1px solid var(--line); }
+    .testimonial { grid-template-columns: 1fr; padding: 32px; gap: 24px; }
+    .testimonial .sig { border-left: none; border-top: 1px solid #CFD4F0; padding: 18px 0 0; }
+    .cta-wrap { grid-template-columns: 1fr; }
+    .newsletter { position: static; }
+    .foot-inner { grid-template-columns: 1fr 1fr; }
+    section.block { padding: 64px 24px; }
+    .cta-wrap { padding: 64px 24px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ NAV ============ -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="#top" class="brand">
+      <svg width="28" height="28" viewBox="0 0 64 64" aria-hidden="true">
+        <defs>
+          <radialGradient id="nv-orb" cx="30%" cy="28%">
+            <stop offset="0%" stop-color="#6366F1"/>
+            <stop offset="100%" stop-color="#4338CA"/>
+          </radialGradient>
+        </defs>
+        <circle cx="24" cy="32" r="20" fill="url(#nv-orb)"/>
+        <circle cx="52" cy="32" r="6" fill="#2A2724"/>
+      </svg>
+      DataPraat<span style="color:var(--ink-mute);font-weight:400">.ai</span>
+    </a>
+    <div class="nav-links">
+      <a href="#product">Product</a>
+      <a href="#how">Hoe werkt het</a>
+      <a href="#betrouwbaar">Veilig &amp; vertrouwd</a>
+      <a href="#faq">FAQ</a>
+    </div>
+    <div class="nav-cta">
+      <a href="#nieuwsbrief" class="btn link" style="padding:10px 8px">Nieuwsbrief</a>
+      <a href="#demo" class="btn primary">Plan een demo <span class="arrow">→</span></a>
+    </div>
+  </div>
+</nav>
+
+<!-- ============ HERO ============ -->
+<section class="hero" id="top">
+  <div>
+    <div class="eyebrow">
+      <span class="dot"></span>
+      Voor gemeenten · Sociaal Domein
+    </div>
+    <h1>Eindelijk <em>écht praten</em> met je jeugdzorg&shy;data.</h1>
+    <p class="hero-sub">
+      Eén plek waar we brondata van 17+ aanbieders samenbrengen, valideren, en bevraagbaar maken in gewone taal. Via dashboard én chat. Met elk cijfer traceerbaar terug naar de bron.
+    </p>
+    <div class="hero-cta">
+      <a href="#demo" class="btn primary lg">Plan een demo <span class="arrow">→</span></a>
+      <a href="#nieuwsbrief" class="btn ghost lg">Nieuwsbrief ontvangen</a>
+    </div>
+    <div class="hero-trust">
+      <div><b>ISO 27001</b>Gecertificeerd</div>
+      <div><b>Op jullie Azure</b>Data blijft binnen</div>
+      <div><b>EU-hosted LLM</b>AVG &amp; AI-Act proof</div>
+    </div>
+  </div>
+
+  <!-- Hero demo card -->
+  <div class="demo-card" id="hero-demo">
+    <div class="demo-head">
+      <div class="dots"><span></span><span></span><span></span></div>
+      <div class="title">datapraat.ai · chat</div>
+    </div>
+    <div class="demo-ctx">
+      <span class="ctx-chip"><span class="k">gemeente</span> <b>Riemsterdal</b></span>
+      <span class="ctx-chip"><span class="k">periode</span> <b>Q3 2024</b></span>
+      <span class="ctx-chip"><span class="k">thema</span> <b>Jeugdzorg</b></span>
+    </div>
+    <div class="demo-body" id="heroBody"></div>
+  </div>
+</section>
+
+<!-- ============ LOGO STRIP ============ -->
+<div class="logos">
+  <div class="k">In pilot bij Nederlandse gemeenten</div>
+  <div class="logos-row">
+    <span class="logo-item"><span class="circ"></span> Riemsterdal</span>
+    <span class="logo-item"><span class="circ"></span> Noord-Vaalveen</span>
+    <span class="logo-item"><span class="circ"></span> Oostmark</span>
+    <span class="logo-item"><span class="circ"></span> Den Brugge</span>
+    <span class="logo-item"><span class="circ"></span> Hoevenburg</span>
+    <span class="logo-item"><span class="circ"></span> Westerpolder</span>
+  </div>
+</div>
+
+<!-- ============ PROBLEM / ANSWER ============ -->
+<section class="block" id="product">
+  <div class="sec-kicker">Waarom DataPraat</div>
+  <h2 class="sec-title">Van 17 varianten iJW-bestanden naar <em>één antwoord</em> — in gewone taal.</h2>
+  <p class="sec-sub">
+    Gemeenten krijgen jeugdzorgdata in evenveel varianten als er aanbieders zijn. Die data belandt in dashboards. Maar als een wethouder vraagt <i>"klopt dit cijfer wel?"</i>, begint het spitten in Excel.
+  </p>
+
+  <div class="split">
+    <div>
+      <span class="split-tag problem">Het probleem</span>
+      <h3>Data die klopt — maar die niemand kan uitleggen.</h3>
+      <p>Cijfers staan in dashboards, maar het <b>waarom</b> zit verstopt in brondata, declaratieregels en validatielogica die alleen de analist begrijpt.</p>
+      <p>MT-leden en beleidsmakers willen geen tabellen. Ze willen een antwoord. En ze willen het desnoods op de achterkant van een bierviltje kunnen uitleggen aan de raad.</p>
+    </div>
+    <div>
+      <span class="split-tag answer">DataPraat</span>
+      <h3>Rommelige brondata in, traceerbaar antwoord uit.</h3>
+      <p>We valideren elke declaratie met <b>80+ regels</b>, geven elk cijfer een traceerbare trust-score, en maken het bevraagbaar in <b>twee oppervlakken</b>: een rustig dashboard en een chat voor de waarom-vragen.</p>
+      <p>Nieuw: een <b>woorden-modus</b> — dezelfde data, zelfde validatie, maar gepresenteerd als verhaal of verkeerslicht voor wie liever in taal denkt dan in percentages.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FEATURES ============ -->
+<section class="block">
+  <div class="sec-kicker">Kernfuncties</div>
+  <h2 class="sec-title">Drie dingen die DataPraat <em>echt anders</em> maakt.</h2>
+
+  <div class="features">
+    <div class="feat">
+      <div class="num">01 · Betrouwbaar</div>
+      <h4>Brondata die klopt</h4>
+      <p>Elke declaratie gaat door 142+ automatische controles — verdwaalde komma's, onmogelijke waarden, ontbrekende periodes. Wat blijft staan krijgt een trust-score, mét uitleg.</p>
+      <div class="demo-mini">
+        <div class="src"># regel 1247 · Aanbieder Lentis</div>
+        <div class="ai" style="color:var(--destructive);margin-top:4px">⚠ decimaal-fout · €1.240,00 → €124,00</div>
+        <div class="src" style="border-top:none;padding-top:2px">auto-gecorrigeerd · gemarkeerd voor review</div>
+      </div>
+    </div>
+    <div class="feat">
+      <div class="num">02 · Traceerbaar</div>
+      <h4>Elke KPI terug naar de bron</h4>
+      <p>Vraagt de accountant waar een cijfer vandaan komt? Klik erop en laat het hele pad zien — van ruwe iJW-levering naar gepubliceerde KPI in vijf stappen. Exporteerbaar als PDF.</p>
+      <div class="demo-mini">
+        <div class="user">› Waar komt "€4,2M uitgaven" vandaan?</div>
+        <div class="ai">iJW-bestanden (17 aanbieders) → validatie (142 regels) → aggregatie → KPI</div>
+        <div class="src">5 stappen · volledig traceerbaar</div>
+      </div>
+    </div>
+    <div class="feat">
+      <div class="num">03 · Bespreekbaar</div>
+      <h4>Cijfers die zichzelf uitleggen</h4>
+      <p>Vraag wat je wilt — "waarom piekten de kosten in augustus?" — en krijg het antwoord in de vorm die past: grafiek, tabel of verhaal in gewone taal.</p>
+      <div class="demo-mini">
+        <div class="user">› Waarom piekte augustus?</div>
+        <div class="ai">Twee grote declaraties van Pluryn (€340k en €280k) kwamen die maand binnen…</div>
+        <div class="src">bron: 2 declaraties · trust 96%</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ HOW IT WORKS ============ -->
+<section class="block" id="how">
+  <div class="sec-kicker">Hoe het werkt</div>
+  <h2 class="sec-title">Van CSV tot <em>klik-door-tot-de-bron</em>, in vier stappen.</h2>
+
+  <div class="steps">
+    <div class="step">
+      <span class="n">1</span>
+      <h5>Sleep je brondata erin</h5>
+      <p>CSV, XML of Excel van een aanbieder. DataPraat herkent iJW-formaten automatisch, ook de afwijkende.</p>
+    </div>
+    <div class="step">
+      <span class="n">2</span>
+      <h5>Wij valideren, jij ziet alles</h5>
+      <p>142 controles draaien direct. Fouten komen bovendrijven met aanbieder, impact en actieknoppen.</p>
+    </div>
+    <div class="step">
+      <span class="n">3</span>
+      <h5>Dashboard + chat, zelfde data</h5>
+      <p>Vijf invalshoeken in één dashboard. Vraag hierover-knop naast elke KPI. ⌘K opent de chat.</p>
+    </div>
+    <div class="step">
+      <span class="n">4</span>
+      <h5>Klik-door tot de bron</h5>
+      <p>Elk cijfer is traceerbaar. Elke trace is exporteerbaar als PDF — voor accountant, audit of raad.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ METRICS ============ -->
+<section class="block">
+  <div class="sec-kicker">Onder de motorkap · pilot Riemsterdal · Q3 2024</div>
+  <h2 class="sec-title">Dit draait er <em>nu al</em>.</h2>
+
+  <div class="metrics">
+    <div class="metric">
+      <div class="k">Declaraties verwerkt</div>
+      <div class="v">2.847</div>
+      <div class="p">ingelezen, gevalideerd en bevraagbaar</div>
+    </div>
+    <div class="metric">
+      <div class="k">Aangesloten aanbieders</div>
+      <div class="v">17</div>
+      <div class="p">waaronder Lentis, Pluryn, Pactum</div>
+    </div>
+    <div class="metric">
+      <div class="k">Automatische controles</div>
+      <div class="v">142</div>
+      <div class="p">iJW-schema, outliers, duplicaten</div>
+    </div>
+    <div class="metric">
+      <div class="k">Gem. trust-score</div>
+      <div class="v">94<sup>%</sup></div>
+      <div class="p">over alle KPI's op het overzicht</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ TRUST ============ -->
+<section class="block" id="betrouwbaar">
+  <div class="trust-grid">
+    <div>
+      <div class="sec-kicker">Veilig &amp; vertrouwd</div>
+      <h2 class="sec-title">Jouw data blijft <em>van jou</em>. Altijd.</h2>
+      <p class="sec-sub" style="margin-bottom:0">
+        We hebben DataPraat gebouwd voor een sector waar AVG, AI-Act en accountantscontrole geen afvinkvakjes zijn, maar dagelijks werk. Geen declaratieregel verlaat jullie eigen omgeving — de AI draait binnen de EU, op een model dat jullie mogen kiezen.
+      </p>
+    </div>
+    <div class="badges">
+      <div class="badge">
+        <div class="k"><span class="check">
+          <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5L4.2 7L8 3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span> Op jullie tenant</div>
+        <h5>Azure, jullie omgeving</h5>
+        <p>Geen declaratieregel verlaat de eigen Azure-tenant. Niets naar OpenAI, Google of andere cloud-LLM's.</p>
+      </div>
+      <div class="badge">
+        <div class="k"><span class="check">
+          <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5L4.2 7L8 3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span> EU-gehost</div>
+        <h5>Europese AI-technologie</h5>
+        <p>Standaard Mistral, binnen de EU. Andere EU-modellen configureerbaar op verzoek.</p>
+      </div>
+      <div class="badge">
+        <div class="k"><span class="check">
+          <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5L4.2 7L8 3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span> Iso 27001</div>
+        <h5>Extern geaudit</h5>
+        <p>Informatiebeveiliging is gedocumenteerd en extern gecertificeerd — niet alleen een belofte.</p>
+      </div>
+      <div class="badge">
+        <div class="k"><span class="check">
+          <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5L4.2 7L8 3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span> Wetgeving</div>
+        <h5>AVG &amp; EU AI-Act proof</h5>
+        <p>We volgen Europese regelgeving rond dataopslag, verwerking en AI — wetswijzigingen worden periodiek meegenomen.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ TESTIMONIAL ============ -->
+<section class="block">
+  <div class="testimonial">
+    <blockquote>
+      Wij hoeven niet meer uit te leggen <em>dát</em> het cijfer klopt. We laten zien waar het vandaan komt — en dan zegt de wethouder uit zichzelf: oké, volgende vraag.
+    </blockquote>
+    <div class="sig">
+      <b>M. Kroes</b>
+      <div class="role">Beleidsadviseur Sociaal Domein<br>gem. Riemsterdal</div>
+      <div class="tag">Pilot-deelnemer · sinds Q1 2024</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CTA SECTION (demo + newsletter) ============ -->
+<section class="cta-block" id="demo">
+  <div class="cta-wrap">
+    <!-- Demo form -->
+    <div class="demo-form" id="demoForm">
+      <div class="form-head">
+        <div class="k">Plan een demo</div>
+        <h3>30 minuten, jouw data, echt proberen.</h3>
+        <p>Je ziet DataPraat draaien op een geanonimiseerde dataset van je eigen formaat. Geen verkooppraatje — een sessie met een van onze data-engineers.</p>
+      </div>
+
+      <div class="form-stepper" id="formStepper">
+        <div class="sstep" data-s="1"><div class="n">1</div> <span>Wie ben je</span></div>
+        <div class="bar"></div>
+        <div class="sstep" data-s="2"><div class="n">2</div> <span>Context</span></div>
+        <div class="bar"></div>
+        <div class="sstep" data-s="3"><div class="n">3</div> <span>Moment</span></div>
+      </div>
+
+      <div class="form-body" id="formBody">
+        <!-- Step 1 -->
+        <div class="form-step" data-s="1">
+          <div class="fieldrow">
+            <label class="field">
+              <span class="lab">Voornaam</span>
+              <input type="text" name="fname" placeholder="Marije"/>
+              <div class="errmsg">Vul je voornaam in</div>
+            </label>
+            <label class="field">
+              <span class="lab">Achternaam</span>
+              <input type="text" name="lname" placeholder="Kroes"/>
+              <div class="errmsg">Vul je achternaam in</div>
+            </label>
+          </div>
+          <label class="field">
+            <span class="lab">Werk-mailadres</span>
+            <input type="email" name="email" placeholder="m.kroes@gemeente.nl"/>
+            <div class="errmsg">Vul een geldig e-mailadres in — bij voorkeur je werk-mail</div>
+          </label>
+          <div class="fieldrow">
+            <label class="field">
+              <span class="lab">Gemeente / organisatie</span>
+              <input type="text" name="org" placeholder="Gemeente Riemsterdal"/>
+              <div class="errmsg">Vul je organisatie in</div>
+            </label>
+            <label class="field">
+              <span class="lab">Jouw rol</span>
+              <select name="role">
+                <option value="">— Kies je rol —</option>
+                <option>Beleidsadviseur Sociaal Domein</option>
+                <option>Data-analist / BI</option>
+                <option>Financieel adviseur</option>
+                <option>Manager / MT-lid</option>
+                <option>Informatiemanager / CIO</option>
+                <option>Anders</option>
+              </select>
+              <div class="errmsg">Kies een rol</div>
+            </label>
+          </div>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="form-step" data-s="2" hidden>
+          <label class="field">
+            <span class="lab">Hoeveel aanbieders leveren data aan?</span>
+            <select name="providers">
+              <option value="">— Kies een range —</option>
+              <option>1–5 aanbieders</option>
+              <option>6–15 aanbieders</option>
+              <option>16–30 aanbieders</option>
+              <option>30+ aanbieders</option>
+              <option>Nog niet zeker</option>
+            </select>
+            <div class="errmsg">Kies een range</div>
+          </label>
+          <label class="field">
+            <span class="lab">Welk thema staat voorop? <span class="opt">meerdere mogelijk</span></span>
+            <div class="nl-tags" id="themeTags" style="margin-top:2px">
+              <div class="nl-tag" data-v="Jeugdzorg">Jeugdzorg</div>
+              <div class="nl-tag" data-v="Wmo">Wmo</div>
+              <div class="nl-tag" data-v="Participatiewet">Participatiewet</div>
+              <div class="nl-tag" data-v="Schuldhulp">Schuldhulp</div>
+              <div class="nl-tag" data-v="Prognose & budget">Prognose &amp; budget</div>
+              <div class="nl-tag" data-v="Verwijzers-analyse">Verwijzers-analyse</div>
+            </div>
+            <div class="errmsg" style="margin-top:8px">Kies ten minste één thema</div>
+          </label>
+          <label class="field">
+            <span class="lab">Wat wil je concreet uit deze demo halen? <span class="opt">optioneel</span></span>
+            <textarea name="goal" placeholder="Bijv. 'we willen kunnen uitleggen waarom Q3 duurder was dan begroot — naar accountant en raad.'"></textarea>
+          </label>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="form-step" data-s="3" hidden>
+          <div class="slots-label">Kies een half uur dat jou past</div>
+          <div class="slots-weeks" id="weekTabs"></div>
+          <div class="slot-grid" id="slotGrid"></div>
+          <div class="errmsg" id="slotErr" style="margin-top:10px; color:var(--destructive); font-size:11.5px; display:none;">Kies een tijdslot</div>
+          <div style="margin-top:18px; padding:14px 16px; background:var(--bg); border:1px solid var(--line); border-radius:10px; font-size:12.5px; color:var(--ink-soft); line-height:1.55;">
+            <b style="color:var(--ink)">Wat krijg je in de sessie?</b><br>
+            Een live rondleiding door het dashboard, de chat en de validatie — en samen één echte vraag uit jouw praktijk beantwoorden met jullie (geanonimiseerde) data.
+          </div>
+        </div>
+
+        <!-- Success -->
+        <div class="form-step" data-s="4" hidden>
+          <div class="success-state">
+            <div class="check">
+              <svg width="26" height="26" viewBox="0 0 26 26" fill="none"><path d="M6 13L11 18L20 8" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <h3>Gepland. Tot gauw.</h3>
+            <p id="successMsg">We hebben je een bevestiging gestuurd met een kalenderuitnodiging. Een engineer neemt één werkdag van tevoren contact op om de sessie voor te bereiden.</p>
+            <div class="summary" id="successSummary"></div>
+          </div>
+        </div>
+
+        <!-- Nav buttons -->
+        <div class="form-foot" id="formFoot">
+          <button class="btn ghost" id="btnBack" style="visibility:hidden">← Terug</button>
+          <button class="btn primary" id="btnNext">Volgende <span class="arrow">→</span></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Newsletter -->
+    <aside class="newsletter" id="nieuwsbrief">
+      <div class="ic">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+          <path d="M3 5h14a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1z" stroke="currentColor" stroke-width="1.5"/>
+          <path d="M3 6l7 5 7-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <h4>Één mail per maand. Praktijkverhalen, geen marketing-ruis.</h4>
+      <p>Hoe gemeenten DataPraat inzetten, wat we toevoegen, en de leukste <i>klopt-dit?</i>-momenten uit onze pilots. Altijd kort.</p>
+
+      <form class="nl-form" id="nlForm">
+        <div>
+          <input type="email" name="email" placeholder="naam@gemeente.nl" id="nlEmail" autocomplete="email"/>
+          <div class="errmsg" id="nlErr" style="display:none; color:var(--destructive); font-size:11.5px; margin-top:6px;">Vul een geldig e-mailadres in</div>
+        </div>
+
+        <div>
+          <div class="slots-label" style="font-size:11.5px; font-weight:500; color:var(--ink-soft); margin-bottom:8px;">Waar lees je graag over? <span style="color:var(--ink-mute); font-family:var(--f-mono); font-size:10px; letter-spacing:0.06em; text-transform:uppercase;">optioneel</span></div>
+          <div class="nl-tags" id="nlTags">
+            <div class="nl-tag on" data-v="Productupdates">Productupdates</div>
+            <div class="nl-tag" data-v="Casestudies">Casestudies</div>
+            <div class="nl-tag" data-v="Datakwaliteit">Datakwaliteit</div>
+            <div class="nl-tag" data-v="AI & wetgeving">AI &amp; wetgeving</div>
+          </div>
+        </div>
+
+        <button class="btn primary" type="submit">Abonneren <span class="arrow">→</span></button>
+        <div class="meta">Geen spam. Afmelden met één klik in elke mail.</div>
+      </form>
+
+      <div class="nl-success" id="nlSuccess" hidden>
+        <div class="check">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M4 9L7.5 12.5L14 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <h5>Ingeschreven — welkom.</h5>
+        <p id="nlMsg">Je eerste mail komt begin volgende maand. Tot dan.</p>
+      </div>
+    </aside>
+  </div>
+</section>
+
+<!-- ============ FAQ ============ -->
+<section class="block" id="faq">
+  <div class="sec-kicker">Veelgestelde vragen</div>
+  <h2 class="sec-title">Nog even de <em>harde</em> vragen.</h2>
+
+  <div class="faq" id="faqList">
+    <div class="faq-item">
+      <button class="faq-q"><span>Waarom niet gewoon een dashboard in PowerBI?</span><span class="plus"></span></button>
+      <div class="faq-a"><div class="faq-a-inner">PowerBI laat je zien <i>wat</i>. DataPraat laat zien <i>waarom</i>. Wij beginnen één laag eerder — bij de rommelige brondata van aanbieders — en validëren, traceren en bespreken. Geen enkel cijfer zonder pad terug naar de bron.</div></div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q"><span>Waar draait de AI en wie ziet onze data?</span><span class="plus"></span></button>
+      <div class="faq-a"><div class="faq-a-inner">Alle verwerking gebeurt op jullie eigen Azure-tenant. De LLM (standaard Mistral) draait binnen de EU. Geen declaratieregel gaat naar OpenAI, Google of welke andere partij dan ook. Jullie kiezen uit een shortlist EU-modellen.</div></div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q"><span>Hoe lang duurt de implementatie?</span><span class="plus"></span></button>
+      <div class="faq-a"><div class="faq-a-inner">Voor een pilot: meestal 3–4 weken — van eerste databundel tot werkend overzicht. Productie-uitrol, inclusief koppeling met jullie bronsystemen en SSO, duurt 6–10 weken afhankelijk van het aantal aanbieders en aanwezige datagovernance.</div></div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q"><span>Welke bestandsformaten slikken jullie?</span><span class="plus"></span></button>
+      <div class="faq-a"><div class="faq-a-inner">iJW (alle varianten), CSV, XML, Excel en directe database-koppelingen. Ook de rommelige Excel-exports met samengevoegde cellen en lege rijen — we hebben er een apart kwadrantje aan ontwerp aan besteed.</div></div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q"><span>Wat kost DataPraat?</span><span class="plus"></span></button>
+      <div class="faq-a"><div class="faq-a-inner">Prijs hangt af van gemeentegrootte, aantal aanbieders en modules. Een pilot van drie maanden begint bij €12.500. Plan een demo — we geven een concrete offerte binnen twee werkdagen na de kennismaking.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer class="site">
+  <div class="foot-inner">
+    <div class="foot-brand">
+      <div class="brand-row">
+        <svg width="22" height="22" viewBox="0 0 64 64" aria-hidden="true">
+          <defs>
+            <radialGradient id="f-orb" cx="30%" cy="28%">
+              <stop offset="0%" stop-color="#6366F1"/>
+              <stop offset="100%" stop-color="#4338CA"/>
+            </radialGradient>
+          </defs>
+          <circle cx="24" cy="32" r="20" fill="url(#f-orb)"/>
+          <circle cx="52" cy="32" r="6" fill="#FAFAF7"/>
+        </svg>
+        DataPraat.ai
+      </div>
+      <p>Praten met je data, in gewone taal. Voor gemeenten die willen uitleggen waar hun cijfers vandaan komen — aan wethouder, raad en accountant.</p>
+      <div style="font-family:var(--f-mono); font-size:11px; color:#7A7670; letter-spacing:0.04em;">Keizersgracht 127 · 1015CJ Amsterdam</div>
+    </div>
+    <div>
+      <h6>Product</h6>
+      <ul>
+        <li><a href="#product">Overzicht</a></li>
+        <li><a href="#how">Hoe werkt het</a></li>
+        <li><a href="#betrouwbaar">Veilig &amp; vertrouwd</a></li>
+        <li><a href="DataPraat.html">Prototype bekijken</a></li>
+      </ul>
+    </div>
+    <div>
+      <h6>Bedrijf</h6>
+      <ul>
+        <li><a href="#">Over ons</a></li>
+        <li><a href="#">Pilots &amp; cases</a></li>
+        <li><a href="#nieuwsbrief">Nieuwsbrief</a></li>
+        <li><a href="mailto:info@datapraat.ai">Contact</a></li>
+      </ul>
+    </div>
+    <div>
+      <h6>Juridisch</h6>
+      <ul>
+        <li><a href="#">Privacybeleid</a></li>
+        <li><a href="#">Verwerkersovereenkomst</a></li>
+        <li><a href="#">ISO 27001 statement</a></li>
+        <li><a href="#">AI-Act impactanalyse</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="foot-bottom">
+    <div>© 2026 DataPraat.ai · info@datapraat.ai</div>
+    <div>v1.1 · april 2026</div>
+  </div>
+</footer>
+
+<script>
+/* ============================================
+   HERO CHAT — scripted demo that replays
+   ============================================ */
+(function(){
+  const body = document.getElementById('heroBody');
+  if(!body) return;
+
+  const steps = [
+    { type: 'user', html: 'Waarom piekten onze jeugdzorg-kosten in augustus?' },
+    { type: 'typing' },
+    { type: 'ai', html: `
+        Augustus 2024 kwam uit op <b>€612k</b> — tegenover een maandgemiddelde van <b>€410k</b>. Twee oorzaken springen eruit:
+        <div class="inline-chart">
+          <div class="chart-title"><span>Uitgaven per maand · 2024</span><span>× €1.000</span></div>
+          <div class="bars" id="demoBars">
+            <div class="bar" style="height:38%"></div>
+            <div class="bar" style="height:42%"></div>
+            <div class="bar" style="height:45%"></div>
+            <div class="bar" style="height:48%"></div>
+            <div class="bar" style="height:44%"></div>
+            <div class="bar" style="height:46%"></div>
+            <div class="bar" style="height:50%"></div>
+            <div class="bar peak" style="height:82%"></div>
+            <div class="bar" style="height:52%"></div>
+          </div>
+          <div class="bar-labels">
+            <span>apr</span><span>mei</span><span>jun</span><span>jul</span><span>aug'23</span><span>sep</span><span>jul</span><span>aug</span><span>sep</span>
+          </div>
+        </div>
+        <div style="font-size:13px; margin-top:10px;">
+          <b>1.</b> Twee nagekomen declaraties van <em>Pluryn</em> (€340k, €280k) over Q2<br>
+          <b>2.</b> Reguliere zomerpiek crisisopvang (+18% vs 2023)
+        </div>
+        <span class="trust-inline"><span class="dot"></span> Trust 96% · 2 bronnen geraadpleegd</span>
+      `
+    }
+  ];
+
+  function render(step){
+    if(step.type === 'user'){
+      const d = document.createElement('div');
+      d.className = 'msg-user';
+      d.textContent = step.html;
+      body.appendChild(d);
+    } else if(step.type === 'typing'){
+      const d = document.createElement('div');
+      d.className = 'typing';
+      d.id = '__typing';
+      d.innerHTML = '<span></span><span></span><span></span>';
+      body.appendChild(d);
+    } else if(step.type === 'ai'){
+      const t = document.getElementById('__typing');
+      if(t) t.remove();
+      const wrap = document.createElement('div');
+      wrap.className = 'msg-ai';
+      const txt = document.createElement('div');
+      txt.className = 'msg-ai-text';
+      txt.innerHTML = step.html;
+      wrap.appendChild(txt);
+      body.appendChild(wrap);
+    }
+  }
+
+  let i = 0;
+  function tick(){
+    if(i >= steps.length) return;
+    render(steps[i]);
+    const delay = steps[i].type === 'user' ? 900 : steps[i].type === 'typing' ? 1500 : 200;
+    i++;
+    setTimeout(tick, delay);
+  }
+  setTimeout(tick, 400);
+})();
+
+/* ============================================
+   DEMO BOOKING FORM
+   ============================================ */
+(function(){
+  const form = document.getElementById('demoForm');
+  if(!form) return;
+
+  const state = {
+    step: 1,
+    data: {
+      fname: '', lname: '', email: '', org: '', role: '',
+      providers: '', themes: [], goal: '',
+      week: 0, slot: null
+    }
+  };
+
+  /* slots generator */
+  const dayNames = ['ma','di','wo','do','vr'];
+  const monthNames = ['jan','feb','mrt','apr','mei','jun','jul','aug','sep','okt','nov','dec'];
+  const times = ['09:30', '11:00', '14:00', '15:30'];
+
+  function makeWeeks(){
+    // generate 3 upcoming weeks starting Monday (from today)
+    const weeks = [];
+    const today = new Date(2026, 3, 23); // fixed: Apr 23 2026 (Thu)
+    // find next Monday
+    const d = new Date(today);
+    const dow = d.getDay();
+    const offsetToMon = dow === 0 ? 1 : (dow === 1 ? 0 : 8 - dow);
+    d.setDate(d.getDate() + (dow === 1 ? 7 : offsetToMon)); // next monday
+    for(let w = 0; w < 3; w++){
+      const week = [];
+      for(let i = 0; i < 5; i++){
+        const day = new Date(d);
+        day.setDate(d.getDate() + i);
+        // generate 4 slots, some disabled pseudo-randomly
+        const slots = times.map((t, ti) => {
+          const disabled = (w + i + ti) % 5 === 0;
+          return { time: t, disabled };
+        });
+        week.push({ date: day, slots });
+      }
+      weeks.push(week);
+      d.setDate(d.getDate() + 7);
+    }
+    return weeks;
+  }
+
+  const weeks = makeWeeks();
+
+  function weekLabel(w){
+    const first = w[0].date;
+    const last = w[4].date;
+    return `${first.getDate()} ${monthNames[first.getMonth()]} – ${last.getDate()} ${monthNames[last.getMonth()]}`;
+  }
+
+  function renderWeekTabs(){
+    const wrap = document.getElementById('weekTabs');
+    wrap.innerHTML = '';
+    weeks.forEach((w, i) => {
+      const el = document.createElement('div');
+      el.className = 'week-tab' + (i === state.data.week ? ' active' : '');
+      el.textContent = weekLabel(w);
+      el.onclick = () => { state.data.week = i; state.data.slot = null; renderWeekTabs(); renderSlots(); };
+      wrap.appendChild(el);
+    });
+  }
+
+  function renderSlots(){
+    const grid = document.getElementById('slotGrid');
+    grid.innerHTML = '';
+    const week = weeks[state.data.week];
+    // Build a flat list: day columns collapsed into rows of 4 slots per day
+    // Simpler: 4 cols × 5 rows = 20 slots, 4 per day
+    // We'll display: day header row then 4 times; use 5 col grid
+    grid.style.gridTemplateColumns = 'repeat(5, 1fr)';
+    // Header row (days)
+    week.forEach(d => {
+      const h = document.createElement('div');
+      h.style.cssText = 'padding:4px; text-align:center; font-family:var(--f-mono); font-size:10px; color:var(--ink-mute); letter-spacing:0.08em; text-transform:uppercase;';
+      h.innerHTML = `${dayNames[d.date.getDay() === 0 ? 6 : d.date.getDay() - 1]} ${d.date.getDate()}/${d.date.getMonth()+1}`;
+      grid.appendChild(h);
+    });
+    // 4 time rows
+    times.forEach((t, ti) => {
+      week.forEach((d, di) => {
+        const s = d.slots[ti];
+        const el = document.createElement('div');
+        el.className = 'slot' + (s.disabled ? ' disabled' : '') +
+          (!s.disabled && state.data.slot && state.data.slot.week === state.data.week && state.data.slot.day === di && state.data.slot.time === t ? ' selected' : '');
+        el.innerHTML = `<div class="time">${t}</div>`;
+        if(!s.disabled){
+          el.onclick = () => {
+            state.data.slot = { week: state.data.week, day: di, time: t, date: d.date };
+            renderSlots();
+            document.getElementById('slotErr').style.display = 'none';
+          };
+        }
+        grid.appendChild(el);
+      });
+    });
+  }
+
+  /* theme tag toggles */
+  document.querySelectorAll('#themeTags .nl-tag').forEach(tag => {
+    tag.addEventListener('click', () => {
+      tag.classList.toggle('on');
+      const v = tag.dataset.v;
+      if(tag.classList.contains('on')){
+        if(!state.data.themes.includes(v)) state.data.themes.push(v);
+      } else {
+        state.data.themes = state.data.themes.filter(x => x !== v);
+      }
+      // clear err
+      tag.closest('.field')?.classList.remove('has-err');
+    });
+  });
+
+  /* stepper visual */
+  function updateStepper(){
+    document.querySelectorAll('#formStepper .sstep').forEach(el => {
+      const s = parseInt(el.dataset.s);
+      el.classList.remove('active', 'done');
+      if(s < state.step) el.classList.add('done');
+      if(s === state.step) el.classList.add('active');
+    });
+  }
+
+  function showStep(n){
+    state.step = n;
+    document.querySelectorAll('.form-step').forEach(el => {
+      el.hidden = parseInt(el.dataset.s) !== n;
+    });
+    updateStepper();
+    // buttons
+    const back = document.getElementById('btnBack');
+    const next = document.getElementById('btnNext');
+    const foot = document.getElementById('formFoot');
+    if(n === 4){
+      foot.style.display = 'none';
+      document.getElementById('formStepper').style.display = 'none';
+    } else {
+      back.style.visibility = n === 1 ? 'hidden' : 'visible';
+      next.innerHTML = n === 3 ? 'Bevestig afspraak <span class="arrow">→</span>' : 'Volgende <span class="arrow">→</span>';
+    }
+    if(n === 3){ renderWeekTabs(); renderSlots(); }
+  }
+
+  /* validation */
+  function validEmail(v){ return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v); }
+
+  function validateStep(n){
+    let ok = true;
+    const step = document.querySelector(`.form-step[data-s="${n}"]`);
+    if(!step) return true;
+
+    step.querySelectorAll('.field').forEach(f => f.classList.remove('has-err'));
+
+    if(n === 1){
+      ['fname','lname','org','role'].forEach(name => {
+        const input = step.querySelector(`[name="${name}"]`);
+        const v = input.value.trim();
+        if(!v){ input.closest('.field').classList.add('has-err'); ok = false; }
+        else state.data[name] = v;
+      });
+      const em = step.querySelector('[name="email"]');
+      const ev = em.value.trim();
+      if(!validEmail(ev)){ em.closest('.field').classList.add('has-err'); ok = false; }
+      else state.data.email = ev;
+    }
+    if(n === 2){
+      const p = step.querySelector('[name="providers"]');
+      if(!p.value){ p.closest('.field').classList.add('has-err'); ok = false; }
+      else state.data.providers = p.value;
+
+      if(state.data.themes.length === 0){
+        step.querySelector('#themeTags').closest('.field').classList.add('has-err');
+        ok = false;
+      }
+      state.data.goal = step.querySelector('[name="goal"]').value.trim();
+    }
+    if(n === 3){
+      if(!state.data.slot){
+        document.getElementById('slotErr').style.display = 'block';
+        ok = false;
+      }
+    }
+    return ok;
+  }
+
+  /* live-clear error on input */
+  form.querySelectorAll('input, select, textarea').forEach(el => {
+    el.addEventListener('input', () => el.closest('.field')?.classList.remove('has-err'));
+    el.addEventListener('change', () => el.closest('.field')?.classList.remove('has-err'));
+  });
+
+  document.getElementById('btnNext').onclick = () => {
+    if(!validateStep(state.step)) return;
+    if(state.step < 3){ showStep(state.step + 1); }
+    else { submit(); }
+  };
+  document.getElementById('btnBack').onclick = () => {
+    if(state.step > 1) showStep(state.step - 1);
+  };
+
+  function submit(){
+    // build success summary
+    const s = state.data;
+    const slot = s.slot;
+    const dateStr = `${dayNames[slot.date.getDay() === 0 ? 6 : slot.date.getDay() - 1]} ${slot.date.getDate()} ${monthNames[slot.date.getMonth()]}`;
+    const summary = document.getElementById('successSummary');
+    summary.innerHTML = `
+      <div><b>Wie:</b> ${s.fname} ${s.lname} — ${s.org}</div>
+      <div><b>Wanneer:</b> ${dateStr} · ${slot.time} – ${addMin(slot.time, 30)}</div>
+      <div><b>Thema's:</b> ${s.themes.join(', ')}</div>
+      <div><b>Bevestiging:</b> ${s.email}</div>
+    `;
+    showStep(4);
+  }
+
+  function addMin(t, mins){
+    const [h, m] = t.split(':').map(Number);
+    const tot = h * 60 + m + mins;
+    const hh = Math.floor(tot / 60);
+    const mm = tot % 60;
+    return `${String(hh).padStart(2,'0')}:${String(mm).padStart(2,'0')}`;
+  }
+
+  // init
+  updateStepper();
+})();
+
+/* ============================================
+   NEWSLETTER
+   ============================================ */
+(function(){
+  const form = document.getElementById('nlForm');
+  if(!form) return;
+
+  const tags = document.querySelectorAll('#nlTags .nl-tag');
+  const interests = new Set(['Productupdates']);
+  tags.forEach(t => {
+    t.addEventListener('click', () => {
+      t.classList.toggle('on');
+      const v = t.dataset.v;
+      if(t.classList.contains('on')) interests.add(v);
+      else interests.delete(v);
+    });
+  });
+
+  const emailInp = document.getElementById('nlEmail');
+  const err = document.getElementById('nlErr');
+
+  emailInp.addEventListener('input', () => {
+    emailInp.classList.remove('err');
+    err.style.display = 'none';
+  });
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const v = emailInp.value.trim();
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)){
+      emailInp.classList.add('err');
+      err.style.display = 'block';
+      return;
+    }
+    // animate to success
+    form.style.transition = 'opacity .25s';
+    form.style.opacity = '0';
+    setTimeout(() => {
+      form.hidden = true;
+      const succ = document.getElementById('nlSuccess');
+      succ.hidden = false;
+      const list = Array.from(interests);
+      document.getElementById('nlMsg').textContent =
+        list.length > 0
+          ? `We sturen je ${list.length === 1 ? 'mail' : 'mails'} over ${list.join(', ').toLowerCase()}. Eerste editie: begin volgende maand.`
+          : `Je eerste mail komt begin volgende maand. Tot dan.`;
+    }, 250);
+  });
+})();
+
+/* ============================================
+   FAQ accordion
+   ============================================ */
+(function(){
+  document.querySelectorAll('.faq-item').forEach(item => {
+    item.querySelector('.faq-q').addEventListener('click', () => {
+      const wasOpen = item.classList.contains('open');
+      document.querySelectorAll('.faq-item').forEach(x => x.classList.remove('open'));
+      if(!wasOpen) item.classList.add('open');
+    });
+  });
+})();
+
+/* ============================================
+   Smooth scroll for anchor links
+   ============================================ */
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    const id = a.getAttribute('href');
+    if(id.length > 1){
+      const t = document.querySelector(id);
+      if(t){
+        e.preventDefault();
+        window.scrollTo({ top: t.getBoundingClientRect().top + window.scrollY - 72, behavior: 'smooth' });
+      }
+    }
+  });
+});
+</script>
+
+</body>
+</html>

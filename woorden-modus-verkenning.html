@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Woorden-modus verkenning — DataPraat</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css?v=18">
+<style>
+  body { background: #F3F2EE; }
+  .ex-page {
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 40px 32px 120px;
+  }
+  .ex-hero {
+    margin-bottom: 28px;
+  }
+  .ex-hero h1 {
+    font-size: 28px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    margin: 0 0 6px;
+  }
+  .ex-hero p {
+    color: var(--ink-soft);
+    font-size: 14px;
+    line-height: 1.6;
+    max-width: 720px;
+    margin: 0;
+  }
+  .ex-intro-card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--r-lg);
+    padding: 20px 24px;
+    margin-bottom: 32px;
+    font-size: 13.5px;
+    line-height: 1.65;
+    color: var(--ink-soft);
+  }
+  .ex-intro-card b { color: var(--ink); font-weight: 600; }
+  .ex-intro-card ul { margin: 10px 0 0; padding-left: 18px; }
+  .ex-intro-card li { margin-bottom: 4px; }
+  .ex-ref-card { background: var(--bg-soft); border: 1px dashed var(--line-strong); }
+
+  .ex-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 48px;
+  }
+
+  .ex-concept {
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    gap: 28px;
+    align-items: start;
+  }
+  .ex-meta h2 {
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    margin: 0 0 6px;
+    color: var(--ink);
+  }
+  .ex-meta .ex-num {
+    font-family: var(--f-mono);
+    font-size: 11px;
+    color: var(--ink-mute);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    font-weight: 500;
+  }
+  .ex-meta p {
+    font-size: 12.5px;
+    line-height: 1.6;
+    color: var(--ink-soft);
+    margin: 0 0 14px;
+  }
+  .ex-meta .ex-pros,
+  .ex-meta .ex-cons {
+    font-size: 12px;
+    margin: 0 0 4px;
+    color: var(--ink-soft);
+    line-height: 1.5;
+  }
+  .ex-meta .ex-pros::before { content: "+ "; color: var(--success); font-weight: 700; }
+  .ex-meta .ex-cons::before { content: "− "; color: var(--destructive); font-weight: 700; }
+
+  .ex-demo {
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: var(--r-lg);
+    padding: 24px;
+    min-height: 240px;
+  }
+
+  /* === Concept A: Narratief === */
+  .narr {
+    font-family: "Fraunces", ui-serif, serif;
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 1.65;
+    color: var(--ink);
+    letter-spacing: -0.005em;
+    max-width: 680px;
+  }
+  .narr p { margin: 0 0 18px; }
+  .narr p:last-child { margin-bottom: 0; }
+  .narr .hl-warn { color: var(--warning-strong); font-weight: 500; background: var(--warning-tint); padding: 0 4px; border-radius: 3px; }
+  .narr .hl-good { color: var(--success-strong); font-weight: 500; background: var(--success-tint); padding: 0 4px; border-radius: 3px; }
+  .narr .hl-bad  { color: var(--destructive-strong); font-weight: 500; background: var(--destructive-tint); padding: 0 4px; border-radius: 3px; }
+  .narr .ask-inline {
+    font-family: var(--f-sans);
+    font-size: 12px;
+    color: var(--primary-ink);
+    background: var(--primary-tint);
+    padding: 2px 10px;
+    border-radius: 999px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    vertical-align: middle;
+    margin-left: 4px;
+    font-weight: 500;
+  }
+  .narr .ask-inline .orb { width: 6px; height: 6px; border-radius: 50%; background: var(--primary); }
+  .narr .source {
+    font-family: var(--f-sans);
+    font-size: 11px;
+    color: var(--ink-mute);
+    margin-top: 20px;
+    padding-top: 14px;
+    border-top: 1px solid var(--line);
+    font-weight: 400;
+    letter-spacing: 0;
+  }
+
+  /* === Concept B: Woord-schaal === */
+  .scale-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+  }
+  .scale-card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--r-lg);
+    padding: 18px 20px 16px;
+  }
+  .scale-label {
+    font-size: 12px;
+    color: var(--ink-mute);
+    font-weight: 500;
+    margin-bottom: 10px;
+  }
+  .scale-word {
+    font-size: 22px;
+    font-weight: 600;
+    letter-spacing: -0.015em;
+    line-height: 1.2;
+  }
+  .scale-word.w-warn { color: var(--warning-strong); }
+  .scale-word.w-good { color: var(--success-strong); }
+  .scale-word.w-neutral { color: var(--ink); }
+  .scale-desc {
+    font-size: 13px;
+    color: var(--ink-soft);
+    line-height: 1.5;
+    margin-top: 6px;
+  }
+  .scale-meter {
+    display: flex;
+    gap: 3px;
+    margin-top: 12px;
+  }
+  .scale-meter .dot {
+    height: 5px;
+    flex: 1;
+    background: var(--line);
+    border-radius: 999px;
+  }
+  .scale-meter .dot.on { background: var(--ink); }
+  .scale-meter.w-warn .dot.on { background: var(--warning); }
+  .scale-meter.w-good .dot.on { background: var(--success); }
+  .scale-legend {
+    display: flex;
+    justify-content: space-between;
+    font-size: 10.5px;
+    color: var(--ink-faint);
+    margin-top: 4px;
+    letter-spacing: 0.02em;
+  }
+
+  /* === Concept C: Verkeerslicht === */
+  .light-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+  }
+  .light-card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--r-lg);
+    padding: 18px 20px;
+    display: grid;
+    grid-template-columns: 48px 1fr;
+    gap: 16px;
+    align-items: center;
+  }
+  .light-dot {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    font-weight: 600;
+    font-size: 18px;
+    flex-shrink: 0;
+    position: relative;
+  }
+  .light-dot::after {
+    content: "";
+    position: absolute;
+    inset: -6px;
+    border-radius: 50%;
+    opacity: 0.18;
+  }
+  .light-dot.ok { background: var(--success-tint); color: var(--success-strong); }
+  .light-dot.ok::after { background: var(--success); }
+  .light-dot.watch { background: var(--warning-tint); color: var(--warning-strong); }
+  .light-dot.watch::after { background: var(--warning); }
+  .light-dot.act { background: var(--destructive-tint); color: var(--destructive-strong); }
+  .light-dot.act::after { background: var(--destructive); }
+
+  .light-status {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 600;
+    margin-bottom: 2px;
+  }
+  .light-status.ok { color: var(--success-strong); }
+  .light-status.watch { color: var(--warning-strong); }
+  .light-status.act { color: var(--destructive-strong); }
+  .light-head {
+    font-size: 15px;
+    font-weight: 500;
+    letter-spacing: -0.005em;
+    margin-bottom: 3px;
+  }
+  .light-sub {
+    font-size: 12.5px;
+    color: var(--ink-soft);
+    line-height: 1.5;
+  }
+
+  /* === Concept D: Vergelijkende zinnen === */
+  .comp-wrap {
+    max-width: 620px;
+  }
+  .comp-row {
+    display: grid;
+    grid-template-columns: 150px 1fr;
+    gap: 16px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--line);
+    align-items: baseline;
+  }
+  .comp-row:last-child { border-bottom: none; }
+  .comp-label {
+    font-size: 12.5px;
+    color: var(--ink-mute);
+    font-weight: 500;
+  }
+  .comp-sentence {
+    font-size: 15px;
+    line-height: 1.55;
+    color: var(--ink);
+    letter-spacing: -0.005em;
+  }
+  .comp-sentence em {
+    font-style: normal;
+    font-weight: 600;
+    color: var(--primary);
+  }
+  .comp-sentence .warn { color: var(--warning-strong); font-weight: 500; }
+  .comp-sentence .good { color: var(--success-strong); font-weight: 500; }
+
+  /* === Concept E: Metafoor === */
+  .meta-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+  .meta-card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--r-lg);
+    padding: 20px;
+  }
+  .meta-label {
+    font-size: 11.5px;
+    color: var(--ink-mute);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-weight: 500;
+    margin-bottom: 14px;
+  }
+  .meta-big {
+    font-family: "Fraunces", serif;
+    font-weight: 400;
+    font-size: 19px;
+    line-height: 1.45;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+  }
+  .meta-big b { font-weight: 600; color: var(--primary); }
+  .meta-vis {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2px;
+    margin-top: 14px;
+    padding-top: 14px;
+    border-top: 1px solid var(--line);
+  }
+  .meta-person {
+    width: 8px; height: 11px;
+    border-radius: 2px 2px 0 0;
+    background: var(--line-strong);
+  }
+  .meta-person.on { background: var(--primary); }
+
+  /* === Concept F: Bullet kaart === */
+  .bullet-card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--r-lg);
+    padding: 24px 28px;
+    max-width: 640px;
+  }
+  .bullet-head {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--ink-mute);
+    font-weight: 500;
+    margin-bottom: 14px;
+  }
+  .bullet-title {
+    font-size: 17px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    margin-bottom: 18px;
+  }
+  .bullet-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .bullet-item {
+    display: grid;
+    grid-template-columns: 18px 1fr;
+    gap: 12px;
+    align-items: start;
+    font-size: 14px;
+    line-height: 1.55;
+  }
+  .bullet-marker {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    margin-top: 4px;
+  }
+  .bullet-marker.ok { background: var(--success); }
+  .bullet-marker.watch { background: var(--warning); }
+  .bullet-marker.act { background: var(--destructive); }
+  .bullet-marker.info { background: var(--line-strong); }
+  .bullet-item b { font-weight: 600; }
+
+  /* === Reference (cijfers) demo === */
+  .ref-kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+  }
+  .ref-kpi {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--r-md);
+    padding: 12px 14px;
+  }
+  .ref-kpi-label { font-size: 11px; color: var(--ink-mute); margin-bottom: 6px; }
+  .ref-kpi-val { font-size: 22px; font-weight: 600; letter-spacing: -0.015em; font-variant-numeric: tabular-nums; }
+  .ref-kpi-delta { font-size: 11px; margin-top: 4px; font-variant-numeric: tabular-nums; }
+  .ref-kpi-delta.warn { color: var(--warning); }
+  .ref-kpi-delta.good { color: var(--success); }
+  .ref-kpi-delta.neutral { color: var(--ink-mute); }
+
+  /* === Nav === */
+  .ex-nav {
+    position: sticky;
+    top: 0;
+    background: #F3F2EE;
+    padding: 16px 0;
+    margin-bottom: 28px;
+    border-bottom: 1px solid var(--line);
+    z-index: 10;
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .ex-nav a {
+    padding: 6px 12px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    font-size: 12px;
+    color: var(--ink-soft);
+    cursor: pointer;
+    transition: border-color 0.12s;
+  }
+  .ex-nav a:hover { border-color: var(--primary-soft); color: var(--primary); }
+  .ex-nav .divider {
+    width: 1px; height: 14px; background: var(--line); margin: 0 4px;
+  }
+
+  .ex-section-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--ink-mute);
+    font-weight: 600;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 0;
+  }
+
+  /* === Final summary === */
+  .ex-summary {
+    margin-top: 40px;
+    padding: 24px 28px;
+    background: var(--primary-tint);
+    border-radius: var(--r-lg);
+  }
+  .ex-summary h3 { margin: 0 0 10px; font-size: 16px; font-weight: 600; color: var(--primary-ink); }
+  .ex-summary p { margin: 0 0 8px; font-size: 13px; color: var(--ink); line-height: 1.6; }
+  .ex-summary ol { margin: 8px 0 0; padding-left: 18px; }
+  .ex-summary li { margin-bottom: 6px; font-size: 13px; line-height: 1.55; }
+</style>
+</head>
+<body>
+
+<div class="ex-page">
+
+  <div class="ex-hero">
+    <h1>Woorden in plaats van cijfers — 6 concepten</h1>
+    <p>Voor gebruikers die eerder in taal denken dan in grafieken. Alle concepten tonen dezelfde gegevens (de Overzicht-pagina van Riemsterdal, Q3 2024) — alleen de vorm verschilt. Beoordeel op: <b>leest dit lekker?</b>, <b>wekt dit vertrouwen?</b>, <b>kan ik er een gesprek mee voeren?</b></p>
+  </div>
+
+  <div class="ex-nav">
+    <span style="font-size: 11px; color: var(--ink-mute); font-weight: 500; margin-right: 4px;">SPRING NAAR:</span>
+    <a href="#ref">Cijfer-modus (ref)</a>
+    <div class="divider"></div>
+    <a href="#c1">1 · Verhaal</a>
+    <a href="#c2">2 · Woord-schaal</a>
+    <a href="#c3">3 · Verkeerslicht</a>
+    <a href="#c4">4 · Vergelijkend</a>
+    <a href="#c5">5 · Metafoor</a>
+    <a href="#c6">6 · Bullets</a>
+    <div class="divider"></div>
+    <a href="#aanbeveling">Aanbeveling</a>
+  </div>
+
+  <div class="ex-intro-card">
+    <b>Bron-data (gelijk voor alle concepten):</b>
+    Riemsterdal, jeugdzorg, YTD t/m 30 sep 2024.
+    <ul>
+      <li>Uitgaven YTD: <b>€7.198.420</b> — 5,9% boven begroot</li>
+      <li>Begroot YTD: <b>€6.800.000</b> — 75% van jaarbudget verbruikt</li>
+      <li>Aantal trajecten: <b>453</b> — 2,1% lager dan Q3 2023</li>
+      <li>Gem. prijs per cliënt: <b>€15.842</b> — €1.240 hoger dan vorig jaar</li>
+      <li>Grootste categorie: <b>Ambulant specialistisch</b> — 32% van alle uitgaven</li>
+      <li>Augustus-piek: uitgaven <b>€910K</b> (forecast €830K) — buiten 95% betrouwbaarheidsinterval</li>
+    </ul>
+  </div>
+
+  <div class="ex-grid">
+
+    <!-- ========== REFERENCE: Cijfers ========== -->
+    <div class="ex-concept" id="ref">
+      <div class="ex-meta">
+        <div class="ex-num">REFERENTIE</div>
+        <h2>De huidige cijfer-modus</h2>
+        <p>Zo ziet de Overzicht-pagina er nu uit (verkort). Gebruik deze als ijkpunt bij het beoordelen van de concepten hieronder.</p>
+      </div>
+      <div class="ex-demo ex-ref-card">
+        <div class="ref-kpi-grid">
+          <div class="ref-kpi">
+            <div class="ref-kpi-label">Uitgaven YTD</div>
+            <div class="ref-kpi-val">€7,2M</div>
+            <div class="ref-kpi-delta warn">↑ 5,9% boven begroot</div>
+          </div>
+          <div class="ref-kpi">
+            <div class="ref-kpi-label">Begroot YTD</div>
+            <div class="ref-kpi-val">€6,8M</div>
+            <div class="ref-kpi-delta neutral">75% van jaarbudget</div>
+          </div>
+          <div class="ref-kpi">
+            <div class="ref-kpi-label">Aantal trajecten</div>
+            <div class="ref-kpi-val">453</div>
+            <div class="ref-kpi-delta good">↓ 2,1% vs Q3 '23</div>
+          </div>
+          <div class="ref-kpi">
+            <div class="ref-kpi-label">Gem. prijs / cliënt</div>
+            <div class="ref-kpi-val">€15.842</div>
+            <div class="ref-kpi-delta warn">↑ €1.240 YoY</div>
+          </div>
+        </div>
+        <div style="font-size: 11.5px; color: var(--ink-mute); margin-top: 14px; font-style: italic;">+ grafieken, trust-badges, percentages — preciezer, maar kan overweldigen.</div>
+      </div>
+    </div>
+
+    <!-- ========== CONCEPT 1: Narratief ========== -->
+    <div class="ex-concept" id="c1">
+      <div class="ex-meta">
+        <div class="ex-num">CONCEPT 1</div>
+        <h2>Het verhaal van Q3</h2>
+        <p>Het dashboard als kort briefingsverhaal in volzinnen. Alsof een collega je vertelt hoe het ervoor staat. Sleutelwoorden zijn gemarkeerd in kleur.</p>
+        <div class="ex-pros">Prettig leesbaar, natuurlijke cadans</div>
+        <div class="ex-pros">Toont de <i>samenhang</i> tussen cijfers</div>
+        <div class="ex-cons">Gegenereerde tekst — vertrouwen moet via bron-links</div>
+        <div class="ex-cons">Werkt minder goed voor snel scannen</div>
+      </div>
+      <div class="ex-demo">
+        <div class="narr">
+          <p>Aan het einde van het derde kwartaal zit Riemsterdal op <span class="hl-warn">iets meer uitgaven dan begroot</span> — alleen een klein beetje, maar wel consequent elke maand sinds maart.</p>
+          <p>Er zijn <span class="hl-good">iets minder trajecten</span> dan vorig jaar, maar elk traject kost gemiddeld <span class="hl-warn">wat meer</span>. Het zijn dus niet méér kinderen die hulp krijgen, maar <b>duurdere hulp</b> per kind. Dat komt vooral door ambulant specialistische zorg, de grootste post van het moment. <span class="ask-inline"><span class="orb"></span>Vertel me meer</span></p>
+          <p>Augustus viel op: een <span class="hl-bad">onverwachte piek</span> die buiten wat het model had voorspeld viel. September was juist rustig. <span class="ask-inline"><span class="orb"></span>Wat gebeurde er in augustus?</span></p>
+          <p>Met nog een kwartaal te gaan is driekwart van het jaarbudget al gebruikt. Als het tempo zo blijft, <span class="hl-warn">dreigt een bescheiden overschrijding</span> aan het einde van het jaar.</p>
+          <div class="source">Samengevat uit 2.847 declaraties · peildatum 30 sep 2024 · <u>Zie de cijfers erachter</u></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== CONCEPT 2: Woord-schaal ========== -->
+    <div class="ex-concept" id="c2">
+      <div class="ex-meta">
+        <div class="ex-num">CONCEPT 2</div>
+        <h2>Woord-schaal</h2>
+        <p>KPI-tegels blijven, maar cijfers worden vervangen door schaal-woorden: <i>veel meer · iets meer · zoals verwacht · iets minder · veel minder</i>. De dots eronder geven de intensiteit weer.</p>
+        <div class="ex-pros">Herkenbare structuur (nog steeds tegels)</div>
+        <div class="ex-pros">Snel scanbaar, geen getallen om te ontcijferen</div>
+        <div class="ex-cons">Verliest nuance — "iets meer" kan 2% of 8% zijn</div>
+        <div class="ex-cons">Schaal moet overal consistent zijn, anders verwarrend</div>
+      </div>
+      <div class="ex-demo">
+        <div class="scale-grid">
+          <div class="scale-card">
+            <div class="scale-label">Uitgaven dit jaar</div>
+            <div class="scale-word w-warn">Iets meer dan begroot</div>
+            <div class="scale-desc">Al meerdere maanden op rij — langzame overschrijding, geen schok.</div>
+            <div class="scale-meter w-warn">
+              <div class="dot"></div><div class="dot"></div><div class="dot on"></div><div class="dot on"></div><div class="dot"></div>
+            </div>
+            <div class="scale-legend"><span>veel minder</span><span>zoals verwacht</span><span>veel meer</span></div>
+          </div>
+          <div class="scale-card">
+            <div class="scale-label">Budget-verbruik</div>
+            <div class="scale-word w-neutral">Ongeveer op schema</div>
+            <div class="scale-desc">Driekwart van het jaar is voorbij, driekwart van het budget is op.</div>
+            <div class="scale-meter">
+              <div class="dot"></div><div class="dot"></div><div class="dot on"></div><div class="dot"></div><div class="dot"></div>
+            </div>
+            <div class="scale-legend"><span>nog ruim</span><span>op tempo</span><span>opgebruikt</span></div>
+          </div>
+          <div class="scale-card">
+            <div class="scale-label">Aantal kinderen in zorg</div>
+            <div class="scale-word w-good">Iets minder dan vorig jaar</div>
+            <div class="scale-desc">Kleine daling — geen trendbreuk, wel opmerkelijk.</div>
+            <div class="scale-meter w-good">
+              <div class="dot"></div><div class="dot on"></div><div class="dot on"></div><div class="dot"></div><div class="dot"></div>
+            </div>
+            <div class="scale-legend"><span>veel minder</span><span>gelijk</span><span>veel meer</span></div>
+          </div>
+          <div class="scale-card">
+            <div class="scale-label">Prijs per traject</div>
+            <div class="scale-word w-warn">Merkbaar hoger dan vorig jaar</div>
+            <div class="scale-desc">Elk traject wordt duurder — de grootste verklaring voor de budget-druk.</div>
+            <div class="scale-meter w-warn">
+              <div class="dot"></div><div class="dot"></div><div class="dot on"></div><div class="dot on"></div><div class="dot"></div>
+            </div>
+            <div class="scale-legend"><span>veel lager</span><span>gelijk</span><span>veel hoger</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== CONCEPT 3: Verkeerslicht ========== -->
+    <div class="ex-concept" id="c3">
+      <div class="ex-meta">
+        <div class="ex-num">CONCEPT 3</div>
+        <h2>Status met woorden</h2>
+        <p>Elke KPI krijgt een stoplicht-status: <b>op koers</b>, <b>let op</b>, of <b>actie nodig</b>. Daaronder één zin die vertelt wat er aan de hand is — geen getal te bekennen.</p>
+        <div class="ex-pros">Super snelle scan — oog gaat direct naar rood/amber</div>
+        <div class="ex-pros">Suggereert handelingsperspectief</div>
+        <div class="ex-cons">Risico op 'rode kaart'-angst ipv begrip</div>
+        <div class="ex-cons">Status-drempels moeten goed afgestemd</div>
+      </div>
+      <div class="ex-demo">
+        <div class="light-grid">
+          <div class="light-card">
+            <div class="light-dot watch">!</div>
+            <div>
+              <div class="light-status watch">Let op</div>
+              <div class="light-head">Uitgaven lopen licht voor</div>
+              <div class="light-sub">We geven structureel net wat meer uit dan begroot, al sinds het voorjaar.</div>
+            </div>
+          </div>
+          <div class="light-card">
+            <div class="light-dot ok">✓</div>
+            <div>
+              <div class="light-status ok">Op koers</div>
+              <div class="light-head">Budget-verbruik is in balans</div>
+              <div class="light-sub">Driekwart jaar voorbij, driekwart budget op — precies wat je zou verwachten.</div>
+            </div>
+          </div>
+          <div class="light-card">
+            <div class="light-dot ok">✓</div>
+            <div>
+              <div class="light-status ok">Op koers</div>
+              <div class="light-head">Iets minder kinderen in zorg</div>
+              <div class="light-sub">Lichte daling ten opzichte van vorig jaar. Geen zorgelijke beweging.</div>
+            </div>
+          </div>
+          <div class="light-card">
+            <div class="light-dot act">!</div>
+            <div>
+              <div class="light-status act">Aandacht</div>
+              <div class="light-head">Prijs per traject stijgt door</div>
+              <div class="light-sub">De belangrijkste reden dat het budget onder druk staat. Vooral bij ambulant specialistisch.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== CONCEPT 4: Vergelijkend ========== -->
+    <div class="ex-concept" id="c4">
+      <div class="ex-meta">
+        <div class="ex-num">CONCEPT 4</div>
+        <h2>Vergelijkende zinnen</h2>
+        <p>In plaats van absolute cijfers: "hoe verhoudt zich X tot iets bekends?". Ten opzichte van vorig jaar, de begroting, of peer-gemeenten.</p>
+        <div class="ex-pros">Relatief = makkelijker te vatten dan absoluut</div>
+        <div class="ex-pros">Verbindt automatisch context aan cijfer</div>
+        <div class="ex-cons">Werkt alleen als er een goed vergelijkings-ankerpunt is</div>
+        <div class="ex-cons">Kan saai worden bij veel rijen</div>
+      </div>
+      <div class="ex-demo">
+        <div class="comp-wrap">
+          <div class="comp-row">
+            <div class="comp-label">Uitgaven</div>
+            <div class="comp-sentence"><em>Een klein beetje meer</em> dan begroot — <span class="warn">boven tempo</span>, maar binnen de bandbreedte.</div>
+          </div>
+          <div class="comp-row">
+            <div class="comp-label">Budget-gebruik</div>
+            <div class="comp-sentence"><em>Precies op tempo</em> voor deze tijd van het jaar.</div>
+          </div>
+          <div class="comp-row">
+            <div class="comp-label">Kinderen in zorg</div>
+            <div class="comp-sentence"><em>Iets minder</em> dan vorig jaar, <em>vergelijkbaar</em> met buurgemeente Peer B.</div>
+          </div>
+          <div class="comp-row">
+            <div class="comp-label">Prijs per traject</div>
+            <div class="comp-sentence"><em>Merkbaar hoger</em> dan vorig jaar, en ook <span class="warn">boven het gemiddelde van vergelijkbare gemeenten</span>.</div>
+          </div>
+          <div class="comp-row">
+            <div class="comp-label">Grootste post</div>
+            <div class="comp-sentence">Ambulant specialistisch — <em>bijna een derde</em> van alle uitgaven, meer dan alle kleinere categorieën samen.</div>
+          </div>
+          <div class="comp-row">
+            <div class="comp-label">Augustus</div>
+            <div class="comp-sentence"><span class="warn">Een stuk hoger</span> dan normaal en dan verwacht — enige maand dit jaar buiten de verwachting.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== CONCEPT 5: Metafoor ========== -->
+    <div class="ex-concept" id="c5">
+      <div class="ex-meta">
+        <div class="ex-num">CONCEPT 5</div>
+        <h2>In dagelijkse termen</h2>
+        <p>Grote getallen worden onbevattelijk. Vertaal ze naar dagelijkse termen: inwoners, huishoudens, klaslokalen. Eén iconische visualisatie maakt de schaal voelbaar.</p>
+        <div class="ex-pros">Maakt abstracte schaal tastbaar</div>
+        <div class="ex-pros">Memorabel — blijft hangen in gesprekken</div>
+        <div class="ex-cons">Kan als trivialisering overkomen bij beleidsmakers</div>
+        <div class="ex-cons">Metafoor moet goed gekozen, anders vergezocht</div>
+      </div>
+      <div class="ex-demo">
+        <div class="meta-grid">
+          <div class="meta-card">
+            <div class="meta-label">Kinderen in zorg</div>
+            <div class="meta-big">Op elke groep van <b>100 inwoners</b> van Riemsterdal krijgen er <b>ongeveer anderhalf</b> jeugdzorg.</div>
+            <div class="meta-vis">
+              <!-- 100 people, 2 highlighted -->
+            </div>
+          </div>
+          <div class="meta-card">
+            <div class="meta-label">Uitgaven YTD</div>
+            <div class="meta-big">Voor elke inwoner van Riemsterdal geeft de gemeente dit jaar <b>zo'n 250 euro</b> uit aan jeugdzorg — meer dan aan bibliotheek, groen én afvalophaal samen.</div>
+          </div>
+          <div class="meta-card" style="grid-column: span 2;">
+            <div class="meta-label">Prijs per traject</div>
+            <div class="meta-big">Een gemiddeld jeugdzorg-traject kost Riemsterdal <b>even veel als een middenklasse-auto</b>. Een duurder traject — via een medisch specialist — is eerder een <b>flinke SUV</b>.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== CONCEPT 6: Bullets ========== -->
+    <div class="ex-concept" id="c6">
+      <div class="ex-meta">
+        <div class="ex-num">CONCEPT 6</div>
+        <h2>Kern-bevindingen</h2>
+        <p>Geen cijfers, geen grafieken — alleen de 5 dingen die je moet weten over dit kwartaal, als bullets met kleurstatus. Leest als een briefingsnotitie.</p>
+        <div class="ex-pros">Minimalistisch, vriendelijk voor koppen</div>
+        <div class="ex-pros">Sluit goed aan op MT-briefing-formaat</div>
+        <div class="ex-cons">Minste informatie-dichtheid van de zes</div>
+        <div class="ex-cons">Verbergt dat er nog veel onder de motorkap gebeurt</div>
+      </div>
+      <div class="ex-demo">
+        <div class="bullet-card">
+          <div class="bullet-head">Wat je moet weten over Q3 · Riemsterdal</div>
+          <div class="bullet-title">Stabiel kwartaal, één uitschieter in augustus.</div>
+          <ul class="bullet-list">
+            <li class="bullet-item">
+              <div class="bullet-marker watch"></div>
+              <div><b>Uitgaven lopen licht voor op begroting</b> — geen schok, wel een trend sinds het voorjaar.</div>
+            </li>
+            <li class="bullet-item">
+              <div class="bullet-marker act"></div>
+              <div><b>De prijs per traject stijgt door</b>, vooral in ambulant specialistische zorg. Dit is de grootste drijver van de overschrijding.</div>
+            </li>
+            <li class="bullet-item">
+              <div class="bullet-marker ok"></div>
+              <div><b>Aantal kinderen in zorg is licht gedaald</b> — geen zorgen, mogelijk effect van preventieteams.</div>
+            </li>
+            <li class="bullet-item">
+              <div class="bullet-marker watch"></div>
+              <div><b>Augustus was een uitschieter</b>: uitgaven boven de verwachting. Aanbeveling: uitvragen bij Lentis wat er speelde.</div>
+            </li>
+            <li class="bullet-item">
+              <div class="bullet-marker info"></div>
+              <div><b>Eindejaarsraming</b>: bescheiden overschrijding waarschijnlijk. Nog niet dramatisch, wel op te letten.</div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ========== Aanbeveling ========== -->
+  <div class="ex-summary" id="aanbeveling">
+    <h3>Mijn aanbeveling</h3>
+    <p>Niet één winnaar, maar een <b>combinatie</b>. De sterkste opzet is waarschijnlijk:</p>
+    <ol>
+      <li><b>Concept 1 (Verhaal) bovenaan</b> als openings-paragraaf — één kort briefings-verhaal dat de situatie duidt. Dit geeft meteen context en maakt dat de rest niet afschrikt.</li>
+      <li><b>Concept 3 (Verkeerslicht) als KPI-vervanging</b> — vier status-kaarten met duidelijke woorden in plaats van de cijfer-KPI-tegels. Snel scanbaar, helder handelingsperspectief.</li>
+      <li>De grafieken collapsen standaard, met een <i>"Toon de cijfers erachter"</i>-link per blok, zodat wie wél wil doorklikken dat kan.</li>
+      <li>Concept 2 en 4 zijn <i>stilistische varianten</i> op hetzelfde idee — houden we achter de hand als de verkeerslicht-stijl te dwingend aanvoelt.</li>
+      <li>Concept 5 (Metafoor) is leuk maar riskant — alleen inzetten in exports / briefings, niet als hoofdmodus.</li>
+      <li>Concept 6 (Bullets) werkt juist voor een <b>"print-briefing"</b> of weekmail, niet voor het dashboard zelf.</li>
+    </ol>
+    <p style="margin-top: 12px;"><b>Volgende stap:</b> laat me weten welke richting(en) je het best vindt werken. Ik implementeer dan een <b>"Toon als woorden"</b>-toggle in DataPraat zelf, zodat we het kunnen voorleggen aan echte gebruikers.</p>
+  </div>
+
+</div>
+
+<script>
+  // Generate 100 people in metafoor card (1.5 highlighted, visueel 2 van de 100 zodat het klopt met "ongeveer anderhalf per 100")
+  (() => {
+    const card = document.querySelectorAll('.meta-card .meta-vis')[0];
+    if (!card) return;
+    for (let i = 0; i < 100; i++) {
+      const p = document.createElement('div');
+      p.className = 'meta-person' + (i < 2 ? ' on' : '');
+      card.appendChild(p);
+    }
+  })();
+</script>
+
+</body>
+</html>

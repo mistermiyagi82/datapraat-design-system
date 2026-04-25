@@ -1,0 +1,1490 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DataPraat — Logo Exploration</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --bg: #FCFBF8;
+    --bg-soft: #F3F2EE;
+    --surface: #FFFFFF;
+    --ink: #2A2724;
+    --ink-soft: #5E5A53;
+    --ink-mute: #8F8A80;
+    --ink-faint: #B3ADA3;
+    --line: #E5E3DD;
+    --line-strong: #D4D1CB;
+    --primary: #4338CA;
+    --primary-soft: #6366F1;
+    --primary-tint: #EEF2FF;
+    --primary-ink: #3151B0;
+    --accent-gold: #A8702A;
+    --accent-green: #5E8A6D;
+    --f-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+    --f-serif: "Fraunces", ui-serif, Georgia, serif;
+    --f-mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--bg); font-family: var(--f-sans); color: var(--ink); }
+
+  /* shared artboard bits */
+  .lb {
+    width: 560px;
+    height: 420px;
+    background: var(--surface);
+    display: grid;
+    grid-template-rows: 1fr auto auto;
+    position: relative;
+  }
+  .lb-stage {
+    display: grid;
+    place-items: center;
+    padding: 28px;
+    min-height: 0;
+    overflow: hidden;
+  }
+  .lb-mark-row {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+  }
+  .lb-foot {
+    border-top: 1px solid var(--line);
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    background: var(--bg);
+  }
+  .lb-foot-l { display: flex; align-items: center; gap: 12px; }
+  .lb-foot-r { display: flex; align-items: center; gap: 10px; }
+  .lb-tag {
+    font-family: var(--f-mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+  .lb-note {
+    font-size: 11.5px;
+    color: var(--ink-soft);
+    line-height: 1.4;
+    max-width: 320px;
+    font-family: var(--f-sans);
+  }
+  .lb-note b { color: var(--ink); font-weight: 500; }
+
+  /* favicon chip — 24px preview */
+  .lb-favi {
+    width: 24px; height: 24px;
+    border-radius: 4px;
+    overflow: hidden;
+    display: grid; place-items: center;
+    flex-shrink: 0;
+  }
+
+  /* wordmark defaults */
+  .wm-inter {
+    font-family: var(--f-sans);
+    font-weight: 600;
+    letter-spacing: -0.025em;
+    color: var(--ink);
+  }
+  .wm-inter .p { color: var(--primary); }
+  .wm-fraunces {
+    font-family: var(--f-serif);
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+  }
+
+  /* on-dark variant footer */
+  .lb-dark .lb-stage.dark {
+    background: var(--ink);
+    color: #FAF7EF;
+    border-radius: 0;
+  }
+
+  /* small stripe bg for the hero banner */
+  .hero {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 48px 48px 8px;
+  }
+  .hero h1 {
+    font-family: var(--f-sans);
+    font-weight: 600;
+    font-size: 26px;
+    letter-spacing: -0.02em;
+    margin: 0 0 6px;
+  }
+  .hero p {
+    color: var(--ink-soft);
+    font-size: 13.5px;
+    line-height: 1.55;
+    margin: 0 0 4px;
+    max-width: 720px;
+  }
+  .hero .meta {
+    margin-top: 18px;
+    display: flex;
+    gap: 18px;
+    flex-wrap: wrap;
+    font-family: var(--f-mono);
+    font-size: 11px;
+    color: var(--ink-mute);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  .hero .meta .sw {
+    display: inline-flex; align-items: center; gap: 6px;
+  }
+  .hero .meta .sw span {
+    width: 10px; height: 10px; border-radius: 2px; display: inline-block;
+  }
+
+  /* reusable styles for individual concepts declared next to their components */
+</style>
+</head>
+<body>
+
+<div id="root"></div>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script type="text/babel" src="design-canvas.jsx"></script>
+
+<script type="text/babel">
+// ==========================================================
+// Shared wrapper — every concept uses this
+// ==========================================================
+const LogoBoard = ({ children, note, small, wordmark = "normal", dark = false }) => {
+  return (
+    <div className="lb">
+      <div className="lb-stage" style={dark ? {background: "var(--ink)"} : {}}>
+        <div className="lb-mark-row">
+          <div style={{display: "grid", placeItems: "center"}}>{children}</div>
+          {wordmark && <div style={{display: "flex", flexDirection: "column", gap: 4}}>{wordmark}</div>}
+        </div>
+      </div>
+      <div className="lb-foot">
+        <div className="lb-foot-l">
+          <div className="lb-favi">{small}</div>
+          <span className="lb-tag">24PX · FAVICON</span>
+        </div>
+        <div className="lb-note">{note}</div>
+      </div>
+    </div>
+  );
+};
+
+// Helper: the radial "orb" the product already uses
+const Orb = ({ size = 40, from = "#6366F1", to = "#4338CA", ring = false }) => (
+  <div style={{
+    width: size, height: size, borderRadius: "50%",
+    background: `radial-gradient(circle at 30% 28%, ${from}, ${to})`,
+    boxShadow: ring ? `0 0 0 6px rgba(99,102,241,0.12)` : "none",
+  }} />
+);
+
+// ==========================================================
+// CONCEPT 1 — "Orb + Counterweight"
+// Pulls the product's existing orb language forward;
+// pairs it with a small tick/dot to suggest dialogue (two voices)
+// ==========================================================
+const Concept1 = () => {
+  const Mark = ({ s = 1 }) => (
+    <svg width={64*s} height={64*s} viewBox="0 0 64 64">
+      <defs>
+        <radialGradient id="c1-orb" cx="30%" cy="28%">
+          <stop offset="0%" stopColor="#6366F1"/>
+          <stop offset="100%" stopColor="#4338CA"/>
+        </radialGradient>
+      </defs>
+      <circle cx="24" cy="32" r="20" fill="url(#c1-orb)"/>
+      <circle cx="52" cy="32" r="6" fill="#2A2724"/>
+    </svg>
+  );
+  const Wordmark = (
+    <div className="wm-inter" style={{fontSize: 32, lineHeight: 1}}>
+      Data<span className="p">Praat</span>
+    </div>
+  );
+  return (
+    <LogoBoard
+      note={<><b>01 · Tweespraak.</b> Grote orb = data. Kleine punt = de vraag. Het kleine duwt het grote aan het praten.</>}
+      small={<Mark s={0.32}/>}
+      wordmark={Wordmark}
+    >
+      <Mark s={1}/>
+    </LogoBoard>
+  );
+};
+
+// ==========================================================
+// CONCEPT 2 — "Speech Bubble Chart"
+// Speech bubble where the tail ends in a small rising bar-chart —
+// literal "data + talk"
+// ==========================================================
+const Concept2 = () => {
+  const Mark = ({ s = 1 }) => (
+    <svg width={72*s} height={64*s} viewBox="0 0 72 64">
+      {/* bubble */}
+      <path
+        d="M10 6 h44 a8 8 0 0 1 8 8 v28 a8 8 0 0 1 -8 8 h-20 l-10 10 v-10 h-14 a8 8 0 0 1 -8 -8 v-28 a8 8 0 0 1 8 -8 z"
+        fill="#4338CA"
+      />
+      {/* bars inside */}
+      <rect x="18" y="30" width="6" height="12" fill="#FAF7EF" rx="1"/>
+      <rect x="28" y="22" width="6" height="20" fill="#FAF7EF" rx="1"/>
+      <rect x="38" y="16" width="6" height="26" fill="#FAF7EF" rx="1"/>
+      <rect x="48" y="26" width="6" height="16" fill="#A8702A" rx="1"/>
+    </svg>
+  );
+  const Wordmark = (
+    <div className="wm-inter" style={{fontSize: 30, lineHeight: 1}}>DataPraat</div>
+  );
+  return (
+    <LogoBoard
+      note={<><b>02 · Gesprek met cijfers.</b> Tekstballon waarin de staafjes de zin maken. Eén staaf in amber — de uitschieter die aandacht vraagt.</>}
+      small={<Mark s={0.28}/>}
+      wordmark={Wordmark}
+    >
+      <Mark s={1}/>
+    </LogoBoard>
+  );
+};
+
+// ==========================================================
+// CONCEPT 3 — "The Quote Orb"
+// Orb with a single curly quotation mark cut out — quiet, elegant
+// ==========================================================
+const Concept3 = () => {
+  const Mark = ({ s = 1 }) => (
+    <svg width={64*s} height={64*s} viewBox="0 0 64 64">
+      <defs>
+        <radialGradient id="c3-orb" cx="32%" cy="30%">
+          <stop offset="0%" stopColor="#6366F1"/>
+          <stop offset="100%" stopColor="#4338CA"/>
+        </radialGradient>
+        <mask id="c3-m">
+          <rect width="64" height="64" fill="white"/>
+          {/* quote */}
+          <path d="M24 22 q-6 2 -6 10 h6 v8 h-10 v-10 q0 -12 10 -14 z M40 22 q-6 2 -6 10 h6 v8 h-10 v-10 q0 -12 10 -14 z" fill="black"/>
+        </mask>
+      </defs>
+      <circle cx="32" cy="32" r="28" fill="url(#c3-orb)" mask="url(#c3-m)"/>
+    </svg>
+  );
+  const Wordmark = (
+    <div className="wm-fraunces" style={{fontSize: 34, lineHeight: 1}}>DataPraat</div>
+  );
+  return (
+    <LogoBoard
+      note={<><b>03 · Citaat.</b> De orb spreekt zelf — aanhalingstekens snijden erin. Bedachtzaam, academisch, past bij de verhalenmodus.</>}
+      small={<Mark s={0.3}/>}
+      wordmark={Wordmark}
+    >
+      <Mark s={1}/>
+    </LogoBoard>
+  );
+};
+
+// ==========================================================
+// CONCEPT 4 — "Scatter / Constellation"
+// Dots + a single connecting line; reads as data points
+// beginning to "talk" to each other
+// ==========================================================
+const Concept4 = () => {
+  const Mark = ({ s = 1 }) => (
+    <svg width={72*s} height={64*s} viewBox="0 0 72 64">
+      {/* connecting polyline */}
+      <polyline
+        points="10,50 24,36 40,42 56,18"
+        fill="none"
+        stroke="#4338CA"
+        strokeWidth="2.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      {/* data points */}
+      <circle cx="10" cy="50" r="4" fill="#2A2724"/>
+      <circle cx="24" cy="36" r="4" fill="#2A2724"/>
+      <circle cx="40" cy="42" r="4" fill="#2A2724"/>
+      <circle cx="56" cy="18" r="5.5" fill="#4338CA"/>
+      {/* speech dot — tiny orb above the end */}
+      <circle cx="64" cy="10" r="2.5" fill="#A8702A"/>
+    </svg>
+  );
+  const Wordmark = (
+    <div className="wm-inter" style={{fontSize: 30, lineHeight: 1, fontWeight: 500}}>DataPraat</div>
+  );
+  return (
+    <LogoBoard
+      note={<><b>04 · Lijn van vier punten.</b> Trend + commentaar. De amber stip boven is de aha-moment, het inzicht dat uit de cijfers "praat".</>}
+      small={<Mark s={0.28}/>}
+      wordmark={Wordmark}
+    >
+      <Mark s={1}/>
+    </LogoBoard>
+  );
+};
+
+// ==========================================================
+// CONCEPT 5 — "DP Monogram in a Rounded Square"
+// Classic app-icon look; the P's bowl is a tiny orb
+// ==========================================================
+const Concept5 = () => {
+  const Mark = ({ s = 1 }) => (
+    <svg width={64*s} height={64*s} viewBox="0 0 64 64">
+      <defs>
+        <radialGradient id="c5-bg" cx="30%" cy="20%">
+          <stop offset="0%" stopColor="#5A4FE0"/>
+          <stop offset="100%" stopColor="#4338CA"/>
+        </radialGradient>
+      </defs>
+      <rect x="0" y="0" width="64" height="64" rx="14" fill="url(#c5-bg)"/>
+      {/* Custom DP wordlet */}
+      <text x="32" y="44"
+            textAnchor="middle"
+            fontFamily="Inter, sans-serif"
+            fontSize="30"
+            fontWeight="700"
+            fill="#FAF7EF"
+            letterSpacing="-0.02em">Dp</text>
+      {/* little orb nestled as a dot */}
+      <circle cx="48" cy="20" r="3.5" fill="#FBBF24"/>
+    </svg>
+  );
+  const Wordmark = (
+    <div className="wm-inter" style={{fontSize: 30, lineHeight: 1}}>
+      Data<span className="p">Praat</span>
+    </div>
+  );
+  return (
+    <LogoBoard
+      note={<><b>05 · Monogram.</b> Nederlands "Dp" op rounded-square — werkt als app-icoon. Kleine gouden stip voor het insight-moment.</>}
+      small={<Mark s={0.32}/>}
+      wordmark={Wordmark}
+    >
+      <Mark s={1}/>
+    </LogoBoard>
+  );
+};
+
+// ==========================================================
+// CONCEPT 6 — "Soundwave"
+// Abstract set of vertical bars that could read as a
+// bar-chart OR a waveform (the "praat" half)
+// ==========================================================
+const Concept6 = () => {
+  const Mark = ({ s = 1 }) => {
+    const heights = [12, 22, 32, 44, 32, 50, 28, 18];
+    return (
+      <svg width={72*s} height={60*s} viewBox="0 0 72 60">
+        {heights.map((h, i) => (
+          <rect
+            key={i}
+            x={4 + i * 8}
+            y={30 - h/2}
+            width="5"
+            height={h}
+            rx="2.5"
+            fill={i === 5 ? "#A8702A" : i === 3 ? "#4338CA" : "#2A2724"}
+          />
+        ))}
+      </svg>
+    );
+  };
+  const Wordmark = (
+    <div className="wm-inter" style={{fontSize: 30, lineHeight: 1, letterSpacing: "-0.03em"}}>
+      data<span style={{color: "var(--primary)"}}>·</span>praat
+    </div>
+  );
+  return (
+    <LogoBoard
+      note={<><b>06 · Waveform.</b> Leest als staafjes én als spraak-signaal. De punt in het wordmark = de orb op ooghoogte.</>}
+      small={<Mark s={0.28}/>}
+      wordmark={Wordmark}
+    >
+      <Mark s={1}/>
+    </LogoBoard>
+  );
+};
+
+// ==========================================================
+// CONCEPT 7 — "The Colon"
+// Typographic: two dots (the colon — "here come the numbers")
+// set against a serifed wordmark. Quiet editorial vibe.
+// ==========================================================
+const Concept7 = () => {
+  const Mark = ({ s = 1 }) => (
+    <svg width={32*s} height={64*s} viewBox="0 0 32 64">
+      <circle cx="16" cy="22" r="8" fill="#4338CA"/>
+      <circle cx="16" cy="46" r="8" fill="#2A2724"/>
+    </svg>
+  );
+  const Wordmark = (
+    <div className="wm-fraunces" style={{fontSize: 36, lineHeight: 1, fontWeight: 500, fontStyle: "italic"}}>
+      DataPraat
+    </div>
+  );
+  return (
+    <LogoBoard
+      note={<><b>07 · Dubbele punt.</b> Typografisch minimum — het teken dat altijd voor cijfers staat: "Zorg: 14,2 mln." Redactioneel, Fraunces-cursief.</>}
+      small={<Mark s={0.3}/>}
+      wordmark={Wordmark}
+    >
+      <Mark s={1}/>
+    </LogoBoard>
+  );
+};
+
+// ==========================================================
+// CONCEPT 8 — "Two Orbs, One Line"
+// Dialogue between two entities — you and the data — joined
+// by a baseline. The whole product philosophy in two dots.
+// ==========================================================
+const Concept8 = () => {
+  const Mark = ({ s = 1 }) => (
+    <svg width={88*s} height={48*s} viewBox="0 0 88 48">
+      <line x1="6" y1="24" x2="82" y2="24" stroke="#D4D1CB" strokeWidth="1.5"/>
+      <circle cx="18" cy="24" r="12" fill="#2A2724"/>
+      <defs>
+        <radialGradient id="c8-orb" cx="30%" cy="28%">
+          <stop offset="0%" stopColor="#6366F1"/>
+          <stop offset="100%" stopColor="#4338CA"/>
+        </radialGradient>
+      </defs>
+      <circle cx="70" cy="24" r="16" fill="url(#c8-orb)"/>
+    </svg>
+  );
+  const Wordmark = (
+    <div className="wm-inter" style={{fontSize: 30, lineHeight: 1, fontWeight: 600}}>
+      DataPraat
+    </div>
+  );
+  return (
+    <LogoBoard
+      note={<><b>08 · Twee orbs.</b> Jij en de data op één lijn. Inhoudelijk de kern van het product — een gesprek, niet een dashboard.</>}
+      small={<Mark s={0.22}/>}
+      wordmark={Wordmark}
+    >
+      <Mark s={1}/>
+    </LogoBoard>
+  );
+};
+
+// ==========================================================
+// CONCEPT 9 — "Aperture / Lens"
+// Concentric segments — references the "Toon als…" lens picker.
+// Each lens shows the same data differently.
+// ==========================================================
+const Concept9 = () => {
+  const Mark = ({ s = 1 }) => (
+    <svg width={64*s} height={64*s} viewBox="0 0 64 64">
+      {/* outer ring */}
+      <circle cx="32" cy="32" r="28" fill="none" stroke="#2A2724" strokeWidth="2"/>
+      {/* aperture blades — 6 segments */}
+      {[0, 60, 120, 180, 240, 300].map((deg, i) => (
+        <path
+          key={i}
+          d="M 32 32 L 32 6 A 26 26 0 0 1 54.5 19 Z"
+          fill={i % 2 === 0 ? "#4338CA" : "#6366F1"}
+          opacity={i === 0 ? 1 : (0.85 - i * 0.1)}
+          transform={`rotate(${deg} 32 32)`}
+        />
+      ))}
+      <circle cx="32" cy="32" r="6" fill="#FCFBF8"/>
+    </svg>
+  );
+  const Wordmark = (
+    <div className="wm-inter" style={{fontSize: 30, lineHeight: 1, fontWeight: 600, letterSpacing: "-0.025em"}}>
+      DataPraat
+    </div>
+  );
+  return (
+    <LogoBoard
+      note={<><b>09 · Lens.</b> Diafragma-bladen verwijzen naar "Toon als…" — dezelfde data, andere blik. Roteerbaar als loader-state.</>}
+      small={<Mark s={0.3}/>}
+      wordmark={Wordmark}
+    >
+      <Mark s={1}/>
+    </LogoBoard>
+  );
+};
+
+// ==========================================================
+// CONCEPT 10 — "Wordmark-first: the orb IS the A-dot"
+// No separate mark. The dot on the 'a' of Praat becomes the orb.
+// Most restrained and most sophisticated option.
+// ==========================================================
+const Concept10 = () => {
+  const Mark = ({ s = 1 }) => (
+    <div style={{
+      fontFamily: "Inter, sans-serif",
+      fontWeight: 700,
+      fontSize: 44 * s,
+      letterSpacing: "-0.035em",
+      lineHeight: 1,
+      color: "var(--ink)",
+      display: "inline-flex",
+      alignItems: "baseline",
+      position: "relative",
+    }}>
+      DataPra<span style={{position: "relative", display: "inline-block"}}>
+        a
+        <span style={{
+          position: "absolute",
+          top: 6 * s, right: -6 * s,
+          width: 10 * s, height: 10 * s,
+          borderRadius: "50%",
+          background: "radial-gradient(circle at 30% 28%, #6366F1, #4338CA)",
+        }}/>
+      </span>t
+    </div>
+  );
+  const Small = () => (
+    <div style={{
+      fontFamily: "Inter, sans-serif",
+      fontWeight: 800,
+      fontSize: 14,
+      letterSpacing: "-0.05em",
+      lineHeight: 1,
+      color: "var(--ink)",
+      position: "relative",
+      display: "inline-flex",
+      alignItems: "baseline",
+    }}>
+      Dp
+      <span style={{
+        width: 4, height: 4, borderRadius: "50%",
+        background: "radial-gradient(circle at 30% 28%, #6366F1, #4338CA)",
+        marginLeft: 1, alignSelf: "flex-start", marginTop: 2,
+      }}/>
+    </div>
+  );
+  return (
+    <LogoBoard
+      note={<><b>10 · Wordmark-only.</b> Geen apart symbool — de orb is de punt van de 'a' in Praat. Meest ingetogen; werkt sterk als pure typografie.</>}
+      small={<Small/>}
+      wordmark={null}
+    >
+      <Mark s={1}/>
+    </LogoBoard>
+  );
+};
+
+// ==========================================================
+// CONCEPT 11 — "Orb Eclipse"
+// Two orbs overlapping — indigo + ink — like an eclipse.
+// Single-color wordmark in ink.
+// ==========================================================
+const Concept11 = () => {
+  const Mark = ({ s = 1 }) => (
+    <svg width={68*s} height={48*s} viewBox="0 0 68 48">
+      <defs>
+        <radialGradient id="c11-orb" cx="30%" cy="28%">
+          <stop offset="0%" stopColor="#6366F1"/>
+          <stop offset="100%" stopColor="#4338CA"/>
+        </radialGradient>
+      </defs>
+      <circle cx="24" cy="24" r="20" fill="url(#c11-orb)"/>
+      <circle cx="44" cy="24" r="20" fill="#2A2724"/>
+    </svg>
+  );
+  const Wordmark = (
+    <div className="wm-inter" style={{fontSize: 30, lineHeight: 1, color: "var(--ink)"}}>
+      DataPraat
+    </div>
+  );
+  return (
+    <LogoBoard
+      note={<><b>11 · Eclips.</b> Twee orbs overlappen — data en gesprek smelten samen. Naam in één kleur (ink), mark doet het werk.</>}
+      small={<Mark s={0.3}/>}
+      wordmark={Wordmark}
+    >
+      <Mark s={1}/>
+    </LogoBoard>
+  );
+};
+
+// ==========================================================
+// CONCEPT 12 — "Orb Cluster"
+// Three orbs in a triangular cluster — reads as stakeholders
+// talking, or as a molecular diagram.
+// ==========================================================
+const Concept12 = () => {
+  const Mark = ({ s = 1 }) => (
+    <svg width={64*s} height={56*s} viewBox="0 0 64 56">
+      <defs>
+        <radialGradient id="c12-a" cx="30%" cy="28%">
+          <stop offset="0%" stopColor="#8B8FFF"/>
+          <stop offset="100%" stopColor="#4338CA"/>
+        </radialGradient>
+        <radialGradient id="c12-b" cx="30%" cy="28%">
+          <stop offset="0%" stopColor="#6366F1"/>
+          <stop offset="100%" stopColor="#3151B0"/>
+        </radialGradient>
+      </defs>
+      <line x1="16" y1="40" x2="48" y2="40" stroke="#D4D1CB" strokeWidth="1.5"/>
+      <line x1="32" y1="14" x2="16" y2="40" stroke="#D4D1CB" strokeWidth="1.5"/>
+      <line x1="32" y1="14" x2="48" y2="40" stroke="#D4D1CB" strokeWidth="1.5"/>
+      <circle cx="32" cy="14" r="10" fill="url(#c12-a)"/>
+      <circle cx="16" cy="40" r="8" fill="url(#c12-b)"/>
+      <circle cx="48" cy="40" r="8" fill="#2A2724"/>
+    </svg>
+  );
+  const Wordmark = (
+    <div className="wm-inter" style={{fontSize: 30, lineHeight: 1, color: "var(--ink)"}}>
+      DataPraat
+    </div>
+  );
+  return (
+    <LogoBoard
+      note={<><b>12 · Cluster.</b> Drie orbs op één driehoek — jij, de data, en het inzicht. Ook leesbaar als molecuul of netwerk.</>}
+      small={<Mark s={0.3}/>}
+      wordmark={Wordmark}
+    >
+      <Mark s={1}/>
+    </LogoBoard>
+  );
+};
+
+// ==========================================================
+// CONCEPT 13 — "Orb Ripple"
+// Orb with concentric rings — a sound wave radiating out.
+// ==========================================================
+const Concept13 = () => {
+  const Mark = ({ s = 1 }) => (
+    <svg width={64*s} height={64*s} viewBox="0 0 64 64">
+      <defs>
+        <radialGradient id="c13-orb" cx="30%" cy="28%">
+          <stop offset="0%" stopColor="#6366F1"/>
+          <stop offset="100%" stopColor="#4338CA"/>
+        </radialGradient>
+      </defs>
+      <circle cx="32" cy="32" r="30" fill="none" stroke="#4338CA" strokeWidth="1" opacity="0.18"/>
+      <circle cx="32" cy="32" r="23" fill="none" stroke="#4338CA" strokeWidth="1.2" opacity="0.32"/>
+      <circle cx="32" cy="32" r="16" fill="none" stroke="#4338CA" strokeWidth="1.4" opacity="0.5"/>
+      <circle cx="32" cy="32" r="10" fill="url(#c13-orb)"/>
+    </svg>
+  );
+  const Wordmark = (
+    <div className="wm-inter" style={{fontSize: 30, lineHeight: 1, color: "var(--ink)"}}>
+      DataPraat
+    </div>
+  );
+  return (
+    <LogoBoard
+      note={<><b>13 · Rimpeling.</b> De orb straalt uit — één inzicht dat rimpelt door het hele beleid. Werkt mooi als animated loader.</>}
+      small={<Mark s={0.3}/>}
+      wordmark={Wordmark}
+    >
+      <Mark s={1}/>
+    </LogoBoard>
+  );
+};
+
+// ==========================================================
+// CONCEPT 14 — "Orb Split"
+// Half orb indigo, half orb ink — split down the middle.
+// The duality of data (cool) and conversation (warm).
+// ==========================================================
+const Concept14 = () => {
+  const Mark = ({ s = 1 }) => (
+    <svg width={64*s} height={64*s} viewBox="0 0 64 64">
+      <defs>
+        <radialGradient id="c14-orb" cx="30%" cy="28%">
+          <stop offset="0%" stopColor="#6366F1"/>
+          <stop offset="100%" stopColor="#4338CA"/>
+        </radialGradient>
+        <clipPath id="c14-clip-l"><rect x="0" y="0" width="32" height="64"/></clipPath>
+        <clipPath id="c14-clip-r"><rect x="32" y="0" width="32" height="64"/></clipPath>
+      </defs>
+      <circle cx="32" cy="32" r="26" fill="url(#c14-orb)" clipPath="url(#c14-clip-l)"/>
+      <circle cx="32" cy="32" r="26" fill="#2A2724" clipPath="url(#c14-clip-r)"/>
+      <circle cx="32" cy="32" r="26" fill="none" stroke="#FCFBF8" strokeWidth="0"/>
+    </svg>
+  );
+  const Wordmark = (
+    <div className="wm-inter" style={{fontSize: 30, lineHeight: 1, color: "var(--ink)"}}>
+      DataPraat
+    </div>
+  );
+  return (
+    <LogoBoard
+      note={<><b>14 · Gespleten.</b> De orb in twee helften — data & gesprek, objectief & subjectief. Wordmark in één kleur.</>}
+      small={<Mark s={0.3}/>}
+      wordmark={Wordmark}
+    >
+      <Mark s={1}/>
+    </LogoBoard>
+  );
+};
+
+// ==========================================================
+// CONCEPT 15 — "Orb Trail"
+// Small orb trailing into a larger one — motion, progress,
+// a conversation building up.
+// ==========================================================
+const Concept15 = () => {
+  const Mark = ({ s = 1 }) => (
+    <svg width={96*s} height={48*s} viewBox="0 0 96 48">
+      <defs>
+        <radialGradient id="c15-orb" cx="30%" cy="28%">
+          <stop offset="0%" stopColor="#6366F1"/>
+          <stop offset="100%" stopColor="#4338CA"/>
+        </radialGradient>
+      </defs>
+      <circle cx="8" cy="24" r="2" fill="#4338CA" opacity="0.25"/>
+      <circle cx="20" cy="24" r="3.5" fill="#4338CA" opacity="0.45"/>
+      <circle cx="36" cy="24" r="6" fill="#4338CA" opacity="0.7"/>
+      <circle cx="72" cy="24" r="18" fill="url(#c15-orb)"/>
+    </svg>
+  );
+  const Wordmark = (
+    <div className="wm-inter" style={{fontSize: 30, lineHeight: 1, color: "var(--ink)"}}>
+      DataPraat
+    </div>
+  );
+  return (
+    <LogoBoard
+      note={<><b>15 · Spoor.</b> Kleine orbs die groeien naar het inzicht toe. Richting, beweging, een gesprek dat ergens heen gaat.</>}
+      small={<Mark s={0.24}/>}
+      wordmark={Wordmark}
+    >
+      <Mark s={1}/>
+    </LogoBoard>
+  );
+};
+
+// ==========================================================
+// CONCEPT 16 — "Orb Inside Bubble"
+// Orb nestled inside a chat bubble outline — most literal
+// "praat-tool" reading, but still soft.
+// ==========================================================
+const Concept16 = () => {
+  const Mark = ({ s = 1 }) => (
+    <svg width={64*s} height={60*s} viewBox="0 0 64 60">
+      <defs>
+        <radialGradient id="c16-orb" cx="30%" cy="28%">
+          <stop offset="0%" stopColor="#6366F1"/>
+          <stop offset="100%" stopColor="#4338CA"/>
+        </radialGradient>
+      </defs>
+      <path
+        d="M8 6 h48 a6 6 0 0 1 6 6 v28 a6 6 0 0 1 -6 6 h-24 l-10 10 v-10 h-14 a6 6 0 0 1 -6 -6 v-28 a6 6 0 0 1 6 -6 z"
+        fill="none" stroke="#2A2724" strokeWidth="2" strokeLinejoin="round"
+      />
+      <circle cx="32" cy="26" r="11" fill="url(#c16-orb)"/>
+    </svg>
+  );
+  const Wordmark = (
+    <div className="wm-inter" style={{fontSize: 30, lineHeight: 1, color: "var(--ink)"}}>
+      DataPraat
+    </div>
+  );
+  return (
+    <LogoBoard
+      note={<><b>16 · Orb in bubbel.</b> De orb zit letterlijk in het gesprek. Lijncontour houdt het licht; naam in één kleur.</>}
+      small={<Mark s={0.3}/>}
+      wordmark={Wordmark}
+    >
+      <Mark s={1}/>
+    </LogoBoard>
+  );
+};
+
+// ==========================================================
+// CONCEPT 17 — "Orb Stack (P-form)"
+// Two orbs stacked vertically form an abstract "P" — the
+// Praat initial. The mark IS the letter.
+// ==========================================================
+const Concept17 = () => {
+  const Mark = ({ s = 1 }) => (
+    <svg width={56*s} height={72*s} viewBox="0 0 56 72">
+      <defs>
+        <radialGradient id="c17-orb" cx="32%" cy="28%">
+          <stop offset="0%" stopColor="#6366F1"/>
+          <stop offset="100%" stopColor="#4338CA"/>
+        </radialGradient>
+      </defs>
+      {/* vertical stem */}
+      <rect x="4" y="4" width="7" height="64" fill="#2A2724" rx="3.5"/>
+      {/* orb as the bowl of P */}
+      <circle cx="32" cy="24" r="20" fill="url(#c17-orb)"/>
+    </svg>
+  );
+  const Wordmark = (
+    <div className="wm-inter" style={{fontSize: 30, lineHeight: 1, color: "var(--ink)"}}>
+      DataPraat
+    </div>
+  );
+  return (
+    <LogoBoard
+      note={<><b>17 · P-vorm.</b> De orb wordt de bolle kant van een "P" — directe link naar Praat. Werkt hard als app-icoon.</>}
+      small={<Mark s={0.3}/>}
+      wordmark={Wordmark}
+    >
+      <Mark s={1}/>
+    </LogoBoard>
+  );
+};
+
+// ==========================================================
+// CONCEPT 18 — "Orb Orbit"
+// A small orb orbiting a larger one — playful, dynamic.
+// Suggests the back-and-forth of asking and answering.
+// ==========================================================
+const Concept18 = () => {
+  const Mark = ({ s = 1 }) => (
+    <svg width={72*s} height={64*s} viewBox="0 0 72 64">
+      <defs>
+        <radialGradient id="c18-orb" cx="30%" cy="28%">
+          <stop offset="0%" stopColor="#6366F1"/>
+          <stop offset="100%" stopColor="#4338CA"/>
+        </radialGradient>
+      </defs>
+      {/* orbit ellipse */}
+      <ellipse cx="36" cy="32" rx="30" ry="12" fill="none" stroke="#D4D1CB" strokeWidth="1.5" strokeDasharray="2 3"/>
+      {/* big orb */}
+      <circle cx="36" cy="32" r="14" fill="url(#c18-orb)"/>
+      {/* small orbiting orb */}
+      <circle cx="66" cy="32" r="4" fill="#A8702A"/>
+    </svg>
+  );
+  const Wordmark = (
+    <div className="wm-inter" style={{fontSize: 30, lineHeight: 1, color: "var(--ink)"}}>
+      DataPraat
+    </div>
+  );
+  return (
+    <LogoBoard
+      note={<><b>18 · Baan.</b> Kleine amber-orb draait om de grote indigo. Vraag rond feit. Speels, bijna planetair.</>}
+      small={<Mark s={0.28}/>}
+      wordmark={Wordmark}
+    >
+      <Mark s={1}/>
+    </LogoBoard>
+  );
+};
+
+// ==========================================================
+// CONCEPT 10 variants — wordmark-only, the orb as typography
+// ==========================================================
+
+// 10a — Orb as dot on the second 'a' of Praat (original direction)
+const Concept10a = () => {
+  const Mark = ({ s = 1 }) => (
+    <div style={{
+      fontFamily: "Inter, sans-serif", fontWeight: 700,
+      fontSize: 44 * s, letterSpacing: "-0.035em", lineHeight: 1,
+      color: "var(--ink)", display: "inline-flex", alignItems: "baseline",
+    }}>
+      DataPra<span style={{position: "relative", display: "inline-block"}}>
+        a
+        <span style={{
+          position: "absolute", top: 6 * s, right: -6 * s,
+          width: 10 * s, height: 10 * s, borderRadius: "50%",
+          background: "radial-gradient(circle at 30% 28%, #6366F1, #4338CA)",
+        }}/>
+      </span>t
+    </div>
+  );
+  const Small = () => (
+    <div style={{
+      fontFamily: "Inter, sans-serif", fontWeight: 800, fontSize: 14,
+      letterSpacing: "-0.05em", lineHeight: 1, color: "var(--ink)",
+      display: "inline-flex", alignItems: "baseline",
+    }}>
+      Dp<span style={{
+        width: 4, height: 4, borderRadius: "50%",
+        background: "radial-gradient(circle at 30% 28%, #6366F1, #4338CA)",
+        marginLeft: 1, alignSelf: "flex-start", marginTop: 2,
+      }}/>
+    </div>
+  );
+  return (
+    <LogoBoard
+      note={<><b>10a · Accent op de 'a'.</b> De uitgangsvariant — orb als accent-teken. Rustig en weinig gewicht.</>}
+      small={<Small/>}
+      wordmark={null}
+    ><Mark s={1}/></LogoBoard>
+  );
+};
+
+// 10b — Orb replaces the 'o' of Data entirely
+const Concept10b = () => {
+  const Mark = ({ s = 1 }) => (
+    <div style={{
+      fontFamily: "Inter, sans-serif", fontWeight: 700,
+      fontSize: 44 * s, letterSpacing: "-0.035em", lineHeight: 1,
+      color: "var(--ink)", display: "inline-flex", alignItems: "baseline",
+    }}>
+      Dat
+      <span style={{
+        display: "inline-block",
+        width: 36 * s, height: 36 * s,
+        borderRadius: "50%",
+        background: "radial-gradient(circle at 30% 28%, #6366F1, #4338CA)",
+        margin: `0 ${-2*s}px ${2*s}px ${-2*s}px`,
+        alignSelf: "center",
+      }}/>
+      Praat
+    </div>
+  );
+  const Small = () => (
+    <div style={{
+      fontFamily: "Inter, sans-serif", fontWeight: 800, fontSize: 13,
+      letterSpacing: "-0.05em", lineHeight: 1, color: "var(--ink)",
+      display: "inline-flex", alignItems: "center",
+    }}>
+      D<span style={{
+        width: 9, height: 9, borderRadius: "50%",
+        background: "radial-gradient(circle at 30% 28%, #6366F1, #4338CA)",
+        margin: "0 0.5px",
+      }}/>P
+    </div>
+  );
+  return (
+    <LogoBoard
+      note={<><b>10b · Orb als 'a' van Data.</b> De orb vervangt de tweede letter volledig — grote aanwezigheid, direct herkenbaar als merk.</>}
+      small={<Small/>}
+      wordmark={null}
+    ><Mark s={1}/></LogoBoard>
+  );
+};
+
+// 10c — Orb separates the two words as punctuation
+const Concept10c = () => {
+  const Mark = ({ s = 1 }) => (
+    <div style={{
+      fontFamily: "Inter, sans-serif", fontWeight: 700,
+      fontSize: 44 * s, letterSpacing: "-0.035em", lineHeight: 1,
+      color: "var(--ink)", display: "inline-flex", alignItems: "center",
+    }}>
+      <span>Data</span>
+      <span style={{
+        display: "inline-block",
+        width: 14 * s, height: 14 * s, borderRadius: "50%",
+        background: "radial-gradient(circle at 30% 28%, #6366F1, #4338CA)",
+        margin: `0 ${8*s}px`,
+      }}/>
+      <span>Praat</span>
+    </div>
+  );
+  const Small = () => (
+    <div style={{
+      fontFamily: "Inter, sans-serif", fontWeight: 800, fontSize: 12,
+      letterSpacing: "-0.05em", lineHeight: 1, color: "var(--ink)",
+      display: "inline-flex", alignItems: "center",
+    }}>
+      D<span style={{
+        width: 5, height: 5, borderRadius: "50%",
+        background: "radial-gradient(circle at 30% 28%, #6366F1, #4338CA)",
+        margin: "0 2px",
+      }}/>P
+    </div>
+  );
+  return (
+    <LogoBoard
+      note={<><b>10c · Orb als koppelpunt.</b> De orb verbindt "Data" en "Praat" — letterlijk het scharnier van het product.</>}
+      small={<Small/>}
+      wordmark={null}
+    ><Mark s={1}/></LogoBoard>
+  );
+};
+
+// 10d — Stacked: two lines, orb anchors the baseline
+const Concept10d = () => {
+  const Mark = ({ s = 1 }) => (
+    <div style={{
+      fontFamily: "Inter, sans-serif", fontWeight: 700,
+      fontSize: 36 * s, letterSpacing: "-0.04em", lineHeight: 0.92,
+      color: "var(--ink)", display: "inline-flex", flexDirection: "column",
+      alignItems: "flex-start",
+    }}>
+      <span>Data</span>
+      <span style={{display: "inline-flex", alignItems: "center", gap: 6 * s}}>
+        <span style={{
+          width: 14 * s, height: 14 * s, borderRadius: "50%",
+          background: "radial-gradient(circle at 30% 28%, #6366F1, #4338CA)",
+          display: "inline-block",
+        }}/>
+        Praat
+      </span>
+    </div>
+  );
+  const Small = () => (
+    <div style={{
+      fontFamily: "Inter, sans-serif", fontWeight: 800, fontSize: 9,
+      letterSpacing: "-0.04em", lineHeight: 0.95, color: "var(--ink)",
+      display: "inline-flex", flexDirection: "column",
+    }}>
+      <span>Data</span>
+      <span style={{display:"inline-flex", alignItems:"center", gap: 1.5}}>
+        <span style={{
+          width: 4, height: 4, borderRadius: "50%",
+          background: "radial-gradient(circle at 30% 28%, #6366F1, #4338CA)",
+          display: "inline-block",
+        }}/>
+        Praat
+      </span>
+    </div>
+  );
+  return (
+    <LogoBoard
+      note={<><b>10d · Gestapeld.</b> Twee regels — orb als "bullet" bij Praat. Compact en sterk vierkant; past bij app-icoon.</>}
+      small={<Small/>}
+      wordmark={null}
+    ><Mark s={1}/></LogoBoard>
+  );
+};
+
+// 10e — Lowercase, orb eats the ascender of the 'd'
+const Concept10e = () => {
+  const Mark = ({ s = 1 }) => (
+    <div style={{
+      fontFamily: "Inter, sans-serif", fontWeight: 500,
+      fontSize: 44 * s, letterSpacing: "-0.04em", lineHeight: 1,
+      color: "var(--ink)", display: "inline-flex", alignItems: "baseline",
+      position: "relative",
+    }}>
+      <span style={{position: "relative", display: "inline-block"}}>
+        d
+        <span style={{
+          position: "absolute", top: -3 * s, left: 14 * s,
+          width: 12 * s, height: 12 * s, borderRadius: "50%",
+          background: "radial-gradient(circle at 30% 28%, #6366F1, #4338CA)",
+        }}/>
+      </span>
+      atapraat
+    </div>
+  );
+  const Small = () => (
+    <div style={{
+      fontFamily: "Inter, sans-serif", fontWeight: 600, fontSize: 14,
+      letterSpacing: "-0.06em", lineHeight: 1, color: "var(--ink)",
+      display: "inline-flex", alignItems: "baseline", position: "relative",
+    }}>
+      <span style={{position:"relative", display:"inline-block"}}>
+        d
+        <span style={{
+          position: "absolute", top: -1, left: 5,
+          width: 5, height: 5, borderRadius: "50%",
+          background: "radial-gradient(circle at 30% 28%, #6366F1, #4338CA)",
+        }}/>
+      </span>p
+    </div>
+  );
+  return (
+    <LogoBoard
+      note={<><b>10e · Lowercase.</b> Zachter gewicht (medium ipv bold), orb zit op de stok van de 'd' als accent. Vriendelijker, dichter bij spraak.</>}
+      small={<Small/>}
+      wordmark={null}
+    ><Mark s={1}/></LogoBoard>
+  );
+};
+
+// ==========================================================
+// APPLICATIONS artboard — shows the top picks in product context
+// ==========================================================
+const ApplicationStage = () => {
+  const cellW = 360, cellH = 200;
+
+  const SidebarMini = ({ mark, name = "DataPraat", bg = "#F3F2EE" }) => (
+    <div style={{
+      width: cellW, height: cellH,
+      background: bg,
+      borderRadius: 10,
+      border: "1px solid var(--line)",
+      padding: "14px 14px",
+      display: "flex", flexDirection: "column", gap: 10,
+    }}>
+      <div style={{display: "flex", alignItems: "center", gap: 10}}>
+        <div>{mark}</div>
+        <div style={{fontFamily: "Inter", fontWeight: 600, fontSize: 14, letterSpacing: "-0.01em"}}>{name}</div>
+      </div>
+      <div style={{fontSize: 10, color: "var(--ink-mute)", textTransform: "uppercase", letterSpacing: "0.08em", fontWeight: 500, marginTop: 8}}>Gemeente</div>
+      <div style={{
+        padding: "6px 10px", background: "white", borderRadius: 6, border: "1px solid var(--line)",
+        fontSize: 12, fontWeight: 500,
+      }}>Rotterdam</div>
+      <div style={{
+        marginTop: "auto", padding: "8px 10px", background: "#4338CA", color: "#FAF7EF",
+        borderRadius: 6, fontSize: 12, fontWeight: 500, textAlign: "center",
+      }}>+ Nieuw gesprek</div>
+    </div>
+  );
+
+  const Orb1 = () => (
+    <svg width="28" height="28" viewBox="0 0 64 64">
+      <defs>
+        <radialGradient id="a1" cx="30%" cy="28%">
+          <stop offset="0%" stopColor="#6366F1"/>
+          <stop offset="100%" stopColor="#4338CA"/>
+        </radialGradient>
+      </defs>
+      <circle cx="24" cy="32" r="20" fill="url(#a1)"/>
+      <circle cx="52" cy="32" r="6" fill="#2A2724"/>
+    </svg>
+  );
+  const Orb8 = () => (
+    <svg width="36" height="20" viewBox="0 0 88 48">
+      <line x1="6" y1="24" x2="82" y2="24" stroke="#D4D1CB" strokeWidth="1.5"/>
+      <circle cx="18" cy="24" r="12" fill="#2A2724"/>
+      <defs>
+        <radialGradient id="a8" cx="30%" cy="28%">
+          <stop offset="0%" stopColor="#6366F1"/>
+          <stop offset="100%" stopColor="#4338CA"/>
+        </radialGradient>
+      </defs>
+      <circle cx="70" cy="24" r="16" fill="url(#a8)"/>
+    </svg>
+  );
+  const Orb9 = () => (
+    <svg width="24" height="24" viewBox="0 0 64 64">
+      <circle cx="32" cy="32" r="28" fill="none" stroke="#2A2724" strokeWidth="2"/>
+      {[0, 60, 120, 180, 240, 300].map((deg, i) => (
+        <path key={i}
+          d="M 32 32 L 32 6 A 26 26 0 0 1 54.5 19 Z"
+          fill={i % 2 === 0 ? "#4338CA" : "#6366F1"}
+          opacity={i === 0 ? 1 : (0.85 - i * 0.1)}
+          transform={`rotate(${deg} 32 32)`}/>
+      ))}
+      <circle cx="32" cy="32" r="6" fill="#F3F2EE"/>
+    </svg>
+  );
+
+  // for concept 10: wordmark replaces everything
+  const Wm10 = () => (
+    <div style={{
+      fontFamily: "Inter, sans-serif",
+      fontWeight: 700,
+      fontSize: 18,
+      letterSpacing: "-0.035em",
+      lineHeight: 1,
+      color: "var(--ink)",
+      display: "inline-flex",
+      alignItems: "baseline",
+    }}>
+      DataPra<span style={{position: "relative", display: "inline-block"}}>
+        a
+        <span style={{
+          position: "absolute",
+          top: 2, right: -3,
+          width: 4, height: 4,
+          borderRadius: "50%",
+          background: "radial-gradient(circle at 30% 28%, #6366F1, #4338CA)",
+        }}/>
+      </span>t
+    </div>
+  );
+
+  return (
+    <div style={{
+      width: 1200, padding: 36,
+      display: "grid",
+      gridTemplateColumns: "repeat(3, 1fr)",
+      gap: 24,
+      background: "var(--surface)",
+    }}>
+      <div>
+        <div style={{fontFamily: "var(--f-mono)", fontSize: 10, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--ink-mute)", marginBottom: 10}}>01 — In sidebar</div>
+        <SidebarMini mark={<Orb1/>}/>
+      </div>
+      <div>
+        <div style={{fontFamily: "var(--f-mono)", fontSize: 10, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--ink-mute)", marginBottom: 10}}>08 — In sidebar</div>
+        <SidebarMini mark={<Orb8/>}/>
+      </div>
+      <div>
+        <div style={{fontFamily: "var(--f-mono)", fontSize: 10, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--ink-mute)", marginBottom: 10}}>09 — In sidebar</div>
+        <SidebarMini mark={<Orb9/>}/>
+      </div>
+
+      {/* Dark variants */}
+      <div>
+        <div style={{fontFamily: "var(--f-mono)", fontSize: 10, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--ink-mute)", marginBottom: 10}}>01 — Op donker</div>
+        <div style={{
+          width: cellW, height: cellH, background: "#2A2724", borderRadius: 10,
+          display: "grid", placeItems: "center",
+        }}>
+          <div style={{display: "flex", alignItems: "center", gap: 14}}>
+            <svg width="56" height="56" viewBox="0 0 64 64">
+              <defs>
+                <radialGradient id="d1" cx="30%" cy="28%">
+                  <stop offset="0%" stopColor="#8B8FFF"/>
+                  <stop offset="100%" stopColor="#6366F1"/>
+                </radialGradient>
+              </defs>
+              <circle cx="24" cy="32" r="20" fill="url(#d1)"/>
+              <circle cx="52" cy="32" r="6" fill="#FAF7EF"/>
+            </svg>
+            <div style={{color: "#FAF7EF", fontFamily: "Inter", fontWeight: 600, fontSize: 24, letterSpacing: "-0.025em"}}>
+              Data<span style={{color: "#8B8FFF"}}>Praat</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div style={{fontFamily: "var(--f-mono)", fontSize: 10, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--ink-mute)", marginBottom: 10}}>10 — Wordmark-only, donker</div>
+        <div style={{
+          width: cellW, height: cellH, background: "#2A2724", borderRadius: 10,
+          display: "grid", placeItems: "center",
+        }}>
+          <div style={{
+            fontFamily: "Inter, sans-serif",
+            fontWeight: 700,
+            fontSize: 36,
+            letterSpacing: "-0.035em",
+            lineHeight: 1,
+            color: "#FAF7EF",
+            display: "inline-flex",
+            alignItems: "baseline",
+            position: "relative",
+          }}>
+            DataPra<span style={{position: "relative", display: "inline-block"}}>
+              a
+              <span style={{
+                position: "absolute",
+                top: 4, right: -5,
+                width: 8, height: 8,
+                borderRadius: "50%",
+                background: "radial-gradient(circle at 30% 28%, #8B8FFF, #6366F1)",
+              }}/>
+            </span>t
+          </div>
+        </div>
+      </div>
+      <div>
+        <div style={{fontFamily: "var(--f-mono)", fontSize: 10, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--ink-mute)", marginBottom: 10}}>10 — Op kaart</div>
+        <div style={{
+          width: cellW, height: cellH, background: "#FBF9F1", borderRadius: 10,
+          border: "1px solid var(--line)",
+          padding: "18px 22px",
+          display: "flex", flexDirection: "column", justifyContent: "space-between",
+        }}>
+          <div style={{
+            fontFamily: "Inter, sans-serif", fontWeight: 700,
+            fontSize: 22, letterSpacing: "-0.035em", color: "var(--ink)",
+            display: "inline-flex", alignItems: "baseline",
+          }}>
+            DataPra<span style={{position: "relative", display: "inline-block"}}>
+              a
+              <span style={{
+                position: "absolute", top: 3, right: -4,
+                width: 6, height: 6, borderRadius: "50%",
+                background: "radial-gradient(circle at 30% 28%, #6366F1, #4338CA)",
+              }}/>
+            </span>t
+          </div>
+          <div style={{fontFamily: "var(--f-serif)", fontSize: 15, lineHeight: 1.45, color: "var(--ink-soft)"}}>
+            "Zorg zit <span style={{color: "#A8702A", fontWeight: 500}}>€1,8 mln boven begroting</span>, voornamelijk Jeugdzorg Q3."
+          </div>
+          <div style={{fontFamily: "var(--f-mono)", fontSize: 10, textTransform: "uppercase", letterSpacing: "0.1em", color: "var(--ink-faint)"}}>
+            Memo · gemeente Rotterdam
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// ==========================================================
+// SWATCHES artboard — quick reference
+// ==========================================================
+const Palette = () => {
+  const rows = [
+    {name: "primary", hex: "#4338CA", label: "Indigo — hoofdkleur, orb, CTA"},
+    {name: "primary-soft", hex: "#6366F1", label: "Indigo-soft — orb hoogtepunt"},
+    {name: "ink", hex: "#2A2724", label: "Ink — tekst, tegenmassa"},
+    {name: "bg", hex: "#FCFBF8", label: "Warme off-white — achtergrond"},
+    {name: "gold", hex: "#A8702A", label: "Amber — accent, uitschieter"},
+    {name: "green", hex: "#5E8A6D", label: "Green — positief"},
+  ];
+  return (
+    <div style={{width: 560, padding: 36, background: "var(--surface)"}}>
+      <div style={{fontFamily: "var(--f-mono)", fontSize: 11, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--ink-mute)", marginBottom: 16}}>
+        Uit bestaande brand-tokens · v1.1
+      </div>
+      <div style={{display: "flex", flexDirection: "column", gap: 10}}>
+        {rows.map(r => (
+          <div key={r.name} style={{display: "flex", alignItems: "center", gap: 14}}>
+            <div style={{width: 40, height: 40, borderRadius: 6, background: r.hex, border: r.name === "bg" ? "1px solid var(--line)" : "none"}}/>
+            <div style={{flex: 1}}>
+              <div style={{fontFamily: "var(--f-mono)", fontSize: 12, color: "var(--ink)"}}>{r.hex}</div>
+              <div style={{fontSize: 11.5, color: "var(--ink-soft)"}}>{r.label}</div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+// ==========================================================
+// Intro artboard
+// ==========================================================
+const Intro = () => (
+  <div style={{width: 780, padding: 56, background: "var(--bg)"}}>
+    <div style={{
+      fontFamily: "var(--f-mono)", fontSize: 11, letterSpacing: "0.14em",
+      textTransform: "uppercase", color: "var(--primary)", marginBottom: 14, fontWeight: 600,
+    }}>
+      DataPraat · Logo Exploration · v1
+    </div>
+    <div style={{
+      fontFamily: "var(--f-serif)", fontWeight: 400,
+      fontSize: 42, lineHeight: 1.15, letterSpacing: "-0.02em",
+      color: "var(--ink)", marginBottom: 22, textWrap: "pretty",
+    }}>
+      Tien richtingen voor een <span style={{color: "var(--primary)", fontStyle: "italic"}}>pratend</span> datamerk.
+    </div>
+    <div style={{
+      fontFamily: "var(--f-sans)", fontSize: 14, lineHeight: 1.7,
+      color: "var(--ink-soft)", maxWidth: 560, marginBottom: 28,
+    }}>
+      Ieder concept bouwt op de bestaande merk-DNA (indigo <b style={{color: "var(--ink)"}}>#4338CA</b>, warm papier, de "orb"). 
+      Drie families: <b style={{color: "var(--ink)"}}>orb-based</b> (01, 03, 08, 10), <b style={{color: "var(--ink)"}}>data-driven</b> (02, 04, 06), 
+      en <b style={{color: "var(--ink)"}}>typografisch/conceptueel</b> (05, 07, 09). Elk toont favicon-schaal op 24px.
+    </div>
+    <div style={{display: "flex", gap: 18, flexWrap: "wrap"}}>
+      {[
+        {label: "primary", hex: "#4338CA"},
+        {label: "soft", hex: "#6366F1"},
+        {label: "ink", hex: "#2A2724"},
+        {label: "paper", hex: "#FCFBF8", border: true},
+        {label: "gold", hex: "#A8702A"},
+      ].map(s => (
+        <div key={s.label} style={{display: "inline-flex", alignItems: "center", gap: 8, fontFamily: "var(--f-mono)", fontSize: 11, letterSpacing: "0.06em", textTransform: "uppercase", color: "var(--ink-mute)"}}>
+          <span style={{width: 14, height: 14, borderRadius: 3, background: s.hex, border: s.border ? "1px solid var(--line-strong)" : "none"}}/>
+          {s.hex}
+        </div>
+      ))}
+    </div>
+  </div>
+);
+
+// ==========================================================
+// Compose the canvas
+// ==========================================================
+const { DesignCanvas, DCSection, DCArtboard } = window;
+
+const App = () => {
+  return (
+    <DesignCanvas title="DataPraat · Logo Exploration" initialZoom={0.5}>
+      <DCSection id="intro" title="Vertrekpunt" subtitle="Brand-DNA, palet, drie families van richtingen">
+        <DCArtboard id="intro" label="Intro" width={780} height={360}>
+          <Intro/>
+        </DCArtboard>
+        <DCArtboard id="palette" label="Palet" width={560} height={420}>
+          <Palette/>
+        </DCArtboard>
+      </DCSection>
+
+      <DCSection id="orb" title="Familie A · Orb-based" subtitle="Bouwt door op het bestaande orb-motief in het product">
+        <DCArtboard id="c1" label="01 · Tweespraak" width={560} height={420}>
+          <Concept1/>
+        </DCArtboard>
+        <DCArtboard id="c3" label="03 · Citaat-orb" width={560} height={420}>
+          <Concept3/>
+        </DCArtboard>
+        <DCArtboard id="c8" label="08 · Twee orbs" width={560} height={420}>
+          <Concept8/>
+        </DCArtboard>
+        <DCArtboard id="c10" label="10 · Wordmark-only" width={560} height={420}>
+          <Concept10/>
+        </DCArtboard>
+      </DCSection>
+
+      <DCSection id="data" title="Familie B · Data-driven" subtitle="Cijfers, grafieken en signalen worden het merk">
+        <DCArtboard id="c2" label="02 · Gesprek met cijfers" width={560} height={420}>
+          <Concept2/>
+        </DCArtboard>
+        <DCArtboard id="c4" label="04 · Constellatie" width={560} height={420}>
+          <Concept4/>
+        </DCArtboard>
+        <DCArtboard id="c6" label="06 · Waveform" width={560} height={420}>
+          <Concept6/>
+        </DCArtboard>
+      </DCSection>
+
+      <DCSection id="concept" title="Familie C · Typografisch & conceptueel" subtitle="Karakters en vormen die de idee dragen">
+        <DCArtboard id="c5" label="05 · Monogram" width={560} height={420}>
+          <Concept5/>
+        </DCArtboard>
+        <DCArtboard id="c7" label="07 · Dubbele punt" width={560} height={420}>
+          <Concept7/>
+        </DCArtboard>
+        <DCArtboard id="c9" label="09 · Lens / diafragma" width={560} height={420}>
+          <Concept9/>
+        </DCArtboard>
+      </DCSection>
+
+      <DCSection id="orb-more" title="Familie D · Orb-experimenten" subtitle="Meer creatieve varianten op het orb-motief — alle met wordmark in één kleur">
+        <DCArtboard id="c11" label="11 · Eclips" width={560} height={420}>
+          <Concept11/>
+        </DCArtboard>
+        <DCArtboard id="c12" label="12 · Cluster" width={560} height={420}>
+          <Concept12/>
+        </DCArtboard>
+        <DCArtboard id="c13" label="13 · Rimpeling" width={560} height={420}>
+          <Concept13/>
+        </DCArtboard>
+        <DCArtboard id="c14" label="14 · Gespleten" width={560} height={420}>
+          <Concept14/>
+        </DCArtboard>
+        <DCArtboard id="c15" label="15 · Spoor" width={560} height={420}>
+          <Concept15/>
+        </DCArtboard>
+        <DCArtboard id="c16" label="16 · Orb in bubbel" width={560} height={420}>
+          <Concept16/>
+        </DCArtboard>
+        <DCArtboard id="c17" label="17 · P-vorm" width={560} height={420}>
+          <Concept17/>
+        </DCArtboard>
+        <DCArtboard id="c18" label="18 · Baan" width={560} height={420}>
+          <Concept18/>
+        </DCArtboard>
+      </DCSection>
+
+      <DCSection id="wordmark-variants" title="Familie E · Wordmark-varianten" subtitle="Voortbouwend op 10 — de orb als typografisch element">
+        <DCArtboard id="c10a" label="10a · Accent op 'a'" width={560} height={420}>
+          <Concept10a/>
+        </DCArtboard>
+        <DCArtboard id="c10b" label="10b · Orb als 'a' van Data" width={560} height={420}>
+          <Concept10b/>
+        </DCArtboard>
+        <DCArtboard id="c10c" label="10c · Koppelpunt" width={560} height={420}>
+          <Concept10c/>
+        </DCArtboard>
+        <DCArtboard id="c10d" label="10d · Gestapeld" width={560} height={420}>
+          <Concept10d/>
+        </DCArtboard>
+        <DCArtboard id="c10e" label="10e · Lowercase" width={560} height={420}>
+          <Concept10e/>
+        </DCArtboard>
+      </DCSection>
+
+      <DCSection id="apps" title="Favorieten in context" subtitle="Hoe de kandidaten zich gedragen in product en communicatie">
+        <DCArtboard id="apps" label="Applicaties" width={1200} height={520}>
+          <ApplicationStage/>
+        </DCArtboard>
+      </DCSection>
+    </DesignCanvas>
+  );
+};
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
+</script>
+
+</body>
+</html>

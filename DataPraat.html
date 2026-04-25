@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="nl" data-density="comfortable">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DataPraat — Prototype</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css?v=22">
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<script src="data.js"></script>
+</head>
+<body>
+<div id="root"></div>
+
+<script type="text/babel" src="shared.jsx"></script>
+<script type="text/babel" src="charts.jsx"></script>
+<script type="text/babel" src="shell.jsx"></script>
+<script type="text/babel" src="overzicht-modes.jsx"></script>
+<script type="text/babel" src="pages.jsx"></script>
+<script type="text/babel" src="trust.jsx"></script>
+<script type="text/babel" src="klopt-dit.jsx"></script>
+<script type="text/babel" src="chat.jsx"></script>
+<script type="text/babel" src="scenario.jsx"></script>
+
+<script type="text/babel">
+const { useState, useEffect } = React;
+
+const TWEAKS_DEFAULTS = /*EDITMODE-BEGIN*/{
+  "density": "comfortable"
+}/*EDITMODE-END*/;
+
+const App = () => {
+  const [page, setPage] = useState(() => localStorage.getItem("dp_page") || "overzicht");
+  const [inspectMetric, setInspectMetric] = useState(null);
+  const [askTopic, setAskTopic] = useState(null);
+  const [chatContext, setChatContext] = useState(null);
+  const [tweaksOpen, setTweaksOpen] = useState(false);
+  const [tweaks, setTweaks] = useState(TWEAKS_DEFAULTS);
+
+  useEffect(() => { localStorage.setItem("dp_page", page); }, [page]);
+
+  // density tweak
+  useEffect(() => {
+    document.documentElement.setAttribute("data-density", tweaks.density || "comfortable");
+  }, [tweaks.density]);
+
+  // edit mode protocol
+  useEffect(() => {
+    const handler = (e) => {
+      if (e.data?.type === "__activate_edit_mode") setTweaksOpen(true);
+      if (e.data?.type === "__deactivate_edit_mode") setTweaksOpen(false);
+    };
+    window.addEventListener("message", handler);
+    window.parent.postMessage({ type: "__edit_mode_available" }, "*");
+    return () => window.removeEventListener("message", handler);
+  }, []);
+
+  const setTweak = (k, v) => {
+    const next = { ...tweaks, [k]: v };
+    setTweaks(next);
+    window.parent.postMessage({ type: "__edit_mode_set_keys", edits: { [k]: v } }, "*");
+  };
+
+  // keyboard: Cmd+K
+  useEffect(() => {
+    const h = (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === "k") {
+        e.preventDefault();
+        setChatContext(null);
+        setPage("chat");
+      }
+    };
+    window.addEventListener("keydown", h);
+    return () => window.removeEventListener("keydown", h);
+  }, []);
+
+  const openNewChat = () => { setChatContext(null); setPage("chat"); };
+  const openChatFromQuestion = (q, ctx) => {
+    setAskTopic(null);
+    setChatContext(ctx || null);
+    setPage("chat");
+    window.__dpPendingQ = q;
+  };
+
+  let Content;
+  if (page === "overzicht") Content = <window.OverzichtPage onInspect={setInspectMetric} onAskChart={setAskTopic}/>;
+  else if (page === "prognose") Content = <window.PrognosePage onInspect={setInspectMetric}/>;
+  else if (page === "scenario") Content = <window.ScenarioPage onAsk={(q) => openChatFromQuestion(q, null)}/>;
+  else if (page === "benchmark") Content = <window.BenchmarkPage/>;
+  else if (page === "verwijzers") Content = <window.VerwijzersPage onAskChart={setAskTopic}/>;
+  else if (page === "klopt-dit") Content = <window.KloptDitPage onAsk={(q, ctx) => openChatFromQuestion(q, ctx)}/>;
+  else if (page === "validatie") Content = <window.ValidatiePage/>;
+  else if (page === "lineage") Content = <window.LineagePage onBack={() => setPage("klopt-dit")}/>;
+  else if (page === "glossary") Content = <window.GlossaryPage/>;
+  else if (page === "regels") Content = <window.ValidatiePage/>;
+  else if (page === "chat") Content = <window.ChatView context={chatContext} onBack={() => setPage("overzicht")}/>;
+  // legacy redirect
+  else if (page === "klopt-dit-legacy") Content = <window.KloptDitPage onAsk={(q, ctx) => openChatFromQuestion(q, ctx)}/>;
+
+  const showLauncher = page !== "chat";
+
+  return (
+    <div className="app" data-screen-label={page}>
+      <window.Sidebar
+        currentPage={page}
+        onNav={(p) => { setPage(p); setChatContext(null); }}
+        onNewChat={openNewChat}
+        onOpenChat={(c) => { setChatContext(null); setPage("chat"); }}
+        chatBadge={3}
+      />
+      <main className="main">
+        {page !== "chat" && <window.MainHeader onQuickAsk={openNewChat} onToggleTweaks={() => setTweaksOpen(!tweaksOpen)}/>}
+        <div className="main-body" style={page === "chat" ? {padding: 0, maxWidth: "none"} : {}}>
+          {Content}
+        </div>
+      </main>
+
+      {showLauncher && <window.Launcher onClick={openNewChat}/>}
+      {inspectMetric && <window.TrustInspector metricId={inspectMetric} onClose={() => setInspectMetric(null)} onOpenLineage={() => { setInspectMetric(null); setPage("klopt-dit"); }}/>}
+      {askTopic && <window.AskDrawer topic={askTopic} onClose={() => setAskTopic(null)} onOpenFull={(q, ctx) => openChatFromQuestion(q, ctx)}/>}
+
+      {tweaksOpen && (
+        <div className="tweaks-panel">
+          <h4>Tweaks</h4>
+          <div className="tweak-row" style={{flexDirection: "column", alignItems: "flex-start", gap: 4}}>
+            <label>Palette</label>
+            <div style={{display: "flex", gap: 4, marginTop: 2}}>
+              <div style={{width: 20, height: 20, borderRadius: 4, background: "#4338CA"}} title="Primary indigo"/>
+              <div style={{width: 20, height: 20, borderRadius: 4, background: "#3b82f6"}} title="Chart blauw"/>
+              <div style={{width: 20, height: 20, borderRadius: 4, background: "#5E8A6D"}} title="Success"/>
+              <div style={{width: 20, height: 20, borderRadius: 4, background: "#A8702A"}} title="Warning"/>
+              <div style={{width: 20, height: 20, borderRadius: 4, background: "#A85050"}} title="Destructive"/>
+              <div style={{width: 20, height: 20, borderRadius: 4, background: "#FCFBF8", border: "1px solid var(--line)"}} title="Main bg"/>
+            </div>
+            <div style={{fontSize: 10.5, color: "var(--ink-mute)"}}>Brand guide v1.1 — vast.</div>
+          </div>
+          <div className="tweak-row">
+            <label>Density</label>
+            <select value={tweaks.density} onChange={e => setTweak("density", e.target.value)} style={{padding: "3px 6px", fontSize: 12, background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 4}}>
+              <option value="comfortable">Comfortable</option>
+              <option value="compact">Compact</option>
+            </select>
+          </div>
+          <div style={{marginTop: 12, fontSize: 11, color: "var(--ink-mute)", lineHeight: 1.5}}>
+            Tip: druk <b style={{color: "var(--ink)", fontFamily: "var(--f-mono)"}}>⌘K</b> om snel de chat te openen. Klik op een trust-badge voor de Inspector.
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
+</script>
+
+</body>
+</html>

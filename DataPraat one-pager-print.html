@@ -1,0 +1,508 @@
+<!DOCTYPE html><html lang="nl"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DataPraat — one-pager (print)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #FFFFFF;
+    --paper: #FFFFFF;
+    --ink: #2A2724;
+    --ink-soft: #5E5A53;
+    --ink-mute: #8F8A80;
+    --ink-faint: #B3ADA3;
+    --line: #E5E3DD;
+    --line-soft: #EEECE7;
+    --line-strong: #D4D1CB;
+    --primary: #4338CA;
+    --primary-soft: #6366F1;
+    --primary-tint: #EEF2FF;
+    --primary-ink: #3151B0;
+    --success: #5E8A6D;
+    --success-tint: #E5EDDF;
+    --success-strong: #3D5C4A;
+    --warning: #A8702A;
+    --warning-tint: #F4ECD4;
+    --warning-strong: #8A5A26;
+    --destructive: #A85050;
+    --destructive-tint: #F2DDDA;
+    --f-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+    --f-serif: "Fraunces", ui-serif, Georgia, serif;
+    --f-mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: var(--f-sans);
+    color: var(--ink);
+    background: var(--bg);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    font-feature-settings: "ss01", "cv11";
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .page {
+    width: 1120px;
+    margin: 24px auto;
+    background: var(--paper);
+    padding: 56px 64px 52px;
+    border: 1px solid var(--line);
+    box-shadow: 0 2px 24px rgba(26, 24, 20, 0.06), 0 1px 2px rgba(26, 24, 20, 0.04);
+    position: relative;
+  }
+  .page + .page { margin-top: 12px; }
+
+  .page::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0; height: 3px;
+    background: var(--primary);
+  }
+
+  .header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding-bottom: 28px;
+    border-bottom: 1px solid var(--line);
+    gap: 32px;
+  }
+  .brand { display: flex; align-items: center; gap: 14px; }
+  .brand-mark { width: 48px; height: 48px; display: grid; place-items: center; flex-shrink: 0; }
+  .brand-mark svg { display: block; }
+  .brand-name { font-size: 26px; font-weight: 600; letter-spacing: -0.02em; line-height: 1; margin: 0 0 4px; }
+  .brand-tag { font-family: var(--f-serif); font-weight: 400; font-style: italic; font-size: 15px; color: var(--ink-soft); letter-spacing: -0.005em; }
+  .meta { text-align: right; font-family: var(--f-body); font-size: 11.5px; color: var(--ink-mute); letter-spacing: 0; line-height: 1.6; text-transform: none; }
+  .meta b { color: var(--ink); font-weight: 500; }
+
+  .hero {
+    padding: 36px 0 28px;
+    display: grid;
+    grid-template-columns: 1.25fr 1fr;
+    gap: 56px;
+    border-bottom: 1px solid var(--line);
+  }
+  .hero-lead { font-family: var(--f-serif); font-weight: 400; font-size: 30px; line-height: 1.3; letter-spacing: -0.015em; color: var(--ink); text-wrap: pretty; margin: 0; }
+  .hero-lead em { font-style: italic; color: var(--primary); font-weight: 500; }
+  .hero-side { font-size: 13.5px; line-height: 1.7; color: var(--ink-soft); padding-top: 4px; }
+  .hero-side p { margin: 0 0 10px; }
+  .hero-side p:last-child { margin: 0; }
+  .hero-side b { color: var(--ink); font-weight: 600; }
+
+  .section { padding: 28px 0 0; }
+  .section + .section { padding-top: 32px; }
+  .sec-label { font-family: var(--f-mono); font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.14em; color: var(--ink-mute); font-weight: 500; margin-bottom: 10px; }
+  .sec-title { font-size: 19px; font-weight: 600; letter-spacing: -0.015em; margin: 0 0 18px; line-height: 1.2; }
+
+  .pillars { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+  .pillar { background: #FFFFFFCC; border: 1px solid var(--line); border-radius: 10px; padding: 18px 20px 20px; }
+  .pillar-k { font-family: var(--f-mono); font-size: 10.5px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--primary); font-weight: 500; margin-bottom: 10px; }
+  .pillar-h { font-size: 15px; font-weight: 600; letter-spacing: -0.01em; margin: 0 0 8px; line-height: 1.3; }
+  .pillar-p { font-size: 12.5px; line-height: 1.6; color: var(--ink-soft); margin: 0; }
+
+  .shots { display: grid; grid-template-columns: 1fr 1fr; gap: 24px 24px; }
+  .shot { background: #FFFFFF; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; display: flex; flex-direction: column; break-inside: avoid; }
+  .shot-img { display: block; width: 100%; aspect-ratio: 16 / 10; object-fit: cover; object-position: top left; border-bottom: 1px solid var(--line); background: #F3F2EE; }
+  .shot-body { padding: 14px 18px 16px; }
+  .shot-num { display: inline-flex; align-items: center; gap: 8px; font-family: var(--f-mono); font-size: 10.5px; color: var(--ink-mute); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 6px; }
+  .shot-num .n { display: inline-grid; place-items: center; width: 18px; height: 18px; background: var(--primary-tint); color: var(--primary-ink); border-radius: 4px; font-size: 10px; font-weight: 600; letter-spacing: 0; }
+  .shot-h { font-size: 15px; font-weight: 600; letter-spacing: -0.01em; margin: 0 0 6px; line-height: 1.3; }
+  .shot-p { font-size: 12.5px; line-height: 1.55; color: var(--ink-soft); margin: 0; }
+  .shot-p b { color: var(--ink); font-weight: 600; }
+
+  .why { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; padding: 24px 28px; background: #FFFFFFAA; border: 1px solid var(--line); border-radius: 10px; }
+  .why-h { font-size: 14px; font-weight: 600; letter-spacing: -0.005em; margin: 0 0 10px; display: flex; align-items: center; gap: 8px; }
+  .why-h .chip { display: inline-flex; align-items: center; padding: 2px 8px; border-radius: 999px; font-family: var(--f-mono); font-size: 9.5px; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 500; }
+  .why-h .chip.problem { background: var(--destructive-tint); color: var(--destructive); }
+  .why-h .chip.answer { background: var(--success-tint); color: var(--success-strong); }
+  .why-p { font-size: 13px; line-height: 1.65; color: var(--ink-soft); margin: 0 0 8px; }
+  .why-p:last-child { margin-bottom: 0; }
+  .why-p b { color: var(--ink); font-weight: 600; }
+
+  .quote { margin: 20px 0 0; padding: 18px 22px; background: var(--primary-tint); border-radius: 10px; display: grid; grid-template-columns: auto 1fr auto; gap: 18px; align-items: center; break-inside: avoid; }
+  .quote-mark { font-family: var(--f-serif); font-size: 44px; line-height: 0.8; color: var(--primary); font-weight: 400; font-style: italic; }
+  .quote-body { font-family: var(--f-serif); font-weight: 400; font-size: 15px; line-height: 1.45; letter-spacing: -0.005em; color: var(--ink); text-wrap: pretty; }
+  .quote-body em { color: var(--primary); font-style: italic; font-weight: 500; }
+  .quote-sig { font-family: var(--f-mono); font-size: 9.5px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--primary-ink); text-align: right; border-left: 1px solid #CFD4F0; padding-left: 14px; line-height: 1.5; }
+  .quote-sig b { color: var(--primary); font-weight: 600; display: block; font-size: 11px; letter-spacing: -0.005em; text-transform: none; }
+
+  .strip { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; margin-top: 18px; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); break-inside: avoid; }
+  .strip-cell { padding: 12px 16px; border-right: 1px solid var(--line); }
+  .strip-cell:last-child { border-right: none; }
+  .strip-k { font-family: var(--f-mono); font-size: 9.5px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-mute); font-weight: 500; margin-bottom: 4px; }
+  .strip-v { font-size: 18px; font-weight: 600; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; line-height: 1.1; margin-bottom: 2px; }
+  .strip-p { font-size: 10.5px; color: var(--ink-soft); line-height: 1.35; }
+
+  .status-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  .status-card { background: #FFFFFFCC; border: 1px solid var(--line); border-radius: 10px; padding: 18px 22px 20px; break-inside: avoid; }
+  .status-card.next { background: #FAFAF8; border-style: dashed; border-color: var(--line-strong); }
+  .status-card.trust { background: #F3F6F0; border-color: #CDDBC6; }
+  .status-k { display: inline-flex; align-items: center; gap: 6px; font-family: var(--f-mono); font-size: 10.5px; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 500; margin-bottom: 10px; }
+  .status-k.now { color: var(--success-strong); }
+  .status-k.next { color: var(--warning-strong); }
+  .status-k.trust { color: var(--success-strong); }
+  .status-k .dot { width: 7px; height: 7px; border-radius: 50%; }
+  .status-k.now .dot { background: var(--success); box-shadow: 0 0 0 3px var(--success-tint); }
+  .status-k.next .dot { background: var(--warning); box-shadow: 0 0 0 3px var(--warning-tint); }
+  .status-k.trust .dot { background: var(--success); box-shadow: 0 0 0 3px var(--success-tint); }
+  .status-h { font-size: 15px; font-weight: 600; letter-spacing: -0.01em; margin: 0 0 10px; }
+  .status-ul { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 8px; }
+  .status-ul li { font-size: 12.5px; line-height: 1.5; color: var(--ink-soft); padding-left: 16px; position: relative; }
+  .status-ul li::before { content: ""; position: absolute; left: 0; top: 8px; width: 6px; height: 6px; border-radius: 50%; background: var(--ink-faint); }
+  .status-card.now .status-ul li::before { background: var(--success); }
+  .status-card.next .status-ul li::before { background: var(--warning); }
+  .status-card.trust .status-ul li { padding-left: 26px; }
+  .status-card.trust .status-ul li::before {
+    content: "";
+    left: 0; top: 2px;
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    background: var(--success-tint);
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 18 18'><path d='M5 9.2 L7.7 12 L13 6.5' fill='none' stroke='%233D5C4A' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 18px 18px;
+  }
+  .status-ul li b { color: var(--ink); font-weight: 600; }
+
+  .footer { margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--line); display: flex; justify-content: space-between; align-items: center; font-family: var(--f-body, "Inter", sans-serif); font-size: 12px; letter-spacing: 0; text-transform: none; color: var(--ink-mute); }
+  .footer b { color: var(--ink); font-weight: 500; }
+  .footer .dot { width: 4px; height: 4px; border-radius: 50%; background: var(--ink-faint); display: inline-block; margin: 0 8px; vertical-align: middle; }
+
+  .nowrap { white-space: nowrap; }
+
+  /* ---- print ---- */
+  @page {
+    size: A4 portrait;
+    margin: 0;
+  }
+  @media print {
+    html, body { background: white !important; }
+    body { margin: 0; }
+    .page {
+      width: 210mm;
+      min-height: 297mm;
+      margin: 0;
+      padding: 12mm 12mm 10mm;
+      box-shadow: none;
+      border: none;
+      page-break-after: always;
+      break-after: page;
+      border-radius: 0;
+    }
+    .page:last-of-type {
+      page-break-after: auto;
+      break-after: auto;
+    }
+    .page::before { height: 3px; }
+    /* Tighter typography for A4 */
+    .header { padding-bottom: 16px; }
+    .brand-mark { width: 38px; height: 38px; }
+    .brand-mark svg { width: 38px; height: 38px; }
+    .brand-name { font-size: 21px; }
+    .meta { font-size: 10px; line-height: 1.5; }
+    .hero { padding: 16px 0 14px; gap: 24px; }
+    .hero-lead { font-size: 21px; line-height: 1.25; }
+    .hero-side { font-size: 11px; line-height: 1.55; padding-top: 2px; }
+    .hero-side p { margin: 0 0 6px; }
+    .section { padding-top: 14px; }
+    .section + .section { padding-top: 16px; }
+    .sec-label { font-size: 9.5px; margin-bottom: 6px; }
+    .sec-title { font-size: 15px; margin-bottom: 10px; }
+    .pillars { gap: 10px; }
+    .pillar { padding: 10px 12px 12px; border-radius: 8px; }
+    .pillar-k { font-size: 9px; margin-bottom: 6px; }
+    .pillar-h { font-size: 12.5px; margin-bottom: 5px; }
+    .pillar-p { font-size: 10.5px; line-height: 1.45; }
+    /* SCREENSHOTS: much tighter */
+    .shots { gap: 10px; }
+    .shot { border-radius: 8px; }
+    .shot-img { aspect-ratio: 16 / 7; }
+    .shot-body { padding: 8px 12px 10px; }
+    .shot-num { font-size: 9px; margin-bottom: 3px; gap: 6px; }
+    .shot-num .n { width: 15px; height: 15px; font-size: 8.5px; }
+    .shot-h { font-size: 12px; margin-bottom: 3px; line-height: 1.25; }
+    .shot-p { font-size: 10.5px; line-height: 1.45; }
+    .why { padding: 12px 14px; gap: 18px; border-radius: 8px; }
+    .why-h { font-size: 12px; margin-bottom: 6px; }
+    .why-h .chip { font-size: 8.5px; padding: 1px 6px; }
+    .why-p { font-size: 11px; line-height: 1.5; margin-bottom: 6px; }
+    .strip-cell { padding: 8px 12px; }
+    .strip-k { font-size: 8.5px; margin-bottom: 3px; }
+    .strip-v { font-size: 15px; }
+    .strip-p { font-size: 9.5px; line-height: 1.3; }
+    .quote { padding: 10px 14px; margin-top: 10px; gap: 12px; border-radius: 8px; }
+    .quote-body { font-size: 12px; line-height: 1.4; }
+    .quote-mark { font-size: 28px; }
+    .quote-sig { font-size: 8.5px; padding-left: 10px; line-height: 1.4; }
+    .quote-sig b { font-size: 10px; }
+    .status-card { padding: 10px 14px 12px; border-radius: 8px; }
+    .status-k { font-size: 9.5px; margin-bottom: 6px; }
+    .status-h { font-size: 12.5px; margin-bottom: 6px; }
+    .status-ul { gap: 5px; }
+    .status-ul li { font-size: 10.5px; line-height: 1.4; padding-left: 14px; }
+    .status-ul li::before { top: 6px; width: 5px; height: 5px; }
+    .status-card.trust .status-ul li { padding-left: 22px; }
+    .status-card.trust .status-ul li::before { width: 15px; height: 15px; background-size: 15px 15px; top: 1px; }
+    .footer { margin-top: 16px; padding-top: 10px; font-size: 10px; }
+    /* keep color fidelity */
+    * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <!-- ============ HEADER ============ -->
+  <header class="header">
+    <div class="brand">
+      <div class="brand-mark" aria-label="DataPraat">
+        <svg width="48" height="48" viewBox="0 0 64 64" role="img" aria-hidden="true">
+          <defs>
+            <radialGradient id="dp-orb" cx="30%" cy="28%">
+              <stop offset="0%" stop-color="#6366F1"></stop>
+              <stop offset="100%" stop-color="#4338CA"></stop>
+            </radialGradient>
+          </defs>
+          <circle cx="24" cy="32" r="20" fill="url(#dp-orb)"></circle>
+          <circle cx="52" cy="32" r="6" fill="#2A2724"></circle>
+        </svg>
+      </div>
+      <div>
+        <div class="brand-name" style="font-weight: 700;">DataPraat.ai</div>
+      </div>
+    </div>
+    <div class="meta">
+      One-pager<br>
+      <b>v1.1 · april 2026</b><br>
+      Doelgroep: gemeenten
+    </div>
+  </header>
+
+  <!-- ============ HERO ============ -->
+  <section class="hero">
+    <p class="hero-lead">
+      Eindelijk <em style="color: rgb(67, 56, 202); letter-spacing: -0.45px;">écht praten met je data</em>. Stel je vraag in gewone taal en krijg antwoord.</p>
+    <div class="hero-side">
+      <p><b>Voor wie?</b>&nbsp;Leidinggevenden, beleidsadviseurs, data-analisten en financials bij gemeenten werkzaam in het Sociaal Domein.</p>
+      <p><b>Wat is het?</b>&nbsp;Eén plek waar we brondata van aanbieders samenbrengen, controleren, en bevraagbaar maken in gewone taal — via dashboard én chat.</p>
+    </div>
+  </section>
+
+  <!-- ============ 3 PILLARS ============ -->
+  <section class="section">
+    <div class="sec-label">Kernfuncties</div>
+    <h2 class="sec-title">Wat DataPraat uniek maakt</h2>
+    <div class="pillars">
+      <div class="pillar">
+        <div class="pillar-k">01 · Betrouwbaar</div>
+        <h3 class="pillar-h">Brondata die klopt</h3>
+        <p class="pillar-p">DataPraat controleert elke declaratie via 80+ validatieregels — van verdwaalde komma's tot onmogelijke waarden. Wat blijft staan krijgt een betrouwbaarheidsscore, met uitleg.</p>
+      </div>
+      <div class="pillar">
+        <div class="pillar-k">02 · Traceerbaar</div>
+        <h3 class="pillar-h">Elke KPI terug naar de bron</h3>
+        <p class="pillar-p">Vraagt de accountant waar een cijfer vandaan komt? Klik erop en laat het hele pad zien — van aanbieder tot KPI.</p>
+      </div>
+      <div class="pillar">
+        <div class="pillar-k">03 · Bespreekbaar</div>
+        <h3 class="pillar-h">Cijfers die zichzelf uitleggen</h3>
+        <p class="pillar-p">Vraag wat je wilt — "waarom piekten de kosten in augustus?" — en krijg het antwoord in de vorm die past: grafiek, tabel of verhaal in gewone taal.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SCREENSHOTS ============ -->
+  <section class="section">
+    <div class="sec-label">In beeld</div>
+    <h2 class="sec-title">Hoe het eruit ziet</h2>
+    <div class="shots">
+      <div class="shot">
+        <img class="shot-img" src="screenshots/overzicht.png" alt="Overzicht-dashboard">
+        <div class="shot-body">
+          <div class="shot-num"><span class="n">01</span> Overzicht</div>
+          <h3 class="shot-h">Jeugdzorg in een oogopslag</h3>
+          <p class="shot-p">Vier KPI's, elk met een <b>trust-badge</b> die laat zien hoe zeker het cijfer is. Klik op "Vraag hierover" en je bent direct in gesprek met de data eronder.</p>
+        </div>
+      </div>
+      <div class="shot">
+        <img class="shot-img" src="screenshots/chat.png?v=2" alt="Chat">
+        <div class="shot-body">
+          <div class="shot-num"><span class="n">02</span> Chat</div>
+          <h3 class="shot-h">Praten in plaats van klikken</h3>
+          <p class="shot-p">Vragen-bibliotheek per thema — overzicht, trend, benchmark, prognose, verwijzers, anomalieën. Gemeente en periode zijn vastgepind als <b>context-chips</b>.</p>
+        </div>
+      </div>
+      <div class="shot">
+        <img class="shot-img" src="screenshots/validatie.png" alt="Validatie">
+        <div class="shot-body">
+          <div class="shot-num"><span class="n">03</span> Validatie</div>
+          <h3 class="shot-h">Datakwaliteit die zichzelf aanwijst</h3>
+          <p class="shot-p">142 automatische controles op 2.847 declaraties vinden <b>decimaal-fouten</b>, outliers en ontbrekende periodes — met aanbieder, impact en actieknoppen.</p>
+        </div>
+      </div>
+      <div class="shot">
+        <img class="shot-img" src="screenshots/lineage.png" alt="Lineage">
+        <div class="shot-body">
+          <div class="shot-num"><span class="n">04</span> Lineage</div>
+          <h3 class="shot-h">Het spoor van bron tot KPI</h3>
+          <p class="shot-p">Van ruwe iJW-levering naar gepubliceerd getal in vijf stappen. Elk knooppunt is aanklikbaar en <b>exporteerbaar als PDF</b> — voor accountant of intern auditteam.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<div class="page">
+
+  <!-- ============ PROBLEM / ANSWER ============ -->
+  <section class="section" style="padding-top: 0;">
+    <div class="sec-label">Waarom nu</div>
+    <h2 class="sec-title">Het probleem, en waar wij instappen</h2>
+    <div class="why">
+      <div>
+        <div class="why-h"><span class="chip problem">Het probleem</span></div>
+        <p class="why-p">
+          Gemeenten krijgen jeugdzorgdata aangeleverd door 17+ aanbieders, in evenveel varianten van iJW-bestanden. Die data belandt in rapportages en dashboards, maar als een wethouder vraagt <i>"klopt dit cijfer wel?"</i> — dan is het antwoord vaak een half uur spitten in Excel.
+        </p>
+        <p class="why-p">
+          Ondertussen willen MT-leden en beleidsmakers <b>geen tabellen</b>. Ze willen een antwoord. En het liefst een antwoord dat je desnoods op de achterkant van een bierviltje kunt uitleggen aan de raad.
+        </p>
+      </div>
+      <div>
+        <div class="why-h"><span class="chip answer">DataPraat</span></div>
+        <p class="why-p">
+          Wij vangen de rommelige brondata op, valideren het, en geven aan elk cijfer een <b>traceerbare trust-score</b>. Dat cijfer leeft vervolgens in twee oppervlakken: een rustig dashboard voor dagelijks gebruik, en een chat voor de "waarom"-vragen.
+        </p>
+        <p class="why-p">
+          Nieuw in v1.1: een <b>woorden-modus</b>. Zelfde data, zelfde validatie — maar gepresenteerd als verhaal, verkeerslicht of vergelijkende zinnen voor wie liever in taal denkt dan in percentages.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ METRICS STRIP ============ -->
+  <section class="section">
+    <div class="sec-label">Onder de motorkap · pilot Riemsterdal · Q3 2024</div>
+    <h2 class="sec-title">Wat er nu al draait</h2>
+    <div class="strip">
+      <div class="strip-cell">
+        <div class="strip-k">Declaraties</div>
+        <div class="strip-v">2.847</div>
+        <div class="strip-p">ingelezen, gevalideerd en bevraagbaar</div>
+      </div>
+      <div class="strip-cell">
+        <div class="strip-k">Aanbieders</div>
+        <div class="strip-v">17</div>
+        <div class="strip-p">waaronder Lentis, Pluryn, Pactum</div>
+      </div>
+      <div class="strip-cell">
+        <div class="strip-k">Controles</div>
+        <div class="strip-v">142</div>
+        <div class="strip-p">automatisch — iJW-schema, outliers, duplicaten</div>
+      </div>
+      <div class="strip-cell">
+        <div class="strip-k">Gem. trust-score</div>
+        <div class="strip-v">94%</div>
+        <div class="strip-p">over alle KPI's op de Overzicht-pagina</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ QUOTE ============ -->
+  <section class="section" style="padding-top: 10px;">
+    <div class="quote">
+      <div class="quote-mark">"</div>
+      <div class="quote-body">
+        Wij hoeven niet meer uit te leggen dát het cijfer klopt. We <em>laten zien</em> waar het vandaan komt — en dan zegt de wethouder uit zichzelf: oké, volgende vraag.
+      </div>
+      <div class="quote-sig">
+        <b>M. Kroes</b>
+        Beleidsadviseur<br>
+        gem. Riemsterdal<br>
+        pilot-deelnemer
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ STATUS / NEXT ============ -->
+  <section class="section">
+    <div class="sec-label">platform</div>
+    <h2 class="sec-title">Wat erin zit, en waar het op staat</h2>
+    <div class="status-grid">
+      <div class="status-card">
+        <div class="status-k now"><span class="dot"></span> functies</div>
+        <h3 class="status-h">Meer dan het dashboard</h3>
+        <ul class="status-ul">
+          <li><b>Brondata inlezen</b> — sleep een CSV, XML of Excel van een aanbieder erin en DataPraat leest 'm automatisch uit.</li>
+          <li><b>Automatisch controleren</b> — fouten zoals verkeerde bedragen, dubbele regels en missende maanden komen vanzelf bovendrijven.</li>
+          <li><b>Eén dashboard, vijf invalshoeken</b> — uitgaven, prognose, datakwaliteit, vergelijking met buurgemeenten, en verwijzers.</li>
+          <li><b>Klik-door tot de bron</b> — bij elk cijfer zie je waar het vandaan komt, en kun je het als PDF exporteren voor accountant of audit.</li>
+          <li><b>Vragen stellen in gewone taal</b> — typ "waarom piekte augustus?" en krijg een uitleg met bronverwijzing.</li>
+        </ul>
+      </div>
+      <div class="status-card trust">
+        <div class="status-k trust"><span class="dot"></span> Veilig &amp; vertrouwd</div>
+        <h3 class="status-h">Jouw data blijft van jou</h3>
+        <ul class="status-ul">
+          <li><b>Data blijft op jullie Azure-tenant</b> — geen declaratieregel verlaat de eigen omgeving. Niets gaat naar OpenAI, Google of andere cloud-LLM's.</li>
+          <li><b>Europese AI-technologie</b> — standaard Mistral, gehost binnen de EU. Andere EU-modellen zijn configureerbaar op verzoek van de gemeente.</li>
+          <li><b>ISO 27001-gecertificeerd</b> — informatiebeveiliging is extern geaudit en gedocumenteerd, niet alleen een belofte.</li>
+          <li><b>AVG- en EU AI-Act-proof</b> — we volgen de Europese wetgeving rond dataopslag, verwerking en AI actief; updates in de wet worden periodiek meegenomen.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FOOTER ============ -->
+  <footer class="footer">
+    <div>
+      <span class="footer-logo" aria-label="DataPraat">
+        <svg width="18" height="18" viewBox="0 0 64 64" role="img" aria-hidden="true" style="vertical-align: -4px; margin-right: 6px;">
+          <defs>
+            <radialGradient id="dp-orb-f" cx="30%" cy="28%">
+              <stop offset="0%" stop-color="#6366F1"></stop>
+              <stop offset="100%" stop-color="#4338CA"></stop>
+            </radialGradient>
+          </defs>
+          <circle cx="24" cy="32" r="20" fill="url(#dp-orb-f)"></circle>
+          <circle cx="52" cy="32" r="6" fill="#2A2724"></circle>
+        </svg>
+        <b style="text-transform: none; letter-spacing: -0.01em; font-size: 12px; font-weight: 700;">DataPraat.ai</b>
+      </span>
+      <span class="dot"></span>
+      info@datapraat.ai&nbsp;<span class="dot"></span>
+      Keizersgracht 127, 1015CJ, Amsterdam</div>
+    <div>
+      one-pager · v1.1 · april 2026
+    </div>
+  </footer>
+
+</div>
+
+<script>
+  // Wait for fonts + images, then trigger print
+  (async () => {
+    try {
+      if (document.fonts && document.fonts.ready) await document.fonts.ready;
+      const imgs = Array.from(document.images);
+      await Promise.all(imgs.map(img => img.complete ? null : new Promise(res => {
+        img.addEventListener('load', res, { once: true });
+        img.addEventListener('error', res, { once: true });
+      })));
+      await new Promise(r => setTimeout(r, 500));
+      window.print();
+    } catch (e) {
+      setTimeout(() => window.print(), 800);
+    }
+  })();
+</script>
+
+</body></html>
