@@ -18,6 +18,7 @@ This repository has **zero automated tests** and **no testing infrastructure** o
 ### Implications
 
 There is **no way today to**:
+
 - Run a test suite (no `npm test`, no runner present).
 - Verify a refactor preserves behaviour.
 - Catch regressions in the React components, the chart math (`charts.jsx`), the `localStorage` persistence (`shell.jsx:6-9`, `pages.jsx:7`), the chat seed flow (`chat.jsx:5-12`), or the parent-frame edit-mode protocol (`DataPraat.html:54-62`).
@@ -44,11 +45,13 @@ Add a `.gitignore` entry for `node_modules/` (currently `.gitignore` only contai
 The codebase uses Babel-Standalone in the browser and `window.*` globals as the module system. There are two viable strategies:
 
 **Option A — Vitest + jsdom + happy-dom (recommended for new code):**
+
 - Add `vitest`, `@vitest/ui`, `jsdom` (or `happy-dom`), `@testing-library/react`, `@testing-library/jest-dom`.
 - Convert files-under-test to plain ES modules (or use a Vite alias to load them as scripts and pull globals off `window`).
 - Useful for: new pure functions (`fmtEUR`, `fmtNum`, `fmtCompact` in `shared.jsx:62-68`), chart math helpers (`xOf`, `yOf`, arc generators in `charts.jsx:42-49`, `charts.jsx:71-89`), date / number formatting, `localStorage` persistence helpers.
 
 **Option B — Playwright against the static HTML (recommended for protecting existing prototypes):**
+
 - Add `@playwright/test`.
 - Serve the repo with any static server (`npx serve .`) and drive `DataPraat.html` directly.
 - Useful for: routing, drawer open/close, mode-switcher persistence (`pages.jsx:7-8`), Cmd+K shortcut (`DataPraat.html:71-81`), localStorage rehydration, chat input.
@@ -68,7 +71,7 @@ Once a runner is chosen, lock in the conventions before writing tests:
 
 ### 4. Pre-test lint / format pass
 
-Before any large refactor, also add Prettier + ESLint (see CONVENTIONS.md → *Linting / Formatting*) so the test-driven changes do not produce mixed-purpose diffs.
+Before any large refactor, also add Prettier + ESLint (see CONVENTIONS.md → _Linting / Formatting_) so the test-driven changes do not produce mixed-purpose diffs.
 
 ## What to Test First (priority order)
 

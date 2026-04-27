@@ -38,15 +38,15 @@ Plan: 2 of 5
 Progress: [██░░░░░░░░░░░░░░░░░░] 20% (1/5 plans in phase 01 · 0/7 phases overall)
 ```
 
-| Phase | Status |
-|-------|--------|
-| 1. Foundation | In progress (1/5 plans complete — Wave 0 GREEN) |
-| 2. Design System | Not started |
-| 3. Marketing Landing | Not started |
-| 4. Chat Backbone | Not started |
-| 5. Generative Charts & Trust | Not started |
-| 6. Overzicht (Live VVD) | Not started |
-| 7. Stubs & Operability Polish | Not started |
+| Phase                         | Status                                          |
+| ----------------------------- | ----------------------------------------------- |
+| 1. Foundation                 | In progress (1/5 plans complete — Wave 0 GREEN) |
+| 2. Design System              | Not started                                     |
+| 3. Marketing Landing          | Not started                                     |
+| 4. Chat Backbone              | Not started                                     |
+| 5. Generative Charts & Trust  | Not started                                     |
+| 6. Overzicht (Live VVD)       | Not started                                     |
+| 7. Stubs & Operability Polish | Not started                                     |
 
 ## Performance Metrics
 
@@ -55,9 +55,9 @@ Progress: [██░░░░░░░░░░░░░░░░░░] 20% (1/
 - Requirements covered: 29/29 (mapped, 0/29 implemented — Wave 0 ships RED tests for FOUND-01/04/05/06/07 + OPS-01)
 - Time-in-phase: 5m 21s (Plan 01 only)
 
-| Phase | Plan | Duration | Tasks | Files | Date |
-|-------|------|----------|-------|-------|------|
-| 01-foundation | 01 | 5m 21s | 3 | 12 new + 1 modified (.gitignore) | 2026-04-27 |
+| Phase         | Plan | Duration | Tasks | Files                            | Date       |
+| ------------- | ---- | -------- | ----- | -------------------------------- | ---------- |
+| 01-foundation | 01   | 5m 21s   | 3     | 12 new + 1 modified (.gitignore) | 2026-04-27 |
 
 ## Accumulated Context
 
@@ -108,4 +108,5 @@ None.
 **Last session:** 2026-04-27T18:02:28Z · Stopped at: Completed 01-01-PLAN.md
 
 ---
-*State initialized: 2026-04-26 · Updated 2026-04-27 after 01-01-PLAN.md*
+
+_State initialized: 2026-04-26 · Updated 2026-04-27 after 01-01-PLAN.md_

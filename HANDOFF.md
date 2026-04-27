@@ -10,20 +10,20 @@
 
 ## 1. Stack
 
-| Laag | Keuze | Waarom |
-|---|---|---|
-| Framework | Next.js 15 (App Router) + TypeScript | SSR, RSC, route groups |
-| Styling | Tailwind CSS 3.4 | shadcn-standaard |
-| Components | shadcn/ui | Je bezit de code, geen vendor-lock |
-| Charts | Recharts + shadcn `<ChartContainer>` | Tokens-aware, React-native |
-| State | Zustand (UI) + TanStack Query (server state) | Minimaal, geen Redux-overhead |
-| Validatie | Zod | Type-safe forms + API responses |
-| Icons | `lucide-react` | shadcn-standaard |
-| Variants | `class-variance-authority` (CVA) | shadcn-standaard |
-| Table | TanStack Table | Voor validatie-issues + benchmark-rijen |
-| Animatie | `framer-motion` | Trust-drawer + chart-transitions |
-| Tests | Playwright (e2e) + Vitest (unit) | — |
-| Storybook | `storybook@latest` | Visueel contract voor components |
+| Laag       | Keuze                                        | Waarom                                  |
+| ---------- | -------------------------------------------- | --------------------------------------- |
+| Framework  | Next.js 15 (App Router) + TypeScript         | SSR, RSC, route groups                  |
+| Styling    | Tailwind CSS 3.4                             | shadcn-standaard                        |
+| Components | shadcn/ui                                    | Je bezit de code, geen vendor-lock      |
+| Charts     | Recharts + shadcn `<ChartContainer>`         | Tokens-aware, React-native              |
+| State      | Zustand (UI) + TanStack Query (server state) | Minimaal, geen Redux-overhead           |
+| Validatie  | Zod                                          | Type-safe forms + API responses         |
+| Icons      | `lucide-react`                               | shadcn-standaard                        |
+| Variants   | `class-variance-authority` (CVA)             | shadcn-standaard                        |
+| Table      | TanStack Table                               | Voor validatie-issues + benchmark-rijen |
+| Animatie   | `framer-motion`                              | Trust-drawer + chart-transitions        |
+| Tests      | Playwright (e2e) + Vitest (unit)             | —                                       |
+| Storybook  | `storybook@latest`                           | Visueel contract voor components        |
 
 ## 2. Init-stappen (doe deze in volgorde)
 
@@ -59,50 +59,50 @@ npx storybook@latest init
 @layer base {
   :root {
     /* neutrals — lichter, koeler */
-    --background: 48 30% 98%;        /* #FCFBF8 — main area, bijna wit */
-    --foreground: 30 7% 15%;          /* #2A2724 — warm donker */
-    --card: 0 0% 100%;                /* #FFFFFF */
+    --background: 48 30% 98%; /* #FCFBF8 — main area, bijna wit */
+    --foreground: 30 7% 15%; /* #2A2724 — warm donker */
+    --card: 0 0% 100%; /* #FFFFFF */
     --card-foreground: 30 7% 15%;
     --popover: 0 0% 100%;
     --popover-foreground: 30 7% 15%;
 
     /* sidebar/muted surface */
-    --muted: 45 9% 94%;               /* #F3F2EE — warm grijs sidebar */
-    --muted-foreground: 30 4% 38%;    /* #5E5A53 */
+    --muted: 45 9% 94%; /* #F3F2EE — warm grijs sidebar */
+    --muted-foreground: 30 4% 38%; /* #5E5A53 */
 
     /* primary — indigo (brand DNA) */
-    --primary: 244 58% 51%;           /* #4338CA */
+    --primary: 244 58% 51%; /* #4338CA */
     --primary-foreground: 48 30% 98%;
-    --primary-soft: 239 84% 67%;      /* #6366F1 */
-    --primary-tint: 238 100% 97%;     /* #EEF2FF */
+    --primary-soft: 239 84% 67%; /* #6366F1 */
+    --primary-tint: 238 100% 97%; /* #EEF2FF */
 
     /* accent — wordt gebruikt voor secondary */
     --accent: 238 100% 97%;
     --accent-foreground: 244 58% 51%;
 
     /* destructive — gedempt terra */
-    --destructive: 0 36% 48%;         /* #A85050 */
+    --destructive: 0 36% 48%; /* #A85050 */
     --destructive-foreground: 48 30% 98%;
 
     /* borders + input */
-    --border: 40 15% 88%;             /* #E5E3DD */
+    --border: 40 15% 88%; /* #E5E3DD */
     --input: 40 15% 88%;
-    --ring: 244 58% 51%;              /* focus = primary */
+    --ring: 244 58% 51%; /* focus = primary */
 
     /* chart tokens (PxQ semantiek uit brand guide) */
-    --chart-1: 217 91% 60%;           /* #3b82f6 — cost/dominant blauw */
-    --chart-2: 146 18% 46%;           /* #5E8A6D — volume/gedempt groen */
-    --chart-3: 24 92% 48%;            /* #ea580c — price */
-    --chart-4: 217 60% 44%;           /* #3151B0 — donkerblauw */
-    --chart-5: 213 93% 83%;           /* #93c5fd — lichtblauw */
+    --chart-1: 217 91% 60%; /* #3b82f6 — cost/dominant blauw */
+    --chart-2: 146 18% 46%; /* #5E8A6D — volume/gedempt groen */
+    --chart-3: 24 92% 48%; /* #ea580c — price */
+    --chart-4: 217 60% 44%; /* #3151B0 — donkerblauw */
+    --chart-5: 213 93% 83%; /* #93c5fd — lichtblauw */
 
     /* status */
-    --success: 146 18% 46%;           /* #5E8A6D */
+    --success: 146 18% 46%; /* #5E8A6D */
     --success-foreground: 48 30% 98%;
-    --warning: 30 61% 41%;            /* #A8702A — warm amber */
+    --warning: 30 61% 41%; /* #A8702A — warm amber */
     --warning-foreground: 48 30% 98%;
 
-    --radius: 0.5rem;                 /* 8px */
+    --radius: 0.5rem; /* 8px */
   }
 
   .dark {
@@ -111,8 +111,12 @@ npx storybook@latest init
 }
 
 @layer base {
-  * { @apply border-border; }
-  body { @apply bg-background text-foreground font-sans antialiased; }
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+  }
 }
 ```
 
@@ -140,7 +144,10 @@ const config: Config = {
         },
         muted: { DEFAULT: "hsl(var(--muted))", foreground: "hsl(var(--muted-foreground))" },
         accent: { DEFAULT: "hsl(var(--accent))", foreground: "hsl(var(--accent-foreground))" },
-        destructive: { DEFAULT: "hsl(var(--destructive))", foreground: "hsl(var(--destructive-foreground))" },
+        destructive: {
+          DEFAULT: "hsl(var(--destructive))",
+          foreground: "hsl(var(--destructive-foreground))",
+        },
         success: { DEFAULT: "hsl(var(--success))", foreground: "hsl(var(--success-foreground))" },
         warning: { DEFAULT: "hsl(var(--warning))", foreground: "hsl(var(--warning-foreground))" },
         border: "hsl(var(--border))",
@@ -154,7 +161,11 @@ const config: Config = {
           "5": "hsl(var(--chart-5))",
         },
       },
-      borderRadius: { lg: "var(--radius)", md: "calc(var(--radius) - 2px)", sm: "calc(var(--radius) - 4px)" },
+      borderRadius: {
+        lg: "var(--radius)",
+        md: "calc(var(--radius) - 2px)",
+        sm: "calc(var(--radius) - 4px)",
+      },
       fontFamily: { sans: ["var(--font-inter)", "ui-sans-serif", "system-ui"] },
     },
   },
@@ -164,6 +175,7 @@ export default config;
 ```
 
 **Font setup** — `src/app/layout.tsx`:
+
 ```tsx
 import { Inter } from "next/font/google";
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
@@ -234,24 +246,33 @@ src/
 ## 5. Anti-drift regels (critical)
 
 **`.eslintrc.json` additions:**
+
 ```json
 {
   "rules": {
-    "no-restricted-imports": ["error", {
-      "patterns": [{
-        "group": ["@/components/ui/*"],
-        "message": "Features en pages mogen niet direct shadcn primitives importeren. Maak een component in components/domain/ aan en import die."
-      }]
-    }]
+    "no-restricted-imports": [
+      "error",
+      {
+        "patterns": [
+          {
+            "group": ["@/components/ui/*"],
+            "message": "Features en pages mogen niet direct shadcn primitives importeren. Maak een component in components/domain/ aan en import die."
+          }
+        ]
+      }
+    ]
   },
-  "overrides": [{
-    "files": ["src/components/domain/**"],
-    "rules": { "no-restricted-imports": "off" }
-  }]
+  "overrides": [
+    {
+      "files": ["src/components/domain/**"],
+      "rules": { "no-restricted-imports": "off" }
+    }
+  ]
 }
 ```
 
 **Commit hook** (`.husky/pre-commit`):
+
 ```bash
 npx lint-staged
 # en: check dat elke component in components/domain/ een .stories.tsx naast zich heeft
@@ -259,6 +280,7 @@ node scripts/check-stories.mjs
 ```
 
 **CI (GitHub Actions)**:
+
 - ESLint
 - `tsc --noEmit`
 - Playwright smoke tests
@@ -270,11 +292,16 @@ node scripts/check-stories.mjs
 // components/domain/charts/bar-chart.tsx
 "use client";
 import { Bar, BarChart as RBarChart, CartesianGrid, XAxis } from "recharts";
-import { ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig } from "@/components/ui/chart";
+import {
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+  type ChartConfig,
+} from "@/components/ui/chart";
 
 const config = {
   uitgaven: { label: "Gerealiseerd", color: "hsl(var(--chart-1))" },
-  begroot:  { label: "Begroot",      color: "hsl(var(--chart-5))" },
+  begroot: { label: "Begroot", color: "hsl(var(--chart-5))" },
 } satisfies ChartConfig;
 
 export function BarChart({ data }: { data: MaandUitgave[] }) {

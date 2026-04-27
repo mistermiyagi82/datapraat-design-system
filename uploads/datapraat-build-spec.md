@@ -2,9 +2,10 @@
 
 > **Instructie voor de AI die deze applicatie bouwt**
 >
-> Dit document is de functionele specificatie voor DataPraat. Lees het volledig voordat je begint te coderen. Gebruik de meegeleverde design-files als visuele bron-van-waarheid — deze specificatie legt de *gedragslogica* en *business rules* vast waar de designs niet expliciet in zijn.
+> Dit document is de functionele specificatie voor DataPraat. Lees het volledig voordat je begint te coderen. Gebruik de meegeleverde design-files als visuele bron-van-waarheid — deze specificatie legt de _gedragslogica_ en _business rules_ vast waar de designs niet expliciet in zijn.
 >
 > **Meegeleverde companion-files:**
+>
 > - `datapraat-brand-guide-v1.1.md` — alle design tokens (kleuren, fonts, spacing, componenten)
 > - `datapraat-menu-screens.html` — 5 hoofdpagina's (overzicht, prognose, validatie, benchmark, verwijzers)
 > - `datapraat-trust-mockups.html` — trust layer (badges, inspector drawer, lineage graph, glossary)
@@ -24,13 +25,15 @@
 
 **Missie:** Brondata van Nederlandse gemeenten — in het bijzonder jeugdzorg-declaraties — betrouwbaar, traceerbaar en auditeerbaar maken, zodat dashboards en AI-antwoorden ergens op staan.
 
-**Positionering:** DataPraat is geen generieke BI-tool. Het is een *domein-specifieke trust layer* voor jeugdzorg-data met een chat-interface erbovenop. De echte IP zit in de combinatie van:
+**Positionering:** DataPraat is geen generieke BI-tool. Het is een _domein-specifieke trust layer_ voor jeugdzorg-data met een chat-interface erbovenop. De echte IP zit in de combinatie van:
+
 1. Domeinkennis (iJW-productcategorieën, verwijzers, normen)
 2. Validatie-regels die jeugdzorg-patronen kennen
 3. Data-lineage met audit-spoor
 4. Conversational interface die deze context benut
 
 **Niet-doelen:**
+
 - Geen vervanger voor PowerBI of Tableau voor generiek gebruik
 - Geen landelijke aggregatie-tool (elke deployment is één gemeente)
 - Geen case-management systeem voor individuele cliënten
@@ -41,12 +44,12 @@
 
 **Primaire users binnen een gemeente:**
 
-| Rol | Job-to-be-done | Pagina's die ze gebruiken |
-|-----|----------------|--------------------------|
-| **Wethouder / raadslid** | "Waar staan we, klopt het verhaal" | Overzicht, Chat |
-| **Beleidsadviseur sociaal domein** | "Wat drijft kosten, hoe vergelijken we ons" | Alle + Chat, Benchmark |
-| **Financieel controller** | "Forecast, audit-spoor, afwijkingen" | Prognose, Validatie, Lineage |
-| **Data-analist / -consultant** | "Diepe analyse, data-kwaliteit, definities" | Alles + Trust layer intensief |
+| Rol                                | Job-to-be-done                              | Pagina's die ze gebruiken     |
+| ---------------------------------- | ------------------------------------------- | ----------------------------- |
+| **Wethouder / raadslid**           | "Waar staan we, klopt het verhaal"          | Overzicht, Chat               |
+| **Beleidsadviseur sociaal domein** | "Wat drijft kosten, hoe vergelijken we ons" | Alle + Chat, Benchmark        |
+| **Financieel controller**          | "Forecast, audit-spoor, afwijkingen"        | Prognose, Validatie, Lineage  |
+| **Data-analist / -consultant**     | "Diepe analyse, data-kwaliteit, definities" | Alles + Trust layer intensief |
 
 **Secundaire users:** accountant / toezichthouder (alleen-lezen, audit-context).
 
@@ -67,6 +70,7 @@
 - **State:** React Server Components waar mogelijk, Client Components alleen voor interactiviteit
 
 **Bestaande codebase-referenties** (uit brand guide):
+
 - `src/app/globals.css` — design tokens
 - `src/app/layout.tsx` — root layout, font setup
 - `src/components/chat/ChatView.tsx`, `MessageBubble.tsx` — chat foundation
@@ -81,12 +85,14 @@ Nieuwe features bouwen bovenop deze structuur. Niet herstructureren tenzij expli
 DataPraat is **deployed-not-SaaS**. Elke instantie draait in de Azure-tenant van één gemeente.
 
 **Consequenties:**
+
 - Data verlaat de gemeente-omgeving nooit (behalve expliciet aangewezen externe calls zoals CBS)
 - Geen multi-tenant concerns
 - Compliance-oppervlak is klein (data blijft binnen AVG-/BIO-verantwoordelijkheid van de gemeente)
 - Updates worden via VDD's deployment-pipeline per gemeente uitgerold
 
 **Netwerk:**
+
 - **Outbound toegestaan:** CBS OData API (`opendata.cbs.nl`), Anthropic API (voor chat LLM), eventuele NPM/CDN bij build-tijd
 - **Geen outbound naar:** externe analytics, telemetry, third-party tracking
 
@@ -97,6 +103,7 @@ Het core schema komt uit VDD's Azure SQL datamodel (VVD = "Voorziening Verantwoo
 ### 5.1 Fact tables
 
 **`FactWerkelijk`** — gerealiseerde declaraties
+
 - `DeclaratieId` (PK)
 - `GemeenteCode`, `PeriodeJaar`, `PeriodeMaand`
 - `ProductCategorieCode` (iJW-code, bv `45A12`)
@@ -105,6 +112,7 @@ Het core schema komt uit VDD's Azure SQL datamodel (VVD = "Voorziening Verantwoo
 - `ClientId` (pseudoniem)
 
 **`FactVoorspelling`** — forecast-records
+
 - Zelfde structuur als `FactWerkelijk` plus:
 - `Prognoselabel` (bv `"Prognose per 202311 – 202412"` — let op **en-dash**, niet hyphen)
 - `CI_onder`, `CI_boven` (95% betrouwbaarheidsinterval)
@@ -132,15 +140,15 @@ Het core schema komt uit VDD's Azure SQL datamodel (VVD = "Voorziening Verantwoo
 
 ### 5.5 MCP integraties (beschikbaar)
 
-| MCP server | Functie (voorkeur) | Gebruik |
-|------------|--------------------|---------|
-| VVD-Viewer Daan | `vvd_actuals_summary` | Aggregated actuals per dimensie |
-| VVD-Viewer Daan | `vvd_forecast_summary` | Aggregated forecasts |
-| VVD-Viewer Daan | `vvd_compare_forecast_actuals` | Prognose vs realisatie diff |
-| VVD-Viewer Daan | `vvd_list_dimensions` | Filterwaardes (gemeenten, categorieën, periodes) |
-| DataPraat Part 1 Nate | validation & metadata | Validatie-engine, column annotations |
-| DataPraat FF | Fireflies meeting integration | (out of scope voor MVP) |
-| CBS via REST | OData endpoints | Benchmark-data |
+| MCP server            | Functie (voorkeur)             | Gebruik                                          |
+| --------------------- | ------------------------------ | ------------------------------------------------ |
+| VVD-Viewer Daan       | `vvd_actuals_summary`          | Aggregated actuals per dimensie                  |
+| VVD-Viewer Daan       | `vvd_forecast_summary`         | Aggregated forecasts                             |
+| VVD-Viewer Daan       | `vvd_compare_forecast_actuals` | Prognose vs realisatie diff                      |
+| VVD-Viewer Daan       | `vvd_list_dimensions`          | Filterwaardes (gemeenten, categorieën, periodes) |
+| DataPraat Part 1 Nate | validation & metadata          | Validatie-engine, column annotations             |
+| DataPraat FF          | Fireflies meeting integration  | (out of scope voor MVP)                          |
+| CBS via REST          | OData endpoints                | Benchmark-data                                   |
 
 ---
 
@@ -148,14 +156,14 @@ Het core schema komt uit VDD's Azure SQL datamodel (VVD = "Voorziening Verantwoo
 
 ## 6. Wat is de trust layer
 
-De trust layer is alles wat *bovenop* de ruwe data leeft om elke waarde te kunnen vertrouwen, begrijpen en herleiden. Vier lagen:
+De trust layer is alles wat _bovenop_ de ruwe data leeft om elke waarde te kunnen vertrouwen, begrijpen en herleiden. Vier lagen:
 
 1. **Definities** — wat is "totaal uitgaven"? Wat is productcat 45A12?
 2. **Validatie** — welke regels zijn toegepast? Welke records uitgesloten?
 3. **Lineage** — welke ruwe declaraties leidden tot deze waarde?
 4. **Domeinkennis** — wat betekent dit in jeugdzorg-context, wat is de norm?
 
-Deze lagen zijn *cross-cutting*: ze raken elk pagina. Op elke KPI en chart wordt trust-info getoond. Klikken op een waarde opent een Trust Inspector drawer (zie §7.3).
+Deze lagen zijn _cross-cutting_: ze raken elk pagina. Op elke KPI en chart wordt trust-info getoond. Klikken op een waarde opent een Trust Inspector drawer (zie §7.3).
 
 ## 7. Trust score & Inspector drawer
 
@@ -164,12 +172,14 @@ Deze lagen zijn *cross-cutting*: ze raken elk pagina. Op elke KPI en chart wordt
 ### 7.1 Trust score per metric
 
 Een score (0-100%) per KPI, gebaseerd op:
+
 - **Compleetheid** — % records niet uitgesloten door validatie
 - **Versheid** — boost als data recent ververst is, penalty bij >7 dagen oud
 - **Validatie-status** — penalty per open kritiek issue op onderliggende records
 - **Bron-dekking** — % verwachte aanbieders dat heeft geleverd
 
 Per tier een kleur (warm palette):
+
 - **90-100%** — `success-tint` bg, `success-strong` tekst (groen, gedempt)
 - **70-89%** — `warning-tint` bg, `warning-strong` tekst (amber)
 - **< 70%** — `destructive-tint` bg, `destructive` tekst (terra)
@@ -185,6 +195,7 @@ Aggregaat van alle metric-scores, zichtbaar in de pagina-header. Werkt als "data
 Klik op een KPI of chart → rechter drawer (480-520px) opent, hoofd-UI blijft zichtbaar (gedimd is een UI-keuze voor pitches, in het echte product blijft hoofd-UI volledig zichtbaar).
 
 **Drawer-secties:**
+
 1. **Header:** label, metric-naam, waarde, trust-score (grote cirkel met kleur)
 2. **Definitie:** menselijke tekst + SQL-formule in monospace
 3. **Bron:** tabel-naam, totaal records, opgenomen, uitgesloten (klikbaar), periode, aanbieders-count
@@ -209,17 +220,18 @@ Klik op een KPI of chart → rechter drawer (480-520px) opent, hoofd-UI blijft z
 
 Visuele graph van links naar rechts, 5 kolommen:
 
-| Kolom | Inhoud |
-|-------|--------|
-| Bronnen | Per-aanbieder record-counts + status ("Actueel", "Incompleet") |
-| Ingestie | Staging-table met totaal records + laad-timestamp |
-| Validatie | Regels-count, pass-rate, open issues |
-| Transformatie | SQL-aggregatie, versie, groupBy/filter details |
-| Output | De KPI zelf met waarde + trust score |
+| Kolom         | Inhoud                                                         |
+| ------------- | -------------------------------------------------------------- |
+| Bronnen       | Per-aanbieder record-counts + status ("Actueel", "Incompleet") |
+| Ingestie      | Staging-table met totaal records + laad-timestamp              |
+| Validatie     | Regels-count, pass-rate, open issues                           |
+| Transformatie | SQL-aggregatie, versie, groupBy/filter details                 |
+| Output        | De KPI zelf met waarde + trust score                           |
 
 **Connections:** SVG paths met arrow markers, subtly geanimeerd bij hover (pulse op node → arrow naar next).
 
 **Interacties:**
+
 - Klik op node → detail-panel rechts (uitgesloten records, transformatie-code, wijzigingshistorie)
 - Export PDF knop in toolbar — rendert hele lineage + metadata voor accountant/auditor
 - URL-linkable: link naar specifieke metric opent direct de juiste lineage
@@ -235,12 +247,14 @@ Visuele graph van links naar rechts, 5 kolommen:
 Wiki-achtige kennisbank voor jeugdzorg-termen, gekoppeld aan de gemeente-data.
 
 **Entry-types:**
+
 - Productcategorieën (iJW-codes, primaire focus)
 - Verwijzers
 - KPI-definities
 - Validatie-regels
 
 **Per entry (voorbeeld: productcategorie):**
+
 - Naam + code
 - Officiële omschrijving (bron: iJW 3.0 of VWS)
 - Beschrijving in gewone taal
@@ -262,19 +276,20 @@ Validatie-regels zijn jeugdzorg-specifiek. Geen generieke "outlier detection" �
 
 ### 10.1 Regel-types (MVP)
 
-| Regel | Detectie | Voorbeeld |
-|-------|----------|-----------|
-| **Decimaal-scheider** | Waarde is 100× of 1000× afwijkend van categorie-mediaan, consistent met punt/komma-verwisseling | `€2.450,00` vs context-mediaan `€24,50` → suggereert factor 100 fout |
-| **Outlier (domain-aware)** | Z-score > 3 t.o.v. productcategorie-mediaan van diezelfde aanbieder | Pluryn-declaratie €48.200 voor 45A12 waar mediaan €15.080 is |
-| **Ontbrekende periode** | Aanbieder heeft normaal ≥N records/maand voor cat X; deze maand < N/3 | Pactum heeft normaal 12-18 pleegzorg declaraties/mnd; juli = 0 |
-| **Dubbele declaratie** | Zelfde cliëntId, zelfde week, zelfde productcat, verschillende aanbieders | Cliënt #C-4412 → Lentis én Trajectum zelfde week |
-| **Prijs-spreiding** | Declaratie > 1 standaard deviatie van aanbieder-mediaan voor deze cat | — |
-| **Looptijd-controle** | Traject > 18 maanden zonder herindicatie | — |
-| **Codering-mismatch** | Declaratie-code bestaat niet in iJW 3.0 codelijst | — |
+| Regel                      | Detectie                                                                                        | Voorbeeld                                                            |
+| -------------------------- | ----------------------------------------------------------------------------------------------- | -------------------------------------------------------------------- |
+| **Decimaal-scheider**      | Waarde is 100× of 1000× afwijkend van categorie-mediaan, consistent met punt/komma-verwisseling | `€2.450,00` vs context-mediaan `€24,50` → suggereert factor 100 fout |
+| **Outlier (domain-aware)** | Z-score > 3 t.o.v. productcategorie-mediaan van diezelfde aanbieder                             | Pluryn-declaratie €48.200 voor 45A12 waar mediaan €15.080 is         |
+| **Ontbrekende periode**    | Aanbieder heeft normaal ≥N records/maand voor cat X; deze maand < N/3                           | Pactum heeft normaal 12-18 pleegzorg declaraties/mnd; juli = 0       |
+| **Dubbele declaratie**     | Zelfde cliëntId, zelfde week, zelfde productcat, verschillende aanbieders                       | Cliënt #C-4412 → Lentis én Trajectum zelfde week                     |
+| **Prijs-spreiding**        | Declaratie > 1 standaard deviatie van aanbieder-mediaan voor deze cat                           | —                                                                    |
+| **Looptijd-controle**      | Traject > 18 maanden zonder herindicatie                                                        | —                                                                    |
+| **Codering-mismatch**      | Declaratie-code bestaat niet in iJW 3.0 codelijst                                               | —                                                                    |
 
 ### 10.2 Issue-object
 
 Elke gedetecteerde afwijking wordt een issue met:
+
 - `severity`: `critical` / `warning` / `info`
 - `confidence`: 0-100% (hoe zeker is DataPraat dat dit écht een probleem is)
 - `impact`: geschat effect in € of record-count
@@ -299,11 +314,12 @@ Elke gedetecteerde afwijking wordt een issue met:
 **Design:** sidebar patroon uit `datapraat-menu-screens.html` (identiek op alle hoofd-pagina's).
 
 **Route-structuur:**
+
 ```
 /[gemeente]/overzicht          → Overzicht dashboard
 /[gemeente]/prognose           → Prognose
 /[gemeente]/validatie          → Validatie
-/[gemeente]/benchmark          → Benchmark  
+/[gemeente]/benchmark          → Benchmark
 /[gemeente]/verwijzers         → Verwijzers
 /[gemeente]/lineage/[metric]   → Lineage voor specifieke metric
 /[gemeente]/glossary           → Glossary landing
@@ -315,16 +331,19 @@ Elke gedetecteerde afwijking wordt een issue met:
 **Sidebar (260px breed):**
 
 Vaste sectie (top):
+
 - Logo
 - Gemeente-selector (dropdown)
 - "Nieuwe chat" knop (primary)
 
 Scroll-sectie:
+
 - **Inzicht** (5 items): Overzicht, Prognose, Validatie [badge], Benchmark, Verwijzers
 - **Trust** (3 items): Lineage, Glossary, Validatie regels
 - **Chats** (variabele lijst): recent + "Toon meer →"
 
 **Iconen per menu-item** (inline SVG, 16×16, stroke 1.5, `currentColor`):
+
 - Overzicht: dashboard-grid (4 tegels)
 - Prognose: trending-up lijn
 - Validatie: shield-check
@@ -334,7 +353,7 @@ Scroll-sectie:
 - Glossary: open boek
 - Validatie regels: clipboard-check
 
-**Responsive:** op < 1024px breedte wordt sidebar een popover-menu (linksboven togglebaar). Desktop-first; mobile is MVP-scope *niet*.
+**Responsive:** op < 1024px breedte wordt sidebar een popover-menu (linksboven togglebaar). Desktop-first; mobile is MVP-scope _niet_.
 
 ## 12. Overzicht dashboard
 
@@ -345,6 +364,7 @@ Scroll-sectie:
 ### 12.1 UI-structuur
 
 **Header:**
+
 - Titel: "Jeugdzorg in een oogopslag"
 - Subtitle: "Stand per [laatste_peildatum] · laatste update [relatieve tijd]"
 - Filter-pills rechts: jaar-selector, YTD/Q1-4/maand
@@ -360,6 +380,7 @@ Scroll-sectie:
 Elke KPI heeft trust-badge (zie §7).
 
 **Charts (2-koloms, 2/3 + 1/3):**
+
 - Links: "Maandelijkse uitgaven 2024" — stacked bar (begroot semi-transparent, gerealiseerd solid)
 - Rechts: "Top productcategorieën" — doughnut chart met legend
 
@@ -381,11 +402,12 @@ Elke KPI heeft trust-badge (zie §7).
 
 **Route:** `/[gemeente]/prognose`  
 **Design:** `datapraat-menu-screens.html` — screen 02  
-**Purpose:** Toekomstvoorspelling met expliciete onzekerheid. Kritiek: *geen puntvoorspelling zonder bandbreedte*.
+**Purpose:** Toekomstvoorspelling met expliciete onzekerheid. Kritiek: _geen puntvoorspelling zonder bandbreedte_.
 
 ### 13.1 UI-structuur
 
 **Header:**
+
 - Titel: "Prognose vs Realisatie"
 - Subtitle: "Prognoselabel: [active_prognoselabel] · 95% betrouwbaarheidsinterval"
 - Filter: "Alle categorieën" / "Per zorgvorm" (dropdown)
@@ -393,6 +415,7 @@ Elke KPI heeft trust-badge (zie §7).
 **Main-layout (2/3 + 1/3):**
 
 **Links (grote chart):** "Totale uitgaven · [start] – [eind]"
+
 - Line chart met 4 series:
   - Gerealiseerd (solid, ink kleur)
   - Prognose (dashed, primary kleur)
@@ -400,6 +423,7 @@ Elke KPI heeft trust-badge (zie §7).
   - CI onder (transparent fill, fills naar CI boven)
 
 **Rechts (3 side-metrics verticaal):**
+
 - YTD Burn — percentage jaarbudget verbruikt, met progress bar
 - Forecast Accuracy — MAPE over laatste 12 maanden
 - CI Coverage — % maanden waarin werkelijkheid binnen 95% CI viel
@@ -435,6 +459,7 @@ Lijst van maanden waar werkelijkheid buiten CI viel. Kolommen: periode, productc
 ### 14.1 UI-structuur
 
 **Header:**
+
 - Titel: "Datavalidatie"
 - Subtitle met live count: "3 kritieke afwijkingen · 7 waarschuwingen · 142 controles uitgevoerd op 2.847 declaraties"
 
@@ -459,11 +484,13 @@ Elk item: severity-icon, title, detail, meta (aanbieder, confidence, impact), 2 
 ### 15.1 UI-structuur
 
 **Header:**
+
 - Titel: "Vergelijking met peer-gemeenten"
 - Subtitle: "Gebaseerd op CBS Jeugdzorg open data ([tabel]) · [N] vergelijkbare gemeenten"
 - Filter: regio / per-inwonertal
 
 **Hero-block:** prominent stat met percentiel-positie
+
 - Links: context-zin ("Riemsterdal zit op €X per cliënt — boven peer-gem. €Y, binnen spreiding")
 - Rechts: groot percentiel-getal ("73e percentiel · 12 peers")
 
@@ -491,6 +518,7 @@ Elk item: severity-icon, title, detail, meta (aanbieder, confidence, impact), 2 
 ### 16.1 UI-structuur
 
 **Header:**
+
 - Titel: "Verwijzer-analyse"
 - Subtitle: "Geschatte kosten per verwijzingspad · CBS-trajecten × VVD-prijs · YTD [jaar]"
 - Filter: Kosten / Volume / Looptijd
@@ -499,11 +527,12 @@ Elk item: severity-icon, title, detail, meta (aanbieder, confidence, impact), 2 
 
 **Pathway-chart (custom bar visualisatie):**
 Per rij:
+
 - Verwijzer-naam (links)
 - Gradient-bar met gem. kosten getoond (breedte = relatief tot duurste)
 - Stats rechts (total €, count)
 
-**Insight-callout (onderin):** automatisch gegenereerde observatie, bv *"Trajecten via medisch specialist zijn 2,8× duurder dan via wijkteam — primair door langere gemiddelde looptijd (8,2 vs 5,4 maanden), niet door hogere uurprijs."*
+**Insight-callout (onderin):** automatisch gegenereerde observatie, bv _"Trajecten via medisch specialist zijn 2,8× duurder dan via wijkteam — primair door langere gemiddelde looptijd (8,2 vs 5,4 maanden), niet door hogere uurprijs."_
 
 ### 16.2 Data-calls
 
@@ -524,12 +553,14 @@ Per rij:
 ### 17.1 Layout
 
 **Welkomstscherm** (geen chat id):
+
 - Grote begroeting ("Hallo [naam], waar wil je over praten?")
 - Context-strip onder begroeting: gemeente, periode, aantal declaraties beschikbaar
 - Grid van 6 voorgestelde vragen, gegroepeerd (Overzicht, Trend, Benchmark, Prognose, Verwijzers, Anomalieën)
 - Input onderaan met filter-chips
 
 **Actieve chat:**
+
 - Header: chat-titel, subtitle met chat-meta, actie-knoppen (Deel, Voeg toe aan rapport)
 - Chat-stream (flexbox column, scrollable)
 - Input-wrap onderaan (sticky)
@@ -537,22 +568,26 @@ Per rij:
 ### 17.2 Message-types
 
 **User message:**
+
 - Right-aligned, `bg-card` met `ring-1 ring-border`, radius 16px (rounded-2xl)
 - Max-width 70-85%
 
 **Assistant message:**
+
 - Left-aligned, **geen bubble** — tekst direct op achtergrond (per brand guide)
 - `text-sm leading-7 font-light` (font-weight 300, line-height 1.75)
 - Header met AI-tag: `● DataPraat · 1,4s · 2.847 declaraties`
 - Rich content ondersteund: **bold**, tabellen, embedded charts, citations, confidence-blokken
 
 **Rich content in assistant-message:**
+
 - **Embedded chart:** in `.embed` box met titel, chart (Recharts), source-metadata
 - **Embedded table:** full table met monospace cellen
 - **Citations-chip-row** onderaan bepaalde antwoorden: chip per source (tabel, periode, validatie-status, methode)
 - **Confidence-blok:** bij onzekere antwoorden — primary-tint border, "Betrouwbaarheid · X%" label + uitleg
 
 **Actions onderaan assistant-message** (rij van action-chips):
+
 - Algemeen: 👍👎
 - Chart-specifiek: "Pas grafiektype aan", "Wijzig periode", "Export PNG"
 - Data-specifiek: "Kopieer tabel", "Export naar Excel", "+ Voeg toe aan dashboard"
@@ -561,6 +596,7 @@ Per rij:
 ### 17.3 Context behoud
 
 Elke chat heeft een `context` object:
+
 ```typescript
 {
   gemeente: string;
@@ -604,6 +640,7 @@ De bridge tussen overzicht-pagina's en chat. Drie patronen:
 ### 18.1 Chat-launcher (persistent)
 
 Floating button rechtsonder, altijd zichtbaar op alle pagina's:
+
 - Ronde pill met DataPraat-orb
 - Tekst: "Praat met je data"
 - Subtitle: "[N] recente chats"
@@ -614,6 +651,7 @@ Floating button rechtsonder, altijd zichtbaar op alle pagina's:
 Op elke chart-card: kleine ask-button in header (gold-tint-achtergrond, primary-tekst): "💬 Vraag hierover" of "Vraag"
 
 Klik → drawer opent rechts (met animatie), bevat:
+
 - Chart als thumbnail-context-card
 - 5 suggested questions specifiek voor die data
 - Input onder met auto-loaded context-chips
@@ -649,6 +687,7 @@ Route: `/[gemeente]/overzicht?focus=[chart-id]&chat=open`
 Alle UI-tekst, getallen, datums in het Nederlands.
 
 **Getalformat** (via `toLocaleString("nl-NL")`):
+
 - Decimaal: komma → `€13,5 mln`
 - Duizendtallen: punt → `€13.500` / `2.500 cliënten`
 - Valuta: `€` direct voor bedrag, geen spatie
@@ -657,6 +696,7 @@ Alle UI-tekst, getallen, datums in het Nederlands.
 - Factoren: `2,8×` (niet `2.8x`)
 
 **Datum:**
+
 - Volledig: `30 september 2024`
 - In charts: `jan '23`, `dec '24`
 - Relatief: `2 uur geleden`, `gisteren`, `2 dagen geleden`
@@ -702,15 +742,15 @@ Alle UI-tekst, getallen, datums in het Nederlands.
 
 ## 24. Out of scope voor MVP (roadmap)
 
-| Feature | Wanneer | Waarom niet MVP |
-|---------|---------|-----------------|
-| Scenario builder ("wat-als") | Q2 2026 | Extra complexity, niet core-need voor eerste users |
-| Real-time streaming data | Q2 2026 | Vereist andere data-architectuur |
-| Externe-data hub (DUO, UWV, NJi, IGJ) | Q3 2026 | Elke bron is apart integratie-project |
-| Pin naar overzicht / split-view (§18.5-§18.6) | Post-MVP | User-research eerst |
-| Mobile / responsive | Post-MVP | Primaire users werken desktop |
-| Role-based access | Post-MVP | Alle gemeente-users hebben zelfde rechten initial |
-| Multi-gemeente overzicht | Geen | Bewust: DataPraat is per-gemeente |
+| Feature                                       | Wanneer  | Waarom niet MVP                                    |
+| --------------------------------------------- | -------- | -------------------------------------------------- |
+| Scenario builder ("wat-als")                  | Q2 2026  | Extra complexity, niet core-need voor eerste users |
+| Real-time streaming data                      | Q2 2026  | Vereist andere data-architectuur                   |
+| Externe-data hub (DUO, UWV, NJi, IGJ)         | Q3 2026  | Elke bron is apart integratie-project              |
+| Pin naar overzicht / split-view (§18.5-§18.6) | Post-MVP | User-research eerst                                |
+| Mobile / responsive                           | Post-MVP | Primaire users werken desktop                      |
+| Role-based access                             | Post-MVP | Alle gemeente-users hebben zelfde rechten initial  |
+| Multi-gemeente overzicht                      | Geen     | Bewust: DataPraat is per-gemeente                  |
 
 ---
 
@@ -721,6 +761,7 @@ Als de ontwikkelaar geen jeugdzorg-context heeft, hier de minimum kennis:
 **Wat is jeugdzorg?** Sinds 2015 (Jeugdwet) verantwoordelijkheid van gemeenten. Omvat alle zorg en ondersteuning voor kinderen/jongeren ≤ 18 jaar met psychische, sociale of ontwikkelingsproblemen.
 
 **Hoofdcategorieën (iJW 3.0):**
+
 - **Ambulant basis (41A11):** lichte GGZ, op locatie
 - **Ambulant specialistisch (45A12):** zware GGZ zonder verblijf
 - **Verblijf (43A22):** jeugdige woont bij zorgaanbieder
@@ -728,6 +769,7 @@ Als de ontwikkelaar geen jeugdzorg-context heeft, hier de minimum kennis:
 - **Jeugdbescherming (51A01):** gedwongen kader (voogd, OTS)
 
 **Verwijzers (wie verwijst naar jeugdzorg):**
+
 - **Wijkteam:** sociaal-wijkteam van gemeente (goedkoopst pad)
 - **Huisarts:** kan direct verwijzen
 - **Medisch specialist:** jeugdpsychiater/kinderarts (duurst pad, langste looptijd)
@@ -738,12 +780,14 @@ Als de ontwikkelaar geen jeugdzorg-context heeft, hier de minimum kennis:
 Aanbieder levert zorg → declaratie via iJW-bericht naar gemeente → gemeente betaalt → declaratie komt in FactWerkelijk-tabel bij DataPraat.
 
 **Kostenbepalers:**
+
 - Volume (hoeveel cliënten/trajecten)
 - Prijs per traject (contract-afspraken met aanbieder)
 - Looptijd (hoe lang een cliënt in zorg blijft)
 - Intensiteit (hoe vaak per week)
 
 **Typische pijnpunten:**
+
 - Data komt laat binnen (2-3 maanden vertraging)
 - Verschillende aanbieders leveren in verschillende kwaliteit
 - Een cliënt kan bij meerdere aanbieders tegelijk zijn
@@ -752,14 +796,14 @@ Aanbieder levert zorg → declaratie via iJW-bericht naar gemeente → gemeente 
 
 ## Appendix B: Design file mapping
 
-| Design file | Bevat | Primair voor sectie |
-|-------------|-------|---------------------|
-| `datapraat-menu-screens.html` | 5 hoofdpagina's (overzicht, prognose, validatie, benchmark, verwijzers) met gedeelde sidebar | §11, §12-§16 |
-| `datapraat-trust-mockups.html` | Trust badges, Inspector drawer, Lineage graph, Glossary | §7-§9 |
-| `datapraat-chat-mockups.html` | Chat interface: welkom, tabel-antwoord, chart-antwoord, drilldown, forecast | §17 |
-| `datapraat-flow-mockups.html` | Bridge-patronen tussen dashboard en chat | §18 |
-| `datapraat-pitch-deck-v2.html` | Productpositionering + verhaal (niet implementatie) | §1-§2 context |
-| `datapraat-brand-guide-v1.1.md` | Alle visuele tokens, component-patterns, voice & tone | overal |
+| Design file                     | Bevat                                                                                        | Primair voor sectie |
+| ------------------------------- | -------------------------------------------------------------------------------------------- | ------------------- |
+| `datapraat-menu-screens.html`   | 5 hoofdpagina's (overzicht, prognose, validatie, benchmark, verwijzers) met gedeelde sidebar | §11, §12-§16        |
+| `datapraat-trust-mockups.html`  | Trust badges, Inspector drawer, Lineage graph, Glossary                                      | §7-§9               |
+| `datapraat-chat-mockups.html`   | Chat interface: welkom, tabel-antwoord, chart-antwoord, drilldown, forecast                  | §17                 |
+| `datapraat-flow-mockups.html`   | Bridge-patronen tussen dashboard en chat                                                     | §18                 |
+| `datapraat-pitch-deck-v2.html`  | Productpositionering + verhaal (niet implementatie)                                          | §1-§2 context       |
+| `datapraat-brand-guide-v1.1.md` | Alle visuele tokens, component-patterns, voice & tone                                        | overal              |
 
 ## Appendix C: Glossary ontwikkelaars-termen
 

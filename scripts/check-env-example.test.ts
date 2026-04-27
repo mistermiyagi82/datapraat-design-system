@@ -1,6 +1,6 @@
-import { describe, it, expect } from "vitest";
 import fs from "node:fs";
 import path from "node:path";
+import { describe, expect, it } from "vitest";
 
 describe(".env.example coverage", () => {
   it("lists every key used by the Zod env schema (or documents it as build-time-only)", async () => {

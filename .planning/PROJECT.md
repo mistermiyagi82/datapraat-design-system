@@ -19,6 +19,7 @@ This repo is the **fresh DataPraat product app**: a single Next.js 15 applicatio
 ### Active
 
 #### Foundation
+
 - [ ] **FOUND-01**: Next.js 15 + React 19 + TypeScript 5 app boots in dev and production builds
 - [ ] **FOUND-02**: Tailwind 4 configured with DataPraat design tokens ported from `styles.css` (`:root` variables: ink levels, brand indigo, chart PxQ semantics, status triads, spacing, radii, fonts)
 - [ ] **FOUND-03**: shadcn 4 (`base-vega` style) + Base UI + Tabler Icons wired and installable via the shadcn CLI
@@ -28,17 +29,20 @@ This repo is the **fresh DataPraat product app**: a single Next.js 15 applicatio
 - [ ] **FOUND-07**: Env-driven config (no hardcoded secrets, no Vercel-only APIs); `.env.example` documents required vars
 
 #### Design system
+
 - [ ] **DS-01**: Design tokens from current `styles.css` ported into Tailwind 4 `@theme` directives
 - [ ] **DS-02**: Core shadcn primitives installed: button, card, input, dialog, dropdown-menu, tabs, tooltip, toast, separator
 - [ ] **DS-03**: DataPraat-specific primitives ported: `Icon`, `TrustBadge`, `AskButton`, NL-format helpers (currency, number, percent — Dutch locale)
 - [ ] **DS-04**: Typography + color usage documented inline (component stories or a `/internal/design` route)
 
 #### Marketing
+
 - [ ] **MKT-01**: `/` (landing) route ports `website v2.html` content into Next.js components, using the design system
 - [ ] **MKT-02**: Landing is responsive, accessible, and SSR-rendered (good Lighthouse + SEO baseline)
 - [ ] **MKT-03**: Clear CTA from landing into `/app` (or wherever the application enters)
 
 #### Chat (the spine)
+
 - [ ] **CHAT-01**: AI SDK 5 chat route wired to Anthropic + OpenAI providers (model selectable via env)
 - [ ] **CHAT-02**: MCP client (`@modelcontextprotocol/sdk`) connects to the configured MCP server (default: VVD MCP) and exposes its tools to the model
 - [ ] **CHAT-03**: Streaming chat UI (Cmd+K launcher + full-screen mode) renders text, react-markdown + remark-gfm, and tool-call results
@@ -47,15 +51,18 @@ This repo is the **fresh DataPraat product app**: a single Next.js 15 applicatio
 - [ ] **CHAT-06**: Trust marks on chart output (provenance: which MCP tool, which dataset, which time range)
 
 #### Overzicht (required v1)
+
 - [ ] **OVZ-01**: `/app/overzicht` route renders the default `cijfers` mode using real VVD data via MCP (no mock data)
 - [ ] **OVZ-02**: KPI tile pattern (PxQ-aware coloring, delta semantics) ported from prototype
 - [ ] **OVZ-03**: At least one chart pulls live from VVD MCP and renders correctly
 
 #### KloptDit + Scenario (visual stubs)
+
 - [ ] **STUB-01**: `/app/klopt-dit` ships as a styled placeholder using the design system, copy from prototype, no real data wiring
 - [ ] **STUB-02**: `/app/scenario` ships as a styled placeholder, knobs visible but non-functional, copy from prototype
 
 #### Operability
+
 - [ ] **OPS-01**: Health check endpoint at `/api/health` (used by Railway healthcheckPath)
 - [ ] **OPS-02**: Structured logging (request id, route, latency) in API routes
 - [ ] **OPS-03**: README documents local dev, env setup, deploy to Railway, and the path to Azure
@@ -77,15 +84,18 @@ This repo is the **fresh DataPraat product app**: a single Next.js 15 applicatio
 ## Context
 
 **Where this comes from**
+
 - The current repo holds a no-build browser-rendered React prototype (CDN React 18 + Babel-Standalone, JSX files glued via `window.*` globals) plus brand assets and screenshots. See `.planning/codebase/` for the full map. The prototype is **reference material only** — the new app is a clean rebuild.
 - The sibling repo `vibathon-knowledgegraph` (at `/Users/daan/VS Studio/vibathon-knowledgegraph`) is a working Next.js 14 chat-with-data app that already proves the architectural pattern: AI SDK + MCP + Recharts + sqlite-on-volume + Railway deploy. We mirror its `src/` layout (`app/{api,chat,landing}`, `components/{charts,chat,landing,ui}`, `lib/{memory,storage,...}`) but on current versions and stripped to DataPraat's product scope.
 - Design intent and component vocabulary are documented in `HANDOFF.md` and `COMPONENTS.md` at the repo root. Treat them as the design contract; deviate where current best practices say to.
 
 **Domain**
+
 - Dutch municipalities (gemeenten) want to query and trust their own data. Every customer brings their own datasets exposed via an MCP server. VVD MCP (Zeeuwse Jeugdzorg forecasting + CBS data) is the first such server and the demo backbone.
 - Dutch is the default UI language. Domain vocabulary like `gemeente`, `trajecten`, `verwijzers`, `klopt-dit`, `prognose`, `realisatie` is canonical and must not be Anglicized.
 
 **Audience for v1**
+
 - Demo audience first (DataPraat team, prospects, customer pilots). Real per-tenant municipal users come after the demo path is solid. Architect for that future without paying its complexity now.
 
 ## Constraints
@@ -101,23 +111,24 @@ This repo is the **fresh DataPraat product app**: a single Next.js 15 applicatio
 
 ## Key Decisions
 
-| Decision | Rationale | Outcome |
-|----------|-----------|---------|
-| Single Next.js app for marketing + product | Shared design system, one deploy, simpler ops | — Pending |
-| Frontend-only repo; backend stays separate | User framed this repo as the FE; data flows through MCP for analytical queries and (future) backend REST for app state | — Pending |
-| Vibathon as architectural blueprint, not a fork | Keeps DataPraat clean and on current versions; avoids inheriting Attio/graphiti/Neo4j scope | — Pending |
-| Update React/Next/Tailwind/AI SDK to current stable | User explicitly asked to refresh; vibathon's pins (Next 14, Tailwind 3, AI SDK 4) are already a release behind | — Pending |
-| Railway with `/data` volume now, Azure later | Mirrors proven vibathon deploy; sqlite-on-volume is portable to Azure Files; avoids Vercel rework | — Pending |
-| sqlite via storage abstraction | Simplest persistence that fits both targets; abstracted so Postgres swap is mechanical | — Pending |
-| Chat is the v1 spine; KloptDit + Scenario are stubs | User declared chat must work end-to-end; other surfaces support but don't gate v1 | — Pending |
-| Dataset-agnostic, MCP-configurable per customer | DataPraat is sold to consultancies for many municipal clients; VVD is one of many MCP backends | — Pending |
-| Drop vibathon modules (Neo4j, Attio, googleapis, pdf-parse, LangChain) | Out of DataPraat product scope; AI SDK + MCP cover the data path | — Pending |
+| Decision                                                               | Rationale                                                                                                              | Outcome   |
+| ---------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- | --------- |
+| Single Next.js app for marketing + product                             | Shared design system, one deploy, simpler ops                                                                          | — Pending |
+| Frontend-only repo; backend stays separate                             | User framed this repo as the FE; data flows through MCP for analytical queries and (future) backend REST for app state | — Pending |
+| Vibathon as architectural blueprint, not a fork                        | Keeps DataPraat clean and on current versions; avoids inheriting Attio/graphiti/Neo4j scope                            | — Pending |
+| Update React/Next/Tailwind/AI SDK to current stable                    | User explicitly asked to refresh; vibathon's pins (Next 14, Tailwind 3, AI SDK 4) are already a release behind         | — Pending |
+| Railway with `/data` volume now, Azure later                           | Mirrors proven vibathon deploy; sqlite-on-volume is portable to Azure Files; avoids Vercel rework                      | — Pending |
+| sqlite via storage abstraction                                         | Simplest persistence that fits both targets; abstracted so Postgres swap is mechanical                                 | — Pending |
+| Chat is the v1 spine; KloptDit + Scenario are stubs                    | User declared chat must work end-to-end; other surfaces support but don't gate v1                                      | — Pending |
+| Dataset-agnostic, MCP-configurable per customer                        | DataPraat is sold to consultancies for many municipal clients; VVD is one of many MCP backends                         | — Pending |
+| Drop vibathon modules (Neo4j, Attio, googleapis, pdf-parse, LangChain) | Out of DataPraat product scope; AI SDK + MCP cover the data path                                                       | — Pending |
 
 ## Evolution
 
 This document evolves at phase transitions and milestone boundaries.
 
 **After each phase transition** (via `/gsd-transition`):
+
 1. Requirements invalidated? → Move to Out of Scope with reason
 2. Requirements validated? → Move to Validated with phase reference
 3. New requirements emerged? → Add to Active
@@ -125,10 +136,12 @@ This document evolves at phase transitions and milestone boundaries.
 5. "What This Is" still accurate? → Update if drifted
 
 **After each milestone** (via `/gsd-complete-milestone`):
+
 1. Full review of all sections
 2. Core Value check — still the right priority?
 3. Audit Out of Scope — reasons still valid?
 4. Update Context with current state
 
 ---
-*Last updated: 2026-04-26 after initialization*
+
+_Last updated: 2026-04-26 after initialization_

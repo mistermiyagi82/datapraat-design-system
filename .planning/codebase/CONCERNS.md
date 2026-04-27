@@ -273,4 +273,4 @@ Note: The absence of TODO comments is not evidence of cleanliness — most of th
 
 ---
 
-*Concerns audit: 2026-04-25*
+_Concerns audit: 2026-04-25_

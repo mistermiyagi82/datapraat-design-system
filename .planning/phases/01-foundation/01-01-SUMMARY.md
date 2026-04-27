@@ -13,7 +13,8 @@ provides:
   - Extended .gitignore covering .next, node_modules, .env*, .data/, coverage, editor dirs
   - Six RED test scaffolds covering FOUND-06, FOUND-07, OPS-01
   - Four executable verification shell scripts covering FOUND-01, FOUND-05, FOUND-07, OPS-01
-affects: [01-02-foundation-strict-config, 01-03-storage-env, 01-04-health-route, 01-05-deploy-artifact]
+affects:
+  [01-02-foundation-strict-config, 01-03-storage-env, 01-04-health-route, 01-05-deploy-artifact]
 
 # Tech tracking
 tech-stack:
@@ -117,6 +118,7 @@ Each task was committed atomically:
 ## Files Created/Modified
 
 ### Created — config & tooling
+
 - `vitest.config.ts` — Vitest 3 config (node env, src + scripts globs, `@` → `./src` alias)
 - `.nvmrc` — pins Node 22 (no `v` prefix, no trailing newline)
 - `package.json` — scaffold-generated, name set to `datapraat`, with `test` and `test:ci` scripts added
@@ -127,6 +129,7 @@ Each task was committed atomically:
 - `public/{file,globe,next,vercel,window}.svg` — default scaffold static assets
 
 ### Created — Wave 0 tests
+
 - `src/lib/env.test.ts` — 6 cases covering FOUND-07 Zod env schema (accept/reject + defaults for `NODE_ENV` / `LOG_LEVEL` / `DB_PATH`)
 - `src/lib/storage/sqlite/client.test.ts` — 3 cases: lazy + memoized `getDb()`, migrations run on first call, `health_probe` table created (FOUND-06)
 - `src/lib/storage/sqlite/migrate.test.ts` — 3 cases: fresh-DB schema, idempotency on second run, `0001_init.sql` recorded (FOUND-06)
@@ -135,12 +138,14 @@ Each task was committed atomically:
 - `scripts/check-env-example.test.ts` — `.env.example` keys ⊇ runtime-configurable Zod schema keys (FOUND-07)
 
 ### Created — Wave 0 shell verifiers
+
 - `scripts/check-dev-boot.sh` — boots `pnpm dev`, curls `/`, fails if no response within 30s (FOUND-01)
 - `scripts/check-standalone.sh` — asserts `.next/standalone/server.js` exists post-build (FOUND-05)
 - `scripts/check-no-vercel.sh` — greps src/ for `@vercel/(kv|blob|postgres|edge-config)`, `next/og`, `runtime: 'edge'`, hardcoded API key patterns (FOUND-07)
 - `scripts/check-docker-health.sh` — end-to-end docker build + run + curl `/api/health` with `/data` volume mount (FOUND-05 + OPS-01)
 
 ### Modified
+
 - `.gitignore` — appended Next.js / Node / env / sqlite / coverage / editor blocks; original `.DS_Store` line preserved.
 
 ## Decisions Made
@@ -179,6 +184,7 @@ $ pnpm exec vitest --run
 ```
 
 All six test files fail with "Cannot find module" against the not-yet-existent implementations:
+
 - `./env` (Plan 02)
 - `./client`, `./migrate`, `./health-probe` (Plan 03)
 - `./route`, `@/lib/storage` (Plan 04)
@@ -195,17 +201,19 @@ This is the correct Wave 0 state. Plans 02-04 will turn them GREEN.
 - All 4 shell scripts exist with `+x`; `bash -n` clean on all 4
 - `bash scripts/check-no-vercel.sh` → exit 0 (`✓ No Vercel-only APIs ...`)
 - `bash scripts/check-standalone.sh` → exit 1 with the expected message (no build run yet — that's the design)
-- `git status --short` shows the prototype files (DataPraat.html, styles.css, *.jsx, etc.) are NOT in the modified set — they remain at their original mtime from the initial commit `65059ee`.
+- `git status --short` shows the prototype files (DataPraat.html, styles.css, \*.jsx, etc.) are NOT in the modified set — they remain at their original mtime from the initial commit `65059ee`.
 
 ## Self-Check: PASSED
 
 All claimed files verified to exist:
+
 - vitest.config.ts ✓
 - .nvmrc ✓
 - All 6 test files ✓
 - All 4 shell scripts ✓ (with +x)
 
 All claimed commits verified in `git log`:
+
 - b57f2cf ✓ (Task 1)
 - 2b4ca8e ✓ (Task 2)
 - b0b471f ✓ (Task 3)

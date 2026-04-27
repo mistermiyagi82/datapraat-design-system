@@ -1,5 +1,5 @@
-import { describe, it, expect } from "vitest";
 import Database from "better-sqlite3";
+import { describe, expect, it } from "vitest";
 import { runMigrations } from "./migrate";
 
 describe("runMigrations()", () => {
@@ -7,9 +7,7 @@ describe("runMigrations()", () => {
     const db = new Database(":memory:");
     runMigrations(db);
     const row = db
-      .prepare(
-        "SELECT name FROM sqlite_master WHERE type='table' AND name='schema_migrations'",
-      )
+      .prepare("SELECT name FROM sqlite_master WHERE type='table' AND name='schema_migrations'")
       .get();
     expect(row).toBeTruthy();
   });
@@ -34,9 +32,9 @@ describe("runMigrations()", () => {
   it("records the 0001_init.sql migration as applied after first run", () => {
     const db = new Database(":memory:");
     runMigrations(db);
-    const ids = (
-      db.prepare("SELECT id FROM schema_migrations").all() as { id: string }[]
-    ).map((r) => r.id);
+    const ids = (db.prepare("SELECT id FROM schema_migrations").all() as { id: string }[]).map(
+      (r) => r.id,
+    );
     expect(ids).toContain("0001_init.sql");
   });
 });

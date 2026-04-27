@@ -133,26 +133,32 @@ Global command palette voor zoeken, navigeren, direct vragen stellen.
 Elk chart-component wrapt Recharts met ChartContainer, kleuren uit tokens.
 
 ### BarChart
+
 - `data: { maand: string; gerealiseerd: number; begroot: number }[]`
 - Gebruikt op: Overzicht (Maandelijkse uitgaven)
 
 ### DoughnutChart
+
 - `data: { naam: string; waarde: number }[]`
 - Gebruikt op: Overzicht (Top productcategorieën), Verwijzers
 
 ### ForecastChart
+
 - `data: { maand: string; actual?: number; forecast?: number; ciLow?: number; ciHigh?: number }[]`
 - Gebruikt op: Prognose — met confidence interval band
 
 ### SpreadChart
+
 - `data: { gemeente: string; prijs: number; isSelf?: boolean }[]`
 - Gebruikt op: Benchmark — peer-vergelijking
 
 ### VolumeChart
+
 - `data: { periode: string; volume: number }[]`
 - Gebruikt op: Benchmark, Verwijzers
 
 ### PathwayChart
+
 - Sankey/flow diagram voor verwijzer → aanbieder paths
 - Gebruikt op: Verwijzers
 

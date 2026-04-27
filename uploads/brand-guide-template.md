@@ -24,30 +24,34 @@
 > Geef alle kleuren als HEX. Markeer welke kleuren primair zijn vs. accent vs. status.
 
 ### Primary palette
-| Token | HEX | Gebruik |
-|-------|-----|---------|
-| `--primary` | `#______` | hoofd-accent, CTA's |
-| `--secondary` | `#______` | secundair accent |
+
+| Token         | HEX       | Gebruik             |
+| ------------- | --------- | ------------------- |
+| `--primary`   | `#______` | hoofd-accent, CTA's |
+| `--secondary` | `#______` | secundair accent    |
 
 ### Neutrals
-| Token | HEX | Gebruik |
-|-------|-----|---------|
-| `--bg` | `#______` | hoofd-achtergrond |
-| `--bg-soft` | `#______` | secundaire achtergrond, cards |
-| `--surface` | `#______` | modals, popups |
-| `--ink` | `#______` | primaire tekst |
-| `--ink-soft` | `#______` | secundaire tekst |
-| `--ink-mute` | `#______` | metadata, labels |
-| `--line` | `#______` | borders, dividers |
+
+| Token        | HEX       | Gebruik                       |
+| ------------ | --------- | ----------------------------- |
+| `--bg`       | `#______` | hoofd-achtergrond             |
+| `--bg-soft`  | `#______` | secundaire achtergrond, cards |
+| `--surface`  | `#______` | modals, popups                |
+| `--ink`      | `#______` | primaire tekst                |
+| `--ink-soft` | `#______` | secundaire tekst              |
+| `--ink-mute` | `#______` | metadata, labels              |
+| `--line`     | `#______` | borders, dividers             |
 
 ### Status
-| Token | HEX | Gebruik |
-|-------|-----|---------|
+
+| Token       | HEX       | Gebruik            |
+| ----------- | --------- | ------------------ |
 | `--success` | `#______` | positieve feedback |
-| `--warning` | `#______` | waarschuwingen |
-| `--error` | `#______` | fouten, kritiek |
+| `--warning` | `#______` | waarschuwingen     |
+| `--error`   | `#______` | fouten, kritiek    |
 
 ### Achtergrond-toon
+
 - **Light / dark / warm / cool:** [VUL IN]
 
 ---
@@ -57,35 +61,39 @@
 > Specificeer Google Fonts-namen of voeg font-files apart toe.
 
 ### Headings
+
 - **Font family:** [VUL IN — bv. "Instrument Serif"]
 - **Bron:** [Google Fonts URL of "custom file"]
 - **Gewichten:** [VUL IN — bv. 400, 600]
 - **Karakter:** [VUL IN — bv. "serif, italic toegestaan voor accent"]
 
 ### Body
+
 - **Font family:** [VUL IN]
 - **Bron:** [VUL IN]
 - **Gewichten:** [VUL IN]
 
 ### Mono / data
+
 - **Font family:** [VUL IN]
 - **Gebruikt voor:** [VUL IN — bv. "code, getallen, labels, metadata"]
 
 ### Schaal
-| Niveau | Pixel | Gebruik |
-|--------|-------|---------|
-| H1 | __px | page title |
-| H2 | __px | section title |
-| H3 | __px | subsection |
-| Body | __px | standaard tekst |
-| Small | __px | metadata, labels |
+
+| Niveau | Pixel  | Gebruik          |
+| ------ | ------ | ---------------- |
+| H1     | \_\_px | page title       |
+| H2     | \_\_px | section title    |
+| H3     | \_\_px | subsection       |
+| Body   | \_\_px | standaard tekst  |
+| Small  | \_\_px | metadata, labels |
 
 ---
 
 ## 4. Logo & marks
 
 - **Logo bestanden:** [referentie naar geüploade SVG/PNG]
-- **Minimum afmeting:** __px
+- **Minimum afmeting:** \_\_px
 - **Clear space:** [bv. "minimum 1× hoogte van logo aan alle kanten"]
 - **Plaatsing:** [bv. "altijd linksboven, nooit gecentreerd"]
 - **Kleuren-varianten:** [bv. "donker op licht, licht op donker, monochroom"]
@@ -96,29 +104,33 @@
 ## 5. Spacing & layout tokens
 
 ### Spacing schaal
-| Token | Waarde |
-|-------|--------|
-| `--space-xs` | __px |
-| `--space-sm` | __px |
-| `--space-md` | __px |
-| `--space-lg` | __px |
-| `--space-xl` | __px |
+
+| Token        | Waarde |
+| ------------ | ------ |
+| `--space-xs` | \_\_px |
+| `--space-sm` | \_\_px |
+| `--space-md` | \_\_px |
+| `--space-lg` | \_\_px |
+| `--space-xl` | \_\_px |
 
 ### Border radius
-| Token | Waarde | Gebruik |
-|-------|--------|---------|
-| `--radius-sm` | __px | buttons, badges |
-| `--radius-md` | __px | cards, inputs |
-| `--radius-lg` | __px | modals, hero blocks |
+
+| Token         | Waarde | Gebruik             |
+| ------------- | ------ | ------------------- |
+| `--radius-sm` | \_\_px | buttons, badges     |
+| `--radius-md` | \_\_px | cards, inputs       |
+| `--radius-lg` | \_\_px | modals, hero blocks |
 
 ### Shadows
+
 - **Stijl:** [VUL IN — bv. "subtiel, warm" of "dramatisch, neutraal"]
 - **Voorbeeld:** `box-shadow: __`
 
 ### Grid / max-width
-- **Container max-width:** __px
-- **Sidebar breedte:** __px
-- **Default padding:** __px
+
+- **Container max-width:** \_\_px
+- **Sidebar breedte:** \_\_px
+- **Default padding:** \_\_px
 
 ---
 
@@ -127,27 +139,32 @@
 > Beschrijf hoe veelgebruikte componenten eruit moeten zien.
 
 ### Buttons
-- **Primary:** achtergrond `--primary`, tekst `--bg`, radius `--radius-sm`, padding __px __px
+
+- **Primary:** achtergrond `--primary`, tekst `--bg`, radius `--radius-sm`, padding **px **px
 - **Secondary:** [VUL IN]
 - **Tertiary / ghost:** [VUL IN]
 
 ### Cards
+
 - Achtergrond: `--bg`
 - Border: `1px solid --line`
 - Radius: `--radius-md`
-- Padding: __px
+- Padding: \_\_px
 
 ### Inputs
+
 - [VUL IN]
 
 ### Tables
+
 - [VUL IN]
 
 ### Charts
+
 - **Primaire kleur:** `--primary`
 - **Secundaire data-kleuren:** [VUL IN — bv. lijst van 5 HEX-codes]
-- **Grid lines:** `--line` met opacity __
-- **Font:** body font, __px
+- **Grid lines:** `--line` met opacity \_\_
+- **Font:** body font, \_\_px
 
 ---
 
@@ -164,20 +181,24 @@
 ## 8. Voice & tone
 
 ### Aanspreekvorm
+
 - **Pronoun (NL):** [jij / u]
 - **Pronoun (EN):** [you]
 - **Formaliteit:** [formeel / semi-formeel / informeel]
 
 ### Schrijfstijl
+
 - **Zinslengte:** [kort / gemiddeld / variërend]
 - **Vakjargon:** [vermijden / context-afhankelijk / gebruiken]
 - **Toon:** [VUL IN — bv. "feitelijk, geen overdrijving, geen marketing-superlatieven"]
 
 ### Voorbeeld-zinnen
+
 - ✅ Goed: "[VUL IN — voorbeeldzin in jouw tone of voice]"
 - ❌ Vermijden: "[VUL IN — voorbeeld van wat je niet wilt]"
 
 ### Numerieke conventies
+
 - **Decimaal-scheider:** [komma / punt]
 - **Duizendtallen:** [punt / spatie / komma]
 - **Valuta:** [bv. "€1.234,56"]
@@ -188,11 +209,13 @@
 ## 9. Do's & don'ts
 
 ### Wel doen
+
 - [VUL IN]
 - [VUL IN]
 - [VUL IN]
 
 ### Niet doen
+
 - [VUL IN — bv. "geen paarse gradients"]
 - [VUL IN — bv. "geen emoji's in product-UI"]
 - [VUL IN — bv. "geen Inter, Roboto of system-fonts"]

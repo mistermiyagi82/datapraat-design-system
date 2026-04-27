@@ -83,63 +83,65 @@ Deferred to future release. Tracked but not in current roadmap.
 
 Explicitly excluded. Documented to prevent scope creep.
 
-| Feature | Reason |
-|---------|--------|
-| Real auth in v1 | Demo audience uses shared link; auth complexity isn't justified yet |
-| Full KloptDit + Scenario wiring in v1 | Too much surface; each needs its own backend contract; ship as stubs first |
-| Neo4j / graphiti | Vibathon-specific knowledge graph; DataPraat exposes data via MCP, not a graph |
-| Attio integration | Vibathon CRM integration; not part of the DataPraat product |
-| Google APIs (`googleapis`) | Vibathon-specific ingestion; out of DataPraat product scope |
-| `pdf-parse` | Vibathon-specific ingestion path |
-| LangChain | AI SDK 5 + MCP cover what we need; LangChain adds weight without unique value |
-| Vercel deploy | Sqlite + persistent volumes don't fit Vercel; Railway → Azure is the path |
-| The duplicate prototype HTMLs (`website.html`, `DataPraat.html`, `Logos.html`, both one-pagers, `woorden-modus-verkenning.html`) | Replaced by the Next.js app; kept only as reference, not migrated |
-| Mobile-native app | Web-first; mobile responsive is enough for v1 |
-| Real-time multi-user collaboration on a chat | Single-user chat history is sufficient for v1 |
-| Internationalization | Dutch UI is the product; English is later |
-| Manual JSX-via-Babel patterns from prototype (`window.*` globals) | Anti-pattern in TS; we rebuild clean with ES modules + RSC |
+| Feature                                                                                                                          | Reason                                                                         |
+| -------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------ |
+| Real auth in v1                                                                                                                  | Demo audience uses shared link; auth complexity isn't justified yet            |
+| Full KloptDit + Scenario wiring in v1                                                                                            | Too much surface; each needs its own backend contract; ship as stubs first     |
+| Neo4j / graphiti                                                                                                                 | Vibathon-specific knowledge graph; DataPraat exposes data via MCP, not a graph |
+| Attio integration                                                                                                                | Vibathon CRM integration; not part of the DataPraat product                    |
+| Google APIs (`googleapis`)                                                                                                       | Vibathon-specific ingestion; out of DataPraat product scope                    |
+| `pdf-parse`                                                                                                                      | Vibathon-specific ingestion path                                               |
+| LangChain                                                                                                                        | AI SDK 5 + MCP cover what we need; LangChain adds weight without unique value  |
+| Vercel deploy                                                                                                                    | Sqlite + persistent volumes don't fit Vercel; Railway → Azure is the path      |
+| The duplicate prototype HTMLs (`website.html`, `DataPraat.html`, `Logos.html`, both one-pagers, `woorden-modus-verkenning.html`) | Replaced by the Next.js app; kept only as reference, not migrated              |
+| Mobile-native app                                                                                                                | Web-first; mobile responsive is enough for v1                                  |
+| Real-time multi-user collaboration on a chat                                                                                     | Single-user chat history is sufficient for v1                                  |
+| Internationalization                                                                                                             | Dutch UI is the product; English is later                                      |
+| Manual JSX-via-Babel patterns from prototype (`window.*` globals)                                                                | Anti-pattern in TS; we rebuild clean with ES modules + RSC                     |
 
 ## Traceability
 
 Which phases cover which requirements. Updated during roadmap creation.
 
-| Requirement | Phase | Status |
-|-------------|-------|--------|
-| FOUND-01 | Phase 1 | Pending |
-| FOUND-02 | Phase 2 | Pending |
-| FOUND-03 | Phase 2 | Pending |
-| FOUND-04 | Phase 1 | Pending |
-| FOUND-05 | Phase 1 | Pending |
-| FOUND-06 | Phase 1 | Pending |
-| FOUND-07 | Phase 1 | Pending |
-| DS-01 | Phase 2 | Pending |
-| DS-02 | Phase 2 | Pending |
-| DS-03 | Phase 2 | Pending |
-| DS-04 | Phase 2 | Pending |
-| MKT-01 | Phase 3 | Pending |
-| MKT-02 | Phase 3 | Pending |
-| MKT-03 | Phase 3 | Pending |
-| CHAT-01 | Phase 4 | Pending |
-| CHAT-02 | Phase 4 | Pending |
-| CHAT-03 | Phase 4 | Pending |
-| CHAT-04 | Phase 5 | Pending |
-| CHAT-05 | Phase 4 | Pending |
-| CHAT-06 | Phase 5 | Pending |
-| OVZ-01 | Phase 6 | Pending |
-| OVZ-02 | Phase 6 | Pending |
-| OVZ-03 | Phase 6 | Pending |
-| STUB-01 | Phase 7 | Pending |
-| STUB-02 | Phase 7 | Pending |
-| OPS-01 | Phase 1 | Pending |
-| OPS-02 | Phase 7 | Pending |
-| OPS-03 | Phase 7 | Pending |
-| OPS-04 | Phase 7 | Pending |
+| Requirement | Phase   | Status  |
+| ----------- | ------- | ------- |
+| FOUND-01    | Phase 1 | Pending |
+| FOUND-02    | Phase 2 | Pending |
+| FOUND-03    | Phase 2 | Pending |
+| FOUND-04    | Phase 1 | Pending |
+| FOUND-05    | Phase 1 | Pending |
+| FOUND-06    | Phase 1 | Pending |
+| FOUND-07    | Phase 1 | Pending |
+| DS-01       | Phase 2 | Pending |
+| DS-02       | Phase 2 | Pending |
+| DS-03       | Phase 2 | Pending |
+| DS-04       | Phase 2 | Pending |
+| MKT-01      | Phase 3 | Pending |
+| MKT-02      | Phase 3 | Pending |
+| MKT-03      | Phase 3 | Pending |
+| CHAT-01     | Phase 4 | Pending |
+| CHAT-02     | Phase 4 | Pending |
+| CHAT-03     | Phase 4 | Pending |
+| CHAT-04     | Phase 5 | Pending |
+| CHAT-05     | Phase 4 | Pending |
+| CHAT-06     | Phase 5 | Pending |
+| OVZ-01      | Phase 6 | Pending |
+| OVZ-02      | Phase 6 | Pending |
+| OVZ-03      | Phase 6 | Pending |
+| STUB-01     | Phase 7 | Pending |
+| STUB-02     | Phase 7 | Pending |
+| OPS-01      | Phase 1 | Pending |
+| OPS-02      | Phase 7 | Pending |
+| OPS-03      | Phase 7 | Pending |
+| OPS-04      | Phase 7 | Pending |
 
 **Coverage:**
+
 - v1 requirements: 29 total
 - Mapped to phases: 29
 - Unmapped: 0
 
 ---
-*Requirements defined: 2026-04-26*
-*Last updated: 2026-04-26 — traceability filled by ROADMAP.md*
+
+_Requirements defined: 2026-04-26_
+_Last updated: 2026-04-26 — traceability filled by ROADMAP.md_

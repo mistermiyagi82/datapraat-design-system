@@ -1,13 +1,10 @@
-import { defineConfig } from "vitest/config";
 import path from "node:path";
+import { defineConfig } from "vitest/config";
 
 export default defineConfig({
   test: {
     environment: "node",
-    include: [
-      "src/**/*.test.ts",
-      "scripts/**/*.test.ts",
-    ],
+    include: ["src/**/*.test.ts", "scripts/**/*.test.ts"],
     exclude: ["node_modules", ".next"],
   },
   resolve: {

@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 describe("getDb()", () => {
   beforeEach(() => {
@@ -18,9 +18,7 @@ describe("getDb()", () => {
     const { getDb } = await import("./client");
     const db = getDb();
     const row = db
-      .prepare(
-        "SELECT name FROM sqlite_master WHERE type='table' AND name='schema_migrations'",
-      )
+      .prepare("SELECT name FROM sqlite_master WHERE type='table' AND name='schema_migrations'")
       .get();
     expect(row).toBeTruthy();
   });
@@ -29,9 +27,7 @@ describe("getDb()", () => {
     const { getDb } = await import("./client");
     const db = getDb();
     const row = db
-      .prepare(
-        "SELECT name FROM sqlite_master WHERE type='table' AND name='health_probe'",
-      )
+      .prepare("SELECT name FROM sqlite_master WHERE type='table' AND name='health_probe'")
       .get();
     expect(row).toBeTruthy();
   });

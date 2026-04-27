@@ -13,6 +13,7 @@ This is a **build-tool-free design-system / prototype repo** for the DataPraat p
 **Cross-file API = `window`.** Each file declares globals it consumes at the top with a `/* global */` comment, and exports by attaching to `window` at the bottom.
 
 Example (`shared.jsx:1-2`, `shared.jsx:70-75`):
+
 ```js
 /* global React */
 const { useState, useEffect, useRef, useMemo, useCallback } = React;
@@ -23,11 +24,13 @@ window.AskButton = AskButton;
 ```
 
 Consumers reference globals through the same pattern (`pages.jsx:1`):
+
 ```js
 /* global React, Icon, TrustBadge, AskButton, fmtEUR, fmtCompact, BarChart, DoughnutChart, ForecastChart, SpreadChart, VolumeChart, PathwayChart */
 ```
 
 **Important quirk — namespaced React hook destructuring per file.** Because every file shares one global scope, files that need `useState` etc. either re-destructure with a file-suffix (to avoid redeclaration when files share scope) or call `React.useState` directly:
+
 - `shared.jsx:2` — `const { useState, useEffect, useRef, useMemo, useCallback } = React;`
 - `shell.jsx:2` — `const { useState: useStateSB, useRef: useRefSB, useEffect: useEffectSB } = React;` (suffix `SB` = Sidebar)
 - `chat.jsx:5` — uses `React.useState(...)` inline (no destructure)
@@ -42,17 +45,23 @@ When adding a new file, follow the inline `React.useState(...)` pattern (most co
 ```js
 const Sidebar = ({ currentPage, onNav, onNewChat, onOpenChat, chatBadge = 3 }) => {
   // hooks ...
-  return ( <aside className="sb"> ... </aside> );
+  return <aside className="sb"> ... </aside>;
 };
 ```
+
 (`shell.jsx:4`)
 
 **Single-expression components are written as `=>` returning JSX directly** (no body braces):
+
 ```js
 const Launcher = ({ onClick }) => (
-  <div className="launcher" onClick={onClick}> ... </div>
+  <div className="launcher" onClick={onClick}>
+    {" "}
+    ...{" "}
+  </div>
 );
 ```
+
 (`shell.jsx:184-192`)
 
 **Props:** Always destructured in the parameter list. Default values inline (`size = 16`, `chatBadge = 3`, `className = ""`). No `propTypes`, no JSDoc on components.
@@ -70,12 +79,17 @@ const Launcher = ({ onClick }) => (
 **Patterns observed:**
 
 - `useState` with **lazy initializer reading `localStorage`**, wrapped in `try/catch`:
+
   ```js
   const [collapsed, setCollapsed] = useStateSB(() => {
-    try { return JSON.parse(localStorage.getItem("dp_sb_collapsed") || "{}"); }
-    catch { return {}; }
+    try {
+      return JSON.parse(localStorage.getItem("dp_sb_collapsed") || "{}");
+    } catch {
+      return {};
+    }
   });
   ```
+
   (`shell.jsx:6-9`; same shape `chat.jsx:5-12`, `pages.jsx:7`).
 
 - `useEffect` paired with `localStorage.setItem` to **persist state on change**: `pages.jsx:8`, `DataPraat.html:46`, `DataPraat.html:49-51`.
@@ -110,19 +124,20 @@ const Launcher = ({ onClick }) => (
 
 ## Naming Conventions
 
-| Kind | Case | Example |
-|------|------|---------|
-| Component | `PascalCase` | `Sidebar`, `BarChart`, `OverzichtPage`, `TrustInspector`, `AskDrawer`, `ModeSwitcher` |
-| Component file | `kebab-case.jsx` | `klopt-dit.jsx`, `overzicht-modes.jsx`, `design-canvas.jsx`; single-word files lowercase: `shell.jsx`, `pages.jsx`, `trust.jsx`, `chat.jsx`, `charts.jsx`, `shared.jsx`, `scenario.jsx` |
-| Function / variable | `camelCase` | `fmtEUR`, `openNewChat`, `setTweak`, `gemeenteRef`, `chatBadge` |
-| Constants (module-level config arrays) | `UPPER_SNAKE` | `OM_MODES` (`overzicht-modes.jsx:5`), `TWEAKS_DEFAULTS` (`DataPraat.html:34`) |
-| CSS classes | `kebab-case`, BEM-ish with hyphen-only | `.sb-gemeente-menu-foot`, `.kpi-foot`, `.msg-ai-h`, `.om-bullet-marker.ok` |
-| CSS custom properties | `kebab-case` with semantic prefix | `--ink-soft`, `--primary-tint`, `--chart-cost`, `--r-md`, `--s-lg`, `--f-sans` |
-| HTML id / data attr | `kebab-case` | `id="root"`, `data-density`, `data-screen-label` |
-| `localStorage` keys | `snake_case` with `dp_` prefix | `dp_page`, `dp_sb_collapsed`, `dp_overzicht_mode`, `dp_chat_seed` |
-| Window globals (transient) | `__dpCamel` (double-underscore + dp prefix) | `window.__dpPendingQ`, `window.__chatSeed` |
+| Kind                                   | Case                                        | Example                                                                                                                                                                                 |
+| -------------------------------------- | ------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Component                              | `PascalCase`                                | `Sidebar`, `BarChart`, `OverzichtPage`, `TrustInspector`, `AskDrawer`, `ModeSwitcher`                                                                                                   |
+| Component file                         | `kebab-case.jsx`                            | `klopt-dit.jsx`, `overzicht-modes.jsx`, `design-canvas.jsx`; single-word files lowercase: `shell.jsx`, `pages.jsx`, `trust.jsx`, `chat.jsx`, `charts.jsx`, `shared.jsx`, `scenario.jsx` |
+| Function / variable                    | `camelCase`                                 | `fmtEUR`, `openNewChat`, `setTweak`, `gemeenteRef`, `chatBadge`                                                                                                                         |
+| Constants (module-level config arrays) | `UPPER_SNAKE`                               | `OM_MODES` (`overzicht-modes.jsx:5`), `TWEAKS_DEFAULTS` (`DataPraat.html:34`)                                                                                                           |
+| CSS classes                            | `kebab-case`, BEM-ish with hyphen-only      | `.sb-gemeente-menu-foot`, `.kpi-foot`, `.msg-ai-h`, `.om-bullet-marker.ok`                                                                                                              |
+| CSS custom properties                  | `kebab-case` with semantic prefix           | `--ink-soft`, `--primary-tint`, `--chart-cost`, `--r-md`, `--s-lg`, `--f-sans`                                                                                                          |
+| HTML id / data attr                    | `kebab-case`                                | `id="root"`, `data-density`, `data-screen-label`                                                                                                                                        |
+| `localStorage` keys                    | `snake_case` with `dp_` prefix              | `dp_page`, `dp_sb_collapsed`, `dp_overzicht_mode`, `dp_chat_seed`                                                                                                                       |
+| Window globals (transient)             | `__dpCamel` (double-underscore + dp prefix) | `window.__dpPendingQ`, `window.__chatSeed`                                                                                                                                              |
 
 **CSS class prefixes** group features and read like namespaces:
+
 - `.sb-*` — sidebar
 - `.kpi-*` — KPI tile
 - `.card`, `.card-h`, `.card-actions` — generic card
@@ -140,7 +155,7 @@ When adding new components, **invent a 2–3-letter prefix for the feature** and
 The codebase mixes both deliberately:
 
 - **Domain / business vocabulary → Dutch** (Jeugdzorg, gemeenten, government context):
-  `gemeente`, `gemeenten`, `inwoners`, `peildatum`, `trajecten`, `uitgaven`, `begroot`, `verwijzers`, `aanbieders`, `prognose`, `validatie`, `lineage`*, `glossary`*, `regels`, `klopt-dit`, `overzicht`, `scenario`, `kosten`, `aandeel`, `waarde`, `naam`, `actief`, `cijfers`, `verhaal`, `metafoor`, `bullets`, `dagboek`, `weer`, `brief`, `dialoog`, `poster`, `verkeerslicht`, `vergelijkend`, `schaal`, `dagboek`, `looptijd`, `breach`, `afwijking`, `severity`*. (`data.js`, `shell.jsx:36-46`, `overzicht-modes.jsx:5-18`)
+  `gemeente`, `gemeenten`, `inwoners`, `peildatum`, `trajecten`, `uitgaven`, `begroot`, `verwijzers`, `aanbieders`, `prognose`, `validatie`, `lineage`_, `glossary`_, `regels`, `klopt-dit`, `overzicht`, `scenario`, `kosten`, `aandeel`, `waarde`, `naam`, `actief`, `cijfers`, `verhaal`, `metafoor`, `bullets`, `dagboek`, `weer`, `brief`, `dialoog`, `poster`, `verkeerslicht`, `vergelijkend`, `schaal`, `dagboek`, `looptijd`, `breach`, `afwijking`, `severity`\*. (`data.js`, `shell.jsx:36-46`, `overzicht-modes.jsx:5-18`)
 
 - **Generic technical / framework vocabulary → English**:
   `useState`, `loading`, `error`, `messages`, `input`, `onClick`, `Icon`, `Sidebar`, `BarChart`, `width`, `height`, `data`, `score`, `tier`, `path`, `point`, `forecast`, `actual`, `severity`, `metricId`.
@@ -154,6 +169,7 @@ The codebase mixes both deliberately:
 ## Number, Currency, Locale
 
 All number formatting goes through helpers in `shared.jsx:62-68`:
+
 - `fmtEUR(n)` — `Intl.NumberFormat("nl-NL", { style: "currency", currency: "EUR", maximumFractionDigits: 0 })`
 - `fmtNum(n)` — `Intl.NumberFormat("nl-NL")`
 - `fmtCompact(n)` — `€7,2M` / `€450K` / fallback to `fmtEUR`
@@ -170,22 +186,23 @@ For tabular numbers, add `font-variant-numeric: tabular-nums` (CSS class `.tnum`
 
 **Token groups in `:root`:**
 
-| Group | Variables | Purpose |
-|-------|-----------|---------|
-| Neutrals | `--bg`, `--bg-soft`, `--surface`, `--surface-raised` | Page / sidebar / card backgrounds (warm-cool palette, no pure white/black) |
-| Ink (text) | `--ink`, `--ink-soft`, `--ink-mute`, `--ink-faint` | Body text → faint hints. 4 levels of contrast. |
-| Lines | `--line`, `--line-soft`, `--line-strong` | Border weights. |
-| Brand | `--primary` (`#4338CA`), `--primary-soft`, `--primary-tint`, `--primary-ink`, `--primary-foreground` | Indigo brand. |
-| Charts | `--chart-cost`, `--chart-volume`, `--chart-price`, `--chart-1` … `--chart-5` | PxQ semantics: blue=cost, green=volume, orange=price; `chart-1..5` is a sequential blue ramp. |
-| Status | `--success`, `--success-tint`, `--success-strong`; same triple for `--warning` and `--destructive`; `--gold`, `--gold-tint` | Each status has *base / tint / strong* — use `tint` for backgrounds, `strong` for text-on-tint. See `.trust.good`, `.badge.warn`, `.kpi-delta.bad` (`styles.css:417-422`). |
-| Radii | `--r-sm` (4) `--r-md` (8) `--r-lg` (14) `--r-xl` (20) | Always use these tokens. |
-| Spacing | `--s-xs` (4) `--s-sm` (8) `--s-md` (12) `--s-lg` (20) `--s-xl` (32) `--s-2xl` (48) | 4-pt-ish scale. *Note: many existing rules still hard-code px paddings (`padding: 16px 12px`); follow tokens for new code.* |
-| Fonts | `--f-sans` (Inter), `--f-serif` (Inter — note: serif uses Inter, narrative modes use literal `"Fraunces"`), `--f-mono` (JetBrains Mono) | Inter is loaded with feature-settings `ss01, cv11`. |
-| Shadows | `--shadow-sm`, `--shadow-md`, `--shadow-lg`, `--shadow-drawer` | All warm-tinted (`rgba(26,24,20, …)`). |
+| Group      | Variables                                                                                                                               | Purpose                                                                                                                                                                    |
+| ---------- | --------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Neutrals   | `--bg`, `--bg-soft`, `--surface`, `--surface-raised`                                                                                    | Page / sidebar / card backgrounds (warm-cool palette, no pure white/black)                                                                                                 |
+| Ink (text) | `--ink`, `--ink-soft`, `--ink-mute`, `--ink-faint`                                                                                      | Body text → faint hints. 4 levels of contrast.                                                                                                                             |
+| Lines      | `--line`, `--line-soft`, `--line-strong`                                                                                                | Border weights.                                                                                                                                                            |
+| Brand      | `--primary` (`#4338CA`), `--primary-soft`, `--primary-tint`, `--primary-ink`, `--primary-foreground`                                    | Indigo brand.                                                                                                                                                              |
+| Charts     | `--chart-cost`, `--chart-volume`, `--chart-price`, `--chart-1` … `--chart-5`                                                            | PxQ semantics: blue=cost, green=volume, orange=price; `chart-1..5` is a sequential blue ramp.                                                                              |
+| Status     | `--success`, `--success-tint`, `--success-strong`; same triple for `--warning` and `--destructive`; `--gold`, `--gold-tint`             | Each status has _base / tint / strong_ — use `tint` for backgrounds, `strong` for text-on-tint. See `.trust.good`, `.badge.warn`, `.kpi-delta.bad` (`styles.css:417-422`). |
+| Radii      | `--r-sm` (4) `--r-md` (8) `--r-lg` (14) `--r-xl` (20)                                                                                   | Always use these tokens.                                                                                                                                                   |
+| Spacing    | `--s-xs` (4) `--s-sm` (8) `--s-md` (12) `--s-lg` (20) `--s-xl` (32) `--s-2xl` (48)                                                      | 4-pt-ish scale. _Note: many existing rules still hard-code px paddings (`padding: 16px 12px`); follow tokens for new code._                                                |
+| Fonts      | `--f-sans` (Inter), `--f-serif` (Inter — note: serif uses Inter, narrative modes use literal `"Fraunces"`), `--f-mono` (JetBrains Mono) | Inter is loaded with feature-settings `ss01, cv11`.                                                                                                                        |
+| Shadows    | `--shadow-sm`, `--shadow-md`, `--shadow-lg`, `--shadow-drawer`                                                                          | All warm-tinted (`rgba(26,24,20, …)`).                                                                                                                                     |
 
 **Fonts loaded** (`DataPraat.html:9`): Inter (300/400/500/600/700), Fraunces (300/400/500/600 with optical-size axis), JetBrains Mono (400/500). Fraunces is hard-coded by string in two places (`styles.css:808` `.om-narr`, `styles.css:946` `.om-meta-big`, `styles.css:1090ish` `.om-brief`) for narrative / editorial modes.
 
 **Typography scale (no `--type-*` tokens; sizes are inline px in each rule):**
+
 - Page title: 24px / 600 / `letter-spacing: -0.015em` (`.page-title`, `styles.css:373`)
 - KPI value: 28px / 600 / `tabular-nums` (`.kpi-value`, `styles.css:445`)
 - Card title: 14px / 600 (`.card-title`, `styles.css:471`)
@@ -197,6 +214,7 @@ For tabular numbers, add `font-variant-numeric: tabular-nums` (CSS class `.tnum`
 When picking a size, **match the closest existing rule** rather than introducing a new value — there is no formal scale.
 
 **Section structure of `styles.css`** (in source order):
+
 1. `:root` tokens (1-79)
 2. Reset + base (`* { box-sizing }`, `body`, `button`, `a`) (81-97)
 3. Utility (`.mono`, `.serif`, `.tnum`) (99-101)
@@ -211,8 +229,9 @@ When picking a size, **match the closest existing rule** rather than introducing
 **Sectioning style:** banner comments mark feature areas. `/* ==== … ==== */` for big sections, `/* ---- name ---- */` for sub-sections (e.g. `styles.css:103` `/* ---- layout shell ---- */`, `styles.css:475` `/* ---- Ask button ... ---- */`, `styles.css:805` `/* ---- 2 · Verhaal ---- */`).
 
 **Selector style:**
+
 - Single-class selectors prevail; specificity stays low.
-- State as a *second* class on the same element: `.kpi-delta.good`, `.trust.warn`, `.sb-item.active`, `.om-opt.active`, `.om-light-dot.ok`. Don't use BEM `--modifier`.
+- State as a _second_ class on the same element: `.kpi-delta.good`, `.trust.warn`, `.sb-item.active`, `.om-opt.active`, `.om-light-dot.ok`. Don't use BEM `--modifier`.
 - Children are matched by descendant selector, not nesting (no Sass): `.tbl th { … }`, `.kpi-foot .kpi-delta { … }`.
 - Pseudo-classes: `:hover` is heavily used; `:focus` is rare (only `.sc-save-form input:focus`, `styles.css:1622-1626`) — accessibility gap noted in CONCERNS, but follow the existing pattern when extending.
 
@@ -225,29 +244,48 @@ When picking a size, **match the closest existing rule** rather than introducing
 ## HTML Structure
 
 Each top-level prototype is a self-contained HTML page:
+
 - `DataPraat.html` — the React app shell.
 - `Logos.html`, `DataPraat one-pager.html`, `DataPraat one-pager-print.html`, `website.html`, `website v2.html`, `woorden-modus-verkenning.html` — static / standalone pages, each with their own `<style>` block.
 
 **Standard `<head>` for the React app** (`DataPraat.html:1-17`):
+
 ```html
 <!DOCTYPE html>
 <html lang="nl" data-density="comfortable">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>DataPraat — Prototype</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:...&family=Fraunces:...&family=JetBrains+Mono:..." rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=22">
-  <script src="https://unpkg.com/react@18.3.1/.../react.development.js" integrity="..." crossorigin="anonymous"></script>
-  <script src="https://unpkg.com/react-dom@18.3.1/.../react-dom.development.js" integrity="..." crossorigin="anonymous"></script>
-  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="..." crossorigin="anonymous"></script>
-  <script src="data.js"></script>
-</head>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>DataPraat — Prototype</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:...&family=Fraunces:...&family=JetBrains+Mono:..."
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css?v=22" />
+    <script
+      src="https://unpkg.com/react@18.3.1/.../react.development.js"
+      integrity="..."
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://unpkg.com/react-dom@18.3.1/.../react-dom.development.js"
+      integrity="..."
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js"
+      integrity="..."
+      crossorigin="anonymous"
+    ></script>
+    <script src="data.js"></script>
+  </head>
+</html>
 ```
 
 **Conventions:**
+
 - `lang="nl"` on the root — primary user language is Dutch.
 - `data-density` is the only HTML-level "tweak" attribute, set imperatively at runtime (`DataPraat.html:50`).
 - React, ReactDOM, Babel-Standalone are loaded from **unpkg** with **SRI integrity hashes** and `crossorigin="anonymous"`. Keep both when adding new CDN scripts.
@@ -258,9 +296,10 @@ Each top-level prototype is a self-contained HTML page:
 
 ## Comments
 
-**Style:** `//` line comments and `/* */` block comments. Comments are **frequent and Dutch**, often informal/conversational, often used to explain *why* a section exists rather than what the next line does.
+**Style:** `//` line comments and `/* */` block comments. Comments are **frequent and Dutch**, often informal/conversational, often used to explain _why_ a section exists rather than what the next line does.
 
 **Examples:**
+
 - File-level rationale: `data.js:1-2` `// DataPraat — mock data voor Riemsterdal (fictieve gemeente) // Alle getallen zijn realistisch voor een gemeente van ~28.400 inwoners`
 - Section banners inside JSX: `// ===== OVERZICHT =====` (`pages.jsx:3`), `// ===== TRUST INSPECTOR DRAWER =====` (`trust.jsx:3`), `// ===== PER-CHART ASK DRAWER =====` (`chat.jsx:193`)
 - Hat-tip comments above complex regions: `// ---- SVG icons (stroke 1.5, 16x16) ----` (`shared.jsx:4`), `// ---- Format helpers (NL locale) ----` (`shared.jsx:61`)
@@ -269,6 +308,7 @@ Each top-level prototype is a self-contained HTML page:
 - Inline lint disables: `// eslint-disable-next-line` (`chat.jsx:69`) — present despite no ESLint config, suggesting an editor-level lint expectation.
 
 **Rules for new comments:**
+
 - Dutch is fine and matches the codebase voice.
 - Use section banners (`// ===== NAME =====` or `// ---- name ----`) when introducing a new logical block in a JSX file.
 - Document **the reason for a value or decision** (especially design tokens), not the syntax.
@@ -279,6 +319,7 @@ Each top-level prototype is a self-contained HTML page:
 **No tooling is configured.** There is no `package.json`, no `.eslintrc*`, no `.prettierrc*`, no `tsconfig.json`, no `.editorconfig`, no `biome.json`. The single `// eslint-disable-next-line` in `chat.jsx:69` indicates the author runs an editor-level linter, but there is no committed config and no CI.
 
 **De-facto formatting from the source:**
+
 - 2-space indentation.
 - Double quotes for strings (both JS and JSX attributes); back-ticks for template strings.
 - Semicolons at end of statements.
@@ -290,14 +331,14 @@ Each top-level prototype is a self-contained HTML page:
 
 ## Where to Put New Code
 
-| You are adding… | Put it in |
-|-----------------|-----------|
-| A new design token (colour, radius, font) | `:root` block at top of `styles.css` |
-| A small reusable visual primitive (badge, button, icon) | `shared.jsx` and attach to `window` |
-| A new SVG chart | `charts.jsx` and attach to `window` |
-| App chrome (header / sidebar / launcher) | `shell.jsx` |
-| A new top-level page | a new `kebab-case.jsx` file, attached as `window.SomethingPage`, registered in the router in `DataPraat.html:91-104`, and added to the `<script type="text/babel" src=…>` list in `DataPraat.html:21-29` |
-| A page-specific drawer / modal | the same file as the page that opens it (`AskDrawer` lives in `chat.jsx`, `TrustInspector` in `trust.jsx`) |
-| Mock data / business numbers | extend the object literal in `data.js` |
-| CSS for a new feature | append to `styles.css` under a new `/* ==== Feature name ==== */` banner with its own class prefix; bump `?v=` in `DataPraat.html:10` |
-| Persisted user preference | `localStorage` with `dp_` prefix, lazy-init in `useState`, persist in a `useEffect` |
+| You are adding…                                         | Put it in                                                                                                                                                                                                |
+| ------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| A new design token (colour, radius, font)               | `:root` block at top of `styles.css`                                                                                                                                                                     |
+| A small reusable visual primitive (badge, button, icon) | `shared.jsx` and attach to `window`                                                                                                                                                                      |
+| A new SVG chart                                         | `charts.jsx` and attach to `window`                                                                                                                                                                      |
+| App chrome (header / sidebar / launcher)                | `shell.jsx`                                                                                                                                                                                              |
+| A new top-level page                                    | a new `kebab-case.jsx` file, attached as `window.SomethingPage`, registered in the router in `DataPraat.html:91-104`, and added to the `<script type="text/babel" src=…>` list in `DataPraat.html:21-29` |
+| A page-specific drawer / modal                          | the same file as the page that opens it (`AskDrawer` lives in `chat.jsx`, `TrustInspector` in `trust.jsx`)                                                                                               |
+| Mock data / business numbers                            | extend the object literal in `data.js`                                                                                                                                                                   |
+| CSS for a new feature                                   | append to `styles.css` under a new `/* ==== Feature name ==== */` banner with its own class prefix; bump `?v=` in `DataPraat.html:10`                                                                    |
+| Persisted user preference                               | `localStorage` with `dp_` prefix, lazy-init in `useState`, persist in a `useEffect`                                                                                                                      |
