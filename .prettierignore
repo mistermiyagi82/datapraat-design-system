@@ -1,0 +1,9 @@
+.next/
+node_modules/
+.data/
+out/
+pnpm-lock.yaml
+*.html
+*.jsx
+styles.css
+data.js
