@@ -52,7 +52,7 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Operability
 
-- [ ] **OPS-01**: `/api/health` endpoint responds 200 with build info; Railway `healthcheckPath` is configured to use it
+- [x] **OPS-01**: `/api/health` endpoint responds 200 with build info; Railway `healthcheckPath` is configured to use it
 - [ ] **OPS-02**: API routes emit structured logs with request id, route, status, and latency
 - [ ] **OPS-03**: README documents local dev (`pnpm i && pnpm dev`), env setup, Railway deploy, and the migration path to Azure Container Apps + Azure Files
 - [ ] **OPS-04**: A fresh clone runs end-to-end with `pnpm i && pnpm dev` (no manual config beyond copying `.env.example`)
@@ -130,7 +130,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | OVZ-03      | Phase 6 | Pending  |
 | STUB-01     | Phase 7 | Pending  |
 | STUB-02     | Phase 7 | Pending  |
-| OPS-01      | Phase 1 | Pending  |
+| OPS-01      | Phase 1 | Complete |
 | OPS-02      | Phase 7 | Pending  |
 | OPS-03      | Phase 7 | Pending  |
 | OPS-04      | Phase 7 | Pending  |

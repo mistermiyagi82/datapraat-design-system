@@ -38,7 +38,7 @@ Foundation first (boots, builds, deploys), then design system in parallel with m
 - [x] 01-01-PLAN.md — Wave 0 test infrastructure & verification scripts
 - [x] 01-02-PLAN.md — Toolchain + scaffold trim (pin Node/pnpm, ESLint 9, Prettier, strict TS, next.config.ts standalone)
 - [x] 01-03-PLAN.md — Env + logger + storage seam (Zod env, pino, sqlite repo + migrations)
-- [ ] 01-04-PLAN.md — /api/health Route Handler (6-field contract, 200/503)
+- [x] 01-04-PLAN.md — /api/health Route Handler (6-field contract, 200/503)
 - [ ] 01-05-PLAN.md — Deploy artifacts (Dockerfile, .dockerignore, nixpacks.toml, railway.toml) + Railway human-verify
 
 ### Phase 2: Design System

@@ -3,18 +3,18 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-last_updated: "2026-04-27T18:26:09.825Z"
+last_updated: "2026-04-27T18:32:09.547Z"
 progress:
   total_phases: 7
   completed_phases: 0
   total_plans: 5
-  completed_plans: 3
-  percent: 60
+  completed_plans: 4
+  percent: 80
 ---
 
 # State: DataPraat
 
-**Last updated:** 2026-04-27 (after Plan 01-03)
+**Last updated:** 2026-04-27 (after Plan 01-04)
 
 ## Project Reference
 
@@ -27,20 +27,20 @@ progress:
 ## Current Position
 
 Phase: 01 (foundation) — EXECUTING
-Plan: 4 of 5
+Plan: 5 of 5
 
 - **Milestone:** v1
-- **Phase:** Phase 1 (Foundation) — Waves 0 + 1 + 2 complete
-- **Plan:** Plan 03 (Storage seam + Zod env + pino logger) — DONE; Plan 04 (`/api/health` Route Handler) is next
+- **Phase:** Phase 1 (Foundation) — Waves 0 + 1 + 2 + 3 complete (all 6 Wave-0 vitest files GREEN)
+- **Plan:** Plan 04 (`/api/health` Route Handler) — DONE; Plan 05 (Deploy artifact: nixpacks + Dockerfile + railway.toml + smoke) is next
 - **Status:** Executing Phase 01
 
 ```
-Progress: [████████████░░░░░░░░] 60% (3/5 plans in phase 01 · 0/7 phases overall)
+Progress: [████████████████░░░░] 80% (4/5 plans in phase 01 · 0/7 phases overall)
 ```
 
 | Phase                         | Status                                          |
 | ----------------------------- | ----------------------------------------------- |
-| 1. Foundation                 | In progress (3/5 plans complete — Wave 2 GREEN) |
+| 1. Foundation                 | In progress (4/5 plans complete — Wave 3 GREEN) |
 | 2. Design System              | Not started                                     |
 | 3. Marketing Landing          | Not started                                     |
 | 4. Chat Backbone              | Not started                                     |
@@ -51,15 +51,16 @@ Progress: [████████████░░░░░░░░] 60% (3/
 ## Performance Metrics
 
 - Phases complete: 0/7
-- Plans complete: 3/5 in phase 01 (0 plans complete in other phases)
-- Requirements covered: 29/29 (mapped; FOUND-01 / FOUND-04 / FOUND-06 / FOUND-07 implemented as of Plan 03; FOUND-07 no-Vercel audit closes in Plan 05)
-- Time-in-phase: 16m 17s (Plan 01: 5m21s + Plan 02: 6m48s + Plan 03: 4m08s)
+- Plans complete: 4/5 in phase 01 (0 plans complete in other phases)
+- Requirements covered: 29/29 (mapped; FOUND-01 / FOUND-04 / FOUND-06 / FOUND-07 / OPS-01 implemented as of Plan 04; FOUND-07 no-Vercel audit closes in Plan 05)
+- Time-in-phase: 17m 28s (Plan 01: 5m21s + Plan 02: 6m48s + Plan 03: 4m08s + Plan 04: 1m11s)
 
-| Phase         | Plan | Duration | Tasks | Files                            | Date       |
-| ------------- | ---- | -------- | ----- | -------------------------------- | ---------- |
-| 01-foundation | 01   | 5m 21s   | 3     | 12 new + 1 modified (.gitignore) | 2026-04-27 |
-| 01-foundation | 02   | 6m 48s   | 3     | 3 new + 7 modified               | 2026-04-27 |
+| Phase         | Plan | Duration | Tasks | Files                             | Date       |
+| ------------- | ---- | -------- | ----- | --------------------------------- | ---------- |
+| 01-foundation | 01   | 5m 21s   | 3     | 12 new + 1 modified (.gitignore)  | 2026-04-27 |
+| 01-foundation | 02   | 6m 48s   | 3     | 3 new + 7 modified                | 2026-04-27 |
 | 01-foundation | 03   | 4m 08s   | 3     | 9 new + 1 modified (package.json) | 2026-04-27 |
+| 01-foundation | 04   | 1m 11s   | 1     | 1 new                             | 2026-04-27 |
 
 ## Accumulated Context
 
@@ -108,9 +109,17 @@ Progress: [████████████░░░░░░░░] 60% (3/
 - `getDb()` is called per-method in `health-probe.ts` (not at module load) — preserves the lazy-open contract; importing the storage barrel doesn't open the DB.
 - Zod v4 `flatten().fieldErrors` works as expected on 4.3.6 — verified live with `node -e` before implementation. The PLAN.md fallback contingency was unused.
 
+### Decisions logged from Plan 01-04
+
+- Adopted RESEARCH.md Pattern 4 verbatim — the Plan 01 RED test asserted the exact response shape and 503-on-throw branch, so any drift would have broken the test contract. Both cases passed on first run.
+- `commitSha` and `buildTime` read from `process.env.NEXT_PUBLIC_COMMIT_SHA` / `process.env.BUILD_TIME` (with `?? "unknown"` fallback), NOT from the `env` const — keeps the route's contract stable regardless of how `env.ts` defaulting changes, and lets test mocks set process.env directly without re-parsing the Zod schema.
+- Explicit `if (readBack === null) throw` null-check inside the try block — without it, a successful write but missing read would silently report `db.ok: true`, defeating D-08's live-probe purpose.
+- T-1-02 (info disclosure via /api/health response body) accepted for Phase 1 per CLAUDE.md "Auth v1: None / shared-link". No PII or auth material in the 6-field response. Future PII/auth introduction should split to `/api/health` (public liveness) + `/api/health/internal` (auth-gated).
+- No `POST`/`DELETE`/`PUT` handler, no `/api/ready`, no `/api/live` — D-10 explicit: single endpoint, GET-only. K8s-style split probes deferred until Azure Container Apps explicitly needs them.
+
 ### Open Todos
 
-- Execute Plan 04: `/api/health` Route Handler (Wave 3). Turns the last Wave-0 RED test (`src/app/api/health/route.test.ts`) GREEN.
+- Execute Plan 05: Deploy artifact (nixpacks.toml + Dockerfile + railway.toml + docker-health.sh smoke). Closes Phase 1.
 - Decide MCP server URL convention (env var name, default value) at Phase 4 planning.
 
 ### Blockers
@@ -124,14 +133,14 @@ None.
 
 ## Session Continuity
 
-**Last action:** Completed Plan 01-03 — Storage seam + Zod env + pino logger (3 tasks: e007124, bb9d42a, d6e0c22). FOUND-06 + FOUND-07 implemented (env-driven config + Postgres-swappable storage). 5 of 6 Wave-0 vitest files GREEN; only `src/app/api/health/route.test.ts` remains RED.
+**Last action:** Completed Plan 01-04 — `/api/health` Route Handler (1 task: 242bf51). OPS-01 implemented (6-field JSON contract on 200 happy, 503 degraded on storage probe failure, runtime='nodejs', dynamic='force-dynamic'). All 6 Wave-0 vitest files GREEN (18 tests passing). `pnpm build` succeeds with `/api/health` marked Dynamic and emitted into `.next/standalone/.next/server/app/api/health/route.js`.
 
-**Next action:** Execute Plan 01-04 (`/api/health` Route Handler — Wave 3).
+**Next action:** Execute Plan 01-05 (Deploy artifact — nixpacks.toml + Dockerfile + railway.toml + docker-health.sh smoke).
 
-**Resumption:** Read `.planning/phases/01-foundation/01-03-SUMMARY.md` for what landed, then `.planning/phases/01-foundation/01-04-PLAN.md` for what's next. The storage seam is real and Postgres-swappable; Plan 04 wires `/api/health` against `healthProbeRepo` (from `@/lib/storage`) to ship the 6-field health endpoint.
+**Resumption:** Read `.planning/phases/01-foundation/01-04-SUMMARY.md` for what landed, then `.planning/phases/01-foundation/01-05-PLAN.md` for what's next. `/api/health` is alive; Plan 05 wraps it in the deploy contract (Railway healthcheckPath, Docker HEALTHCHECK directive, multi-stage Dockerfile with `output: 'standalone'` + non-root user).
 
-**Last session:** 2026-04-27T18:26:09.821Z
+**Last session:** 2026-04-27T18:32:09.544Z
 
 ---
 
-_State initialized: 2026-04-26 · Updated 2026-04-27 after 01-03-PLAN.md_
+_State initialized: 2026-04-26 · Updated 2026-04-27 after 01-04-PLAN.md_
