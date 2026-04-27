@@ -1,1 +1,29 @@
 .DS_Store
+
+# Next.js
+/.next/
+/out/
+/build
+next-env.d.ts
+tsconfig.tsbuildinfo
+
+# Node
+/node_modules/
+
+# Env files (committed example only — never the real one)
+.env
+.env.local
+.env.*.local
+.env.development
+.env.production
+
+# Local sqlite (development DB_PATH default per CONTEXT.md D-07)
+/.data/
+
+# Test coverage
+/coverage/
+
+# OS / editor
+.vscode/
+.idea/
+*.log
