@@ -3,18 +3,18 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-last_updated: "2026-04-27T18:17:33.524Z"
+last_updated: "2026-04-27T18:26:09.825Z"
 progress:
   total_phases: 7
   completed_phases: 0
   total_plans: 5
-  completed_plans: 2
-  percent: 40
+  completed_plans: 3
+  percent: 60
 ---
 
 # State: DataPraat
 
-**Last updated:** 2026-04-27 (after Plan 01-02)
+**Last updated:** 2026-04-27 (after Plan 01-03)
 
 ## Project Reference
 
@@ -27,20 +27,20 @@ progress:
 ## Current Position
 
 Phase: 01 (foundation) — EXECUTING
-Plan: 3 of 5
+Plan: 4 of 5
 
 - **Milestone:** v1
-- **Phase:** Phase 1 (Foundation) — Waves 0 + 1 complete
-- **Plan:** Plan 02 (Toolchain + scaffold trim) — DONE; Plan 03 (Storage seam + Zod env + pino logger) is next
+- **Phase:** Phase 1 (Foundation) — Waves 0 + 1 + 2 complete
+- **Plan:** Plan 03 (Storage seam + Zod env + pino logger) — DONE; Plan 04 (`/api/health` Route Handler) is next
 - **Status:** Executing Phase 01
 
 ```
-Progress: [████░░░░░░░░░░░░░░░░] 40% (2/5 plans in phase 01 · 0/7 phases overall)
+Progress: [████████████░░░░░░░░] 60% (3/5 plans in phase 01 · 0/7 phases overall)
 ```
 
 | Phase                         | Status                                          |
 | ----------------------------- | ----------------------------------------------- |
-| 1. Foundation                 | In progress (2/5 plans complete — Wave 1 GREEN) |
+| 1. Foundation                 | In progress (3/5 plans complete — Wave 2 GREEN) |
 | 2. Design System              | Not started                                     |
 | 3. Marketing Landing          | Not started                                     |
 | 4. Chat Backbone              | Not started                                     |
@@ -51,14 +51,15 @@ Progress: [████░░░░░░░░░░░░░░░░] 40% (2/
 ## Performance Metrics
 
 - Phases complete: 0/7
-- Plans complete: 2/5 in phase 01 (0 plans complete in other phases)
-- Requirements covered: 29/29 (mapped; FOUND-01 / FOUND-04 / FOUND-07-partial implemented as of Plan 02)
-- Time-in-phase: 12m 09s (Plan 01: 5m21s + Plan 02: 6m48s)
+- Plans complete: 3/5 in phase 01 (0 plans complete in other phases)
+- Requirements covered: 29/29 (mapped; FOUND-01 / FOUND-04 / FOUND-06 / FOUND-07 implemented as of Plan 03; FOUND-07 no-Vercel audit closes in Plan 05)
+- Time-in-phase: 16m 17s (Plan 01: 5m21s + Plan 02: 6m48s + Plan 03: 4m08s)
 
 | Phase         | Plan | Duration | Tasks | Files                            | Date       |
 | ------------- | ---- | -------- | ----- | -------------------------------- | ---------- |
 | 01-foundation | 01   | 5m 21s   | 3     | 12 new + 1 modified (.gitignore) | 2026-04-27 |
 | 01-foundation | 02   | 6m 48s   | 3     | 3 new + 7 modified               | 2026-04-27 |
+| 01-foundation | 03   | 4m 08s   | 3     | 9 new + 1 modified (package.json) | 2026-04-27 |
 
 ## Accumulated Context
 
@@ -97,9 +98,19 @@ Progress: [████░░░░░░░░░░░░░░░░] 40% (2/
 - `src/app/layout.tsx` set to `<html lang="nl">` with DataPraat metadata; scaffold's Geist fonts dropped (design tokens land Phase 2).
 - Skipped `.env.development` per RESEARCH.md — Zod schema (Plan 03) provides defaults; `.env.example` + `.env.local` is the cleaner override contract.
 
+### Decisions logged from Plan 01-03
+
+- Adopted RESEARCH.md Pattern 1/2/3 + Discretion Gap 3/4 snippets verbatim — the Plan-01 RED tests were authored against those exact module signatures, so any shape drift would have broken the test contract.
+- `pnpm.onlyBuiltDependencies = ["better-sqlite3"]` added to `package.json` (Rule 3) — pnpm 10 blocks native build scripts by default; Plan 02 installed the dep but the prebuild step was latent. Without this, `new Database(...)` throws `Could not locate the bindings file` at runtime.
+- `.npmrc` with `public-hoist-pattern[]=*eslint*` + `*prettier*` (Rule 3) — eslint-config-next references `eslint-plugin-react-hooks` by bare name; under pnpm strict layout the plugin lives in `.pnpm/...` only and ESLint can't resolve it from the project root. Canonical pnpm + Next.js bridge.
+- `repos.ts` exports ONLY `HealthProbeRepo` — domain repos (Conversation, Report, etc.) land in their introducing phase per CONTEXT.md D-05.
+- Migration runner uses literal regex `^\d{4}_[a-zA-Z0-9_]+\.sql$` (T-1-03 mitigation); only files matching this pattern are loaded from the `migrations/` directory.
+- `getDb()` is called per-method in `health-probe.ts` (not at module load) — preserves the lazy-open contract; importing the storage barrel doesn't open the DB.
+- Zod v4 `flatten().fieldErrors` works as expected on 4.3.6 — verified live with `node -e` before implementation. The PLAN.md fallback contingency was unused.
+
 ### Open Todos
 
-- Execute Plan 03: Storage seam + Zod env + pino logger (Wave 2). Turns the four remaining Plan-01 RED tests GREEN.
+- Execute Plan 04: `/api/health` Route Handler (Wave 3). Turns the last Wave-0 RED test (`src/app/api/health/route.test.ts`) GREEN.
 - Decide MCP server URL convention (env var name, default value) at Phase 4 planning.
 
 ### Blockers
@@ -113,14 +124,14 @@ None.
 
 ## Session Continuity
 
-**Last action:** Completed Plan 01-02 — Toolchain + scaffold trim (3 tasks + 1 housekeeping commit: 8957559, 45df13b, 9671bcd, c9074c3). FOUND-01, FOUND-04 implemented; FOUND-07 partially (`.env.example` shipped; the no-Vercel + no-secrets audit closes in Plan 05).
+**Last action:** Completed Plan 01-03 — Storage seam + Zod env + pino logger (3 tasks: e007124, bb9d42a, d6e0c22). FOUND-06 + FOUND-07 implemented (env-driven config + Postgres-swappable storage). 5 of 6 Wave-0 vitest files GREEN; only `src/app/api/health/route.test.ts` remains RED.
 
-**Next action:** Execute Plan 01-03 (Storage seam + Zod env + pino logger — Wave 2).
+**Next action:** Execute Plan 01-04 (`/api/health` Route Handler — Wave 3).
 
-**Resumption:** Read `.planning/phases/01-foundation/01-02-SUMMARY.md` for what landed, then `.planning/phases/01-foundation/01-03-PLAN.md` for what's next. The toolchain is green; Plan 03 turns the four remaining Plan-01 RED tests (env, client, migrate, health-probe) GREEN.
+**Resumption:** Read `.planning/phases/01-foundation/01-03-SUMMARY.md` for what landed, then `.planning/phases/01-foundation/01-04-PLAN.md` for what's next. The storage seam is real and Postgres-swappable; Plan 04 wires `/api/health` against `healthProbeRepo` (from `@/lib/storage`) to ship the 6-field health endpoint.
 
-**Last session:** 2026-04-27T18:17:33.521Z
+**Last session:** 2026-04-27T18:26:09.821Z
 
 ---
 
-_State initialized: 2026-04-26 · Updated 2026-04-27 after 01-02-PLAN.md_
+_State initialized: 2026-04-26 · Updated 2026-04-27 after 01-03-PLAN.md_

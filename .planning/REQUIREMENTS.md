@@ -14,8 +14,8 @@ Requirements for initial release. Each maps to roadmap phases.
 - [ ] **FOUND-03**: shadcn 4 (`base-vega` style) + Base UI + Tabler Icons are installed and the shadcn CLI can add new components
 - [x] **FOUND-04**: ESLint, Prettier, and TypeScript strict mode are configured and pass on a clean checkout
 - [ ] **FOUND-05**: Production build uses `output: 'standalone'`; a working Dockerfile + Nixpacks config builds and runs the app
-- [ ] **FOUND-06**: Persistence layer uses `better-sqlite3` mounted at `/data` and is hidden behind a storage interface that can later swap to Postgres
-- [ ] **FOUND-07**: All config is env-driven; `.env.example` lists every required variable; no secrets, no Vercel-only APIs in code
+- [x] **FOUND-06**: Persistence layer uses `better-sqlite3` mounted at `/data` and is hidden behind a storage interface that can later swap to Postgres
+- [x] **FOUND-07**: All config is env-driven; `.env.example` lists every required variable; no secrets, no Vercel-only APIs in code
 
 ### Design system
 
@@ -110,8 +110,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | FOUND-03    | Phase 2 | Pending  |
 | FOUND-04    | Phase 1 | Complete |
 | FOUND-05    | Phase 1 | Pending  |
-| FOUND-06    | Phase 1 | Pending  |
-| FOUND-07    | Phase 1 | Pending  |
+| FOUND-06    | Phase 1 | Complete |
+| FOUND-07    | Phase 1 | Complete |
 | DS-01       | Phase 2 | Pending  |
 | DS-02       | Phase 2 | Pending  |
 | DS-03       | Phase 2 | Pending  |
