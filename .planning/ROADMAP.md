@@ -134,7 +134,7 @@ The following phases can run concurrently once their dependencies are satisfied:
 
 | Phase                         | Plans Complete | Status      | Completed |
 | ----------------------------- | -------------- | ----------- | --------- |
-| 1. Foundation                 | 2/5 | In Progress|  |
+| 1. Foundation                 | 2/5            | In Progress |           |
 | 2. Design System              | 0/0            | Not started | -         |
 | 3. Marketing Landing          | 0/0            | Not started | -         |
 | 4. Chat Backbone              | 0/0            | Not started | -         |

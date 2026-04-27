@@ -103,37 +103,37 @@ Explicitly excluded. Documented to prevent scope creep.
 
 Which phases cover which requirements. Updated during roadmap creation.
 
-| Requirement | Phase   | Status  |
-| ----------- | ------- | ------- |
+| Requirement | Phase   | Status   |
+| ----------- | ------- | -------- |
 | FOUND-01    | Phase 1 | Complete |
-| FOUND-02    | Phase 2 | Pending |
-| FOUND-03    | Phase 2 | Pending |
+| FOUND-02    | Phase 2 | Pending  |
+| FOUND-03    | Phase 2 | Pending  |
 | FOUND-04    | Phase 1 | Complete |
-| FOUND-05    | Phase 1 | Pending |
-| FOUND-06    | Phase 1 | Pending |
-| FOUND-07    | Phase 1 | Pending |
-| DS-01       | Phase 2 | Pending |
-| DS-02       | Phase 2 | Pending |
-| DS-03       | Phase 2 | Pending |
-| DS-04       | Phase 2 | Pending |
-| MKT-01      | Phase 3 | Pending |
-| MKT-02      | Phase 3 | Pending |
-| MKT-03      | Phase 3 | Pending |
-| CHAT-01     | Phase 4 | Pending |
-| CHAT-02     | Phase 4 | Pending |
-| CHAT-03     | Phase 4 | Pending |
-| CHAT-04     | Phase 5 | Pending |
-| CHAT-05     | Phase 4 | Pending |
-| CHAT-06     | Phase 5 | Pending |
-| OVZ-01      | Phase 6 | Pending |
-| OVZ-02      | Phase 6 | Pending |
-| OVZ-03      | Phase 6 | Pending |
-| STUB-01     | Phase 7 | Pending |
-| STUB-02     | Phase 7 | Pending |
-| OPS-01      | Phase 1 | Pending |
-| OPS-02      | Phase 7 | Pending |
-| OPS-03      | Phase 7 | Pending |
-| OPS-04      | Phase 7 | Pending |
+| FOUND-05    | Phase 1 | Pending  |
+| FOUND-06    | Phase 1 | Pending  |
+| FOUND-07    | Phase 1 | Pending  |
+| DS-01       | Phase 2 | Pending  |
+| DS-02       | Phase 2 | Pending  |
+| DS-03       | Phase 2 | Pending  |
+| DS-04       | Phase 2 | Pending  |
+| MKT-01      | Phase 3 | Pending  |
+| MKT-02      | Phase 3 | Pending  |
+| MKT-03      | Phase 3 | Pending  |
+| CHAT-01     | Phase 4 | Pending  |
+| CHAT-02     | Phase 4 | Pending  |
+| CHAT-03     | Phase 4 | Pending  |
+| CHAT-04     | Phase 5 | Pending  |
+| CHAT-05     | Phase 4 | Pending  |
+| CHAT-06     | Phase 5 | Pending  |
+| OVZ-01      | Phase 6 | Pending  |
+| OVZ-02      | Phase 6 | Pending  |
+| OVZ-03      | Phase 6 | Pending  |
+| STUB-01     | Phase 7 | Pending  |
+| STUB-02     | Phase 7 | Pending  |
+| OPS-01      | Phase 1 | Pending  |
+| OPS-02      | Phase 7 | Pending  |
+| OPS-03      | Phase 7 | Pending  |
+| OPS-04      | Phase 7 | Pending  |
 
 **Coverage:**
 
