@@ -2,7 +2,7 @@
 phase: 1
 slug: foundation
 status: draft
-nyquist_compliant: false
+nyquist_compliant: true
 wave_0_complete: false
 created: 2026-04-26
 ---
@@ -42,7 +42,19 @@ created: 2026-04-26
 
 | Task ID | Plan | Wave | Requirement | Threat Ref | Secure Behavior | Test Type | Automated Command | File Exists | Status |
 |---------|------|------|-------------|------------|-----------------|-----------|-------------------|-------------|--------|
-| _to be filled by planner_ | | | | | | | | | ⬜ pending |
+| 01-01-T1 | 01 | 0 | FOUND-01, FOUND-07 | T-1-01 | .gitignore covers .env*, .data/ before any code lands | scaffold | `grep -q "/.next/" .gitignore && grep -q "/.data/" .gitignore && pnpm exec vitest --version` | inline | ⬜ pending |
+| 01-01-T2 | 01 | 0 | FOUND-06, FOUND-07, OPS-01 | — | Test scaffolds exist for every requirement (RED until impl) | unit | `pnpm exec vitest --run (expects RED)` | src/lib/env.test.ts; src/lib/storage/sqlite/{client,migrate,health-probe}.test.ts; src/app/api/health/route.test.ts; scripts/check-env-example.test.ts | ⬜ pending |
+| 01-01-T3 | 01 | 0 | FOUND-01, FOUND-05, FOUND-07, OPS-01 | T-1-01 | Vercel-avoidance + standalone + dev-boot + docker e2e shell scripts exist | static/smoke | `bash -n scripts/*.sh && bash scripts/check-no-vercel.sh` | scripts/check-{dev-boot,standalone,no-vercel,docker-health}.sh | ⬜ pending |
+| 01-02-T1 | 02 | 1 | FOUND-01, FOUND-04 | — | Three-way Node/pnpm pin + exact version pins; no premature deps | static | `node -e parse package.json (see 01-02-PLAN verify block)` | inline | ⬜ pending |
+| 01-02-T2 | 02 | 1 | FOUND-04, FOUND-07 | T-1-01 | ESLint 9 flat + Prettier + strict TS + .env.example documents runtime contract | static | `pnpm exec eslint --version && pnpm exec prettier --version && pnpm exec tsc --version && pnpm exec vitest --run scripts/check-env-example.test.ts` | scripts/check-env-example.test.ts | ⬜ pending |
+| 01-02-T3 | 02 | 1 | FOUND-01, FOUND-05 | — | next.config.ts: output:standalone + build-time env injection; lang=nl layout; minimal page | smoke | `pnpm exec tsc --noEmit && pnpm exec eslint . && pnpm build && bash scripts/check-standalone.sh` | scripts/check-standalone.sh | ⬜ pending |
+| 01-03-T1 | 03 | 2 | FOUND-07 | T-1-01 | Zod fail-fast env parser + pino logger | unit | `pnpm exec vitest --run src/lib/env.test.ts` | src/lib/env.test.ts | ⬜ pending |
+| 01-03-T2 | 03 | 2 | FOUND-06 | T-1-03 | Migration runner with strict regex (path-traversal mitigation) + lazy memoized getDb | unit | `pnpm exec vitest --run src/lib/storage/sqlite/migrate.test.ts src/lib/storage/sqlite/client.test.ts` | src/lib/storage/sqlite/{migrate,client}.test.ts | ⬜ pending |
+| 01-03-T3 | 03 | 2 | FOUND-06 | — | Repo-per-domain async storage seam (HealthProbeRepo + sqlite impl + barrel) | unit | `pnpm exec vitest --run src/lib/storage/sqlite/health-probe.test.ts` | src/lib/storage/sqlite/health-probe.test.ts | ⬜ pending |
+| 01-04-T1 | 04 | 3 | OPS-01 | T-1-02 | /api/health 6-field contract; 200 happy / 503 degraded; nodejs runtime; force-dynamic | integration | `pnpm exec vitest --run src/app/api/health/route.test.ts && pnpm build` | src/app/api/health/route.test.ts | ⬜ pending |
+| 01-05-T1 | 05 | 4 | FOUND-05 | T-1-04 | Multi-stage Alpine Dockerfile (deps+builder+runner) with native-binding gotchas resolved + USER nextjs + HEALTHCHECK | smoke | `docker build -t datapraat:phase1-local . && bash scripts/check-docker-health.sh` | scripts/check-docker-health.sh | ⬜ pending |
+| 01-05-T2 | 05 | 4 | FOUND-05, FOUND-07 | T-1-01 | nixpacks.toml + railway.toml correct + full phase gate green | gate | `pnpm exec tsc --noEmit && pnpm exec eslint . && pnpm exec prettier --check . && pnpm exec vitest --run && pnpm build && bash scripts/check-standalone.sh && bash scripts/check-no-vercel.sh && bash scripts/check-docker-health.sh` | scripts/check-{standalone,no-vercel,docker-health}.sh | ⬜ pending |
+| 01-05-T3 | 05 | 4 | FOUND-05, OPS-01 | T-1-02 | Railway public deploy returns /api/health 200 + db.ok=true (volume mount real) | manual | `MANUAL — see 01-VALIDATION Manual-Only Verifications table` | — | ⬜ pending |
 
 *Status: ⬜ pending · ✅ green · ❌ red · ⚠️ flaky*
 
@@ -85,4 +97,4 @@ Test framework + scripts that must land BEFORE the implementation waves:
 - [ ] Feedback latency < 10s per-task, < 60s per-wave
 - [ ] `nyquist_compliant: true` set in frontmatter once planner has filled the per-task map and the plan-checker has verified coverage
 
-**Approval:** pending
+**Approval:** planner-filled — awaits plan-checker review and execution

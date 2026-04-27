@@ -31,7 +31,12 @@ Foundation first (boots, builds, deploys), then design system in parallel with m
   3. The app builds and runs from the included `Dockerfile`/Nixpacks config and exposes `/api/health` returning 200 with build info.
   4. A `better-sqlite3`-backed storage interface reads/writes at `/data` (Railway volume path) and is hidden behind an interface seam ready for a Postgres swap.
   5. `.env.example` enumerates every required env var and the codebase contains no Vercel-only APIs and no hardcoded secrets.
-**Plans**: TBD
+**Plans**: 5 plans
+- [ ] 01-01-PLAN.md — Wave 0 test infrastructure & verification scripts
+- [ ] 01-02-PLAN.md — Toolchain + scaffold trim (pin Node/pnpm, ESLint 9, Prettier, strict TS, next.config.ts standalone)
+- [ ] 01-03-PLAN.md — Env + logger + storage seam (Zod env, pino, sqlite repo + migrations)
+- [ ] 01-04-PLAN.md — /api/health Route Handler (6-field contract, 200/503)
+- [ ] 01-05-PLAN.md — Deploy artifacts (Dockerfile, .dockerignore, nixpacks.toml, railway.toml) + Railway human-verify
 
 ### Phase 2: Design System
 **Goal**: DataPraat's visual language is encoded as Tailwind 4 tokens and reusable primitives that every later phase consumes without re-inventing styling.
@@ -114,7 +119,7 @@ The following phases can run concurrently once their dependencies are satisfied:
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation | 0/0 | Not started | - |
+| 1. Foundation | 0/5 | Not started | - |
 | 2. Design System | 0/0 | Not started | - |
 | 3. Marketing Landing | 0/0 | Not started | - |
 | 4. Chat Backbone | 0/0 | Not started | - |
