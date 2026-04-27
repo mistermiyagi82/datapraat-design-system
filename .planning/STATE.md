@@ -3,18 +3,18 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-last_updated: "2026-04-27T18:04:09.501Z"
+last_updated: "2026-04-27T18:17:33.524Z"
 progress:
   total_phases: 7
   completed_phases: 0
   total_plans: 5
-  completed_plans: 1
-  percent: 20
+  completed_plans: 2
+  percent: 40
 ---
 
 # State: DataPraat
 
-**Last updated:** 2026-04-27
+**Last updated:** 2026-04-27 (after Plan 01-02)
 
 ## Project Reference
 
@@ -27,20 +27,20 @@ progress:
 ## Current Position
 
 Phase: 01 (foundation) — EXECUTING
-Plan: 2 of 5
+Plan: 3 of 5
 
 - **Milestone:** v1
-- **Phase:** Phase 1 (Foundation) — Wave 0 complete
-- **Plan:** Plan 01 (Wave 0 — Test Infrastructure & Verification Rails) — DONE; Plan 02 (Strict TS + ESLint flat + Prettier + Zod env + minimal layout/page) is next
+- **Phase:** Phase 1 (Foundation) — Waves 0 + 1 complete
+- **Plan:** Plan 02 (Toolchain + scaffold trim) — DONE; Plan 03 (Storage seam + Zod env + pino logger) is next
 - **Status:** Executing Phase 01
 
 ```
-Progress: [██░░░░░░░░░░░░░░░░░░] 20% (1/5 plans in phase 01 · 0/7 phases overall)
+Progress: [████░░░░░░░░░░░░░░░░] 40% (2/5 plans in phase 01 · 0/7 phases overall)
 ```
 
 | Phase                         | Status                                          |
 | ----------------------------- | ----------------------------------------------- |
-| 1. Foundation                 | In progress (1/5 plans complete — Wave 0 GREEN) |
+| 1. Foundation                 | In progress (2/5 plans complete — Wave 1 GREEN) |
 | 2. Design System              | Not started                                     |
 | 3. Marketing Landing          | Not started                                     |
 | 4. Chat Backbone              | Not started                                     |
@@ -51,13 +51,14 @@ Progress: [██░░░░░░░░░░░░░░░░░░] 20% (1/
 ## Performance Metrics
 
 - Phases complete: 0/7
-- Plans complete: 1/5 in phase 01 (0 plans complete in other phases)
-- Requirements covered: 29/29 (mapped, 0/29 implemented — Wave 0 ships RED tests for FOUND-01/04/05/06/07 + OPS-01)
-- Time-in-phase: 5m 21s (Plan 01 only)
+- Plans complete: 2/5 in phase 01 (0 plans complete in other phases)
+- Requirements covered: 29/29 (mapped; FOUND-01 / FOUND-04 / FOUND-07-partial implemented as of Plan 02)
+- Time-in-phase: 12m 09s (Plan 01: 5m21s + Plan 02: 6m48s)
 
 | Phase         | Plan | Duration | Tasks | Files                            | Date       |
 | ------------- | ---- | -------- | ----- | -------------------------------- | ---------- |
 | 01-foundation | 01   | 5m 21s   | 3     | 12 new + 1 modified (.gitignore) | 2026-04-27 |
+| 01-foundation | 02   | 6m 48s   | 3     | 3 new + 7 modified               | 2026-04-27 |
 
 ## Accumulated Context
 
@@ -83,9 +84,22 @@ Progress: [██░░░░░░░░░░░░░░░░░░] 20% (1/
 - `.gitignore` extended preserving the original `.DS_Store` line.
 - Prototype HTML/JSX/CSS files at repo root left untouched (per CONTEXT.md D-01).
 
+### Decisions logged from Plan 01-02
+
+- Pinned Next.js to 15.5.15 (downgraded from Plan 01's scaffold default of 16.2.4); same for `eslint-config-next` (15.5.15) — locked at the 15-line per PROJECT.md.
+- RESEARCH.md proposed `@types/react-dom@19.2.5`, `@eslint/eslintrc@3.3.2`, `vitest@3.4.0` — none yet published. Substituted latest published patches (`19.2.3`, `3.3.5`, `3.2.4`).
+- Three-way Node/pnpm pin closed: `engines.node = ">=22 <23"` + `packageManager = "pnpm@10.30.2"` + `.nvmrc = 22` (the latter from Plan 01).
+- ESLint 9 flat config bridged to `eslint-config-next` via `FlatCompat` (the canonical Next.js maintainer pattern from discussion #71806; eslint-config-next still ships eslintrc-format only).
+- `tsconfig.json` excludes `**/*.test.ts` so tsc passes on a tree where Wave-0 RED tests import not-yet-created modules; vitest still type-checks at test time.
+- `next.config.ts` adds `outputFileTracingRoot=__dirname` (Rule 3 fix) — without it, Next inferred `/Users/daan` as workspace root because of an unrelated `package-lock.json` higher up the tree, breaking the `.next/standalone/server.js` placement.
+- `next.config.ts` injects `NEXT_PUBLIC_COMMIT_SHA` (from `RAILWAY_GIT_COMMIT_SHA` slice or `git rev-parse --short HEAD` fallback) and `BUILD_TIME` (from `Date.now()`) at build time per CONTEXT.md D-12.
+- `.env.example` documents `NODE_ENV`, `LOG_LEVEL`, `DB_PATH`; intentionally omits `NEXT_PUBLIC_COMMIT_SHA`/`BUILD_TIME` per RESEARCH.md Discretion Gap 5 — they're build-time-injected, not runtime-configurable.
+- `src/app/layout.tsx` set to `<html lang="nl">` with DataPraat metadata; scaffold's Geist fonts dropped (design tokens land Phase 2).
+- Skipped `.env.development` per RESEARCH.md — Zod schema (Plan 03) provides defaults; `.env.example` + `.env.local` is the cleaner override contract.
+
 ### Open Todos
 
-- Execute Plan 02: Strict TS + ESLint flat + Prettier + Zod env + minimal layout/page (Wave 1).
+- Execute Plan 03: Storage seam + Zod env + pino logger (Wave 2). Turns the four remaining Plan-01 RED tests GREEN.
 - Decide MCP server URL convention (env var name, default value) at Phase 4 planning.
 
 ### Blockers
@@ -99,14 +113,14 @@ None.
 
 ## Session Continuity
 
-**Last action:** Completed Plan 01-01 — Wave 0 test infrastructure & verification rails (3 tasks, 3 commits: b57f2cf, 2b4ca8e, b0b471f).
+**Last action:** Completed Plan 01-02 — Toolchain + scaffold trim (3 tasks + 1 housekeeping commit: 8957559, 45df13b, 9671bcd, c9074c3). FOUND-01, FOUND-04 implemented; FOUND-07 partially (`.env.example` shipped; the no-Vercel + no-secrets audit closes in Plan 05).
 
-**Next action:** Execute Plan 01-02 (Strict TS + ESLint flat + Prettier + Zod env + minimal layout/page).
+**Next action:** Execute Plan 01-03 (Storage seam + Zod env + pino logger — Wave 2).
 
-**Resumption:** Read `.planning/phases/01-foundation/01-01-SUMMARY.md` for what landed, then `.planning/phases/01-foundation/01-02-PLAN.md` for what's next. The Wave 0 tests are RED; Plan 02 begins turning them GREEN.
+**Resumption:** Read `.planning/phases/01-foundation/01-02-SUMMARY.md` for what landed, then `.planning/phases/01-foundation/01-03-PLAN.md` for what's next. The toolchain is green; Plan 03 turns the four remaining Plan-01 RED tests (env, client, migrate, health-probe) GREEN.
 
-**Last session:** 2026-04-27T18:02:28Z · Stopped at: Completed 01-01-PLAN.md
+**Last session:** 2026-04-27T18:17:33.521Z
 
 ---
 
-_State initialized: 2026-04-26 · Updated 2026-04-27 after 01-01-PLAN.md_
+_State initialized: 2026-04-26 · Updated 2026-04-27 after 01-02-PLAN.md_
