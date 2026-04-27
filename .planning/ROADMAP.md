@@ -32,7 +32,7 @@ Foundation first (boots, builds, deploys), then design system in parallel with m
   4. A `better-sqlite3`-backed storage interface reads/writes at `/data` (Railway volume path) and is hidden behind an interface seam ready for a Postgres swap.
   5. `.env.example` enumerates every required env var and the codebase contains no Vercel-only APIs and no hardcoded secrets.
 **Plans**: 5 plans
-- [ ] 01-01-PLAN.md — Wave 0 test infrastructure & verification scripts
+- [x] 01-01-PLAN.md — Wave 0 test infrastructure & verification scripts
 - [ ] 01-02-PLAN.md — Toolchain + scaffold trim (pin Node/pnpm, ESLint 9, Prettier, strict TS, next.config.ts standalone)
 - [ ] 01-03-PLAN.md — Env + logger + storage seam (Zod env, pino, sqlite repo + migrations)
 - [ ] 01-04-PLAN.md — /api/health Route Handler (6-field contract, 200/503)
