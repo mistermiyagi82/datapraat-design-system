@@ -5,7 +5,10 @@ set -euo pipefail
 IMAGE="datapraat:phase1-test"
 CONTAINER="datapraat-phase1-test"
 HOST_DATA_DIR="$(pwd)/.data-docker-test"
-PORT=3001
+# Allow overriding via env to avoid collisions with stray dev servers on the
+# default Next.js fallback port. Default 3101 is rarely used; set
+# DATAPRAAT_HEALTH_PORT to override on machines where 3101 is also taken.
+PORT="${DATAPRAAT_HEALTH_PORT:-3101}"
 
 cleanup() {
   docker rm -f "$CONTAINER" >/dev/null 2>&1 || true

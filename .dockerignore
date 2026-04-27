@@ -1,0 +1,62 @@
+# Source control
+.git
+.gitignore
+.gitattributes
+
+# Build outputs
+.next
+out
+build
+dist
+
+# Node
+node_modules
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Local data
+.data
+*.sqlite
+*.sqlite-journal
+*.sqlite-wal
+
+# Env files
+.env
+.env.local
+.env.*.local
+.env.development
+.env.production
+
+# Editor / OS
+.DS_Store
+.vscode
+.idea
+*.swp
+
+# Planning / docs (not needed in image)
+.planning
+COMPONENTS.md
+HANDOFF.md
+uploads
+
+# Prototype reference files (not part of the Next.js app)
+DataPraat.html
+Logos.html
+website.html
+website v2.html
+DataPraat one-pager.html
+DataPraat one-pager-print.html
+woorden-modus-verkenning.html
+*.jsx
+styles.css
+data.js
+
+# Tests / scripts (not needed at runtime)
+**/*.test.ts
+scripts
+vitest.config.ts
+
+# Coverage
+coverage
