@@ -4,8 +4,8 @@
 // only; FlatCompat is the documented bridge until Next ships native flat config.
 import { FlatCompat } from "@eslint/eslintrc";
 import js from "@eslint/js";
-import { fileURLToPath } from "node:url";
 import { dirname } from "node:path";
+import { fileURLToPath } from "node:url";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
