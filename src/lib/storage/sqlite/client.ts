@@ -7,9 +7,9 @@
 // boot if the Railway volume isn't mounted (defeats healthcheck-driven
 // restarts).
 
-import Database from "better-sqlite3";
 import { env } from "@/lib/env";
 import { logger } from "@/lib/logger";
+import Database from "better-sqlite3";
 import { runMigrations } from "./migrate";
 
 let db: Database.Database | null = null;

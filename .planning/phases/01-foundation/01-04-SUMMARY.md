@@ -17,10 +17,10 @@ affects: [01-05-deploy-artifact]
 tech-stack:
   added: []
   patterns:
-    - "Route Handler runtime pinning: `export const runtime = \"nodejs\"` + `export const dynamic = \"force-dynamic\"` — Edge runtime would fail on better-sqlite3 native binding (FOUND-07); static rendering would defeat the live probe contract"
+    - 'Route Handler runtime pinning: `export const runtime = "nodejs"` + `export const dynamic = "force-dynamic"` — Edge runtime would fail on better-sqlite3 native binding (FOUND-07); static rendering would defeat the live probe contract'
     - "Probe round-trip pattern: write `last_health_check` via recordProbe then read it back via readProbe; if readBack === null treat as failure (not just exception). probeMs = Date.now() - t0 measured around the round-trip"
     - "Single try/catch covers both storage calls — any failure flips response to 503 with status='degraded' + db.ok=false; logger.error({ err }, ...) before the 503 return so Railway logs surface the failure cause"
-    - "Build-info read from process.env (not env consts) inside the handler: process.env.NEXT_PUBLIC_COMMIT_SHA / BUILD_TIME with `?? \"unknown\"` fallback — keeps the route's contract stable regardless of how env.ts defaults change and lets test mocks set process.env directly"
+    - 'Build-info read from process.env (not env consts) inside the handler: process.env.NEXT_PUBLIC_COMMIT_SHA / BUILD_TIME with `?? "unknown"` fallback — keeps the route''s contract stable regardless of how env.ts defaults change and lets test mocks set process.env directly'
 
 key-files:
   created:

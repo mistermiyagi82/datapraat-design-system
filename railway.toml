@@ -1,0 +1,12 @@
+# Source: docs.railway.com/reference/config-as-code + CONTEXT.md D-14
+[build]
+builder = "NIXPACKS"
+
+[deploy]
+healthcheckPath = "/api/health"
+healthcheckTimeout = 30
+restartPolicyType = "ON_FAILURE"
+restartPolicyMaxRetries = 3
+
+[[volumes]]
+mountPath = "/data"

@@ -4,10 +4,10 @@
 // inside a transaction, tracks applied migrations in schema_migrations.
 // Idempotent: a second run applies zero new migrations.
 
+import { logger } from "@/lib/logger";
+import type Database from "better-sqlite3";
 import fs from "node:fs";
 import path from "node:path";
-import type Database from "better-sqlite3";
-import { logger } from "@/lib/logger";
 
 const MIGRATIONS_DIR = path.join(process.cwd(), "src/lib/storage/sqlite/migrations");
 

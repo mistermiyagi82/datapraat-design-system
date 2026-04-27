@@ -1,0 +1,15 @@
+# Source: nixpacks.com/docs/providers/node + Railway-specific defaults + RESEARCH.md
+# Nixpacks auto-detects Node 22 from package.json `engines.node`. The setup phase
+# auto-installs python3, gcc, and make when `node-gyp` is in the dependency tree.
+# We pin explicitly to be safe — better-sqlite3 needs all three.
+[phases.setup]
+nixPkgs = ["nodejs_22", "pnpm-9_x", "python3", "gcc", "gnumake"]
+
+[phases.install]
+cmds = ["pnpm install --frozen-lockfile"]
+
+[phases.build]
+cmds = ["pnpm build"]
+
+[start]
+cmd = "node .next/standalone/server.js"
