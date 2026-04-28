@@ -3,18 +3,18 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-last_updated: "2026-04-28T10:28:05.582Z"
+last_updated: "2026-04-28T10:45:44.431Z"
 progress:
   total_phases: 7
   completed_phases: 1
   total_plans: 9
-  completed_plans: 6
-  percent: 67
+  completed_plans: 7
+  percent: 78
 ---
 
 # State: DataPraat
 
-**Last updated:** 2026-04-28 (after Plan 02-01 — Phase 2 Wave 0 test infrastructure)
+**Last updated:** 2026-04-28 (after Plan 02-02 — Phase 2 Wave 1 tokens + shadcn init + fonts + fmt helpers)
 
 ## Project Reference
 
@@ -27,15 +27,15 @@ progress:
 ## Current Position
 
 Phase: 02 (design-system) — EXECUTING
-Plan: 2 of 4 (Plan 01 complete)
+Plan: 3 of 4 (Plans 01 + 02 complete)
 
 - **Milestone:** v1
 - **Phase:** 2
-- **Plan:** 02-02 next (tokens, shadcn init, fonts, format helpers)
+- **Plan:** 02-03 next (custom primitives — Icon, TrustBadge, AskButton)
 - **Status:** Executing Phase 02
 
 ```
-Progress: [██████████████░░░░░░] 67% (6/9 plans complete; phase 02 wave 0 done)
+Progress: [████████░░] 78% (7/9 plans complete; Phase 2 Waves 0+1 done)
 ```
 
 | Phase                         | Status                                                                                |
@@ -63,6 +63,7 @@ Progress: [██████████████░░░░░░] 67% (6/
 | 01-foundation | 04   | 1m 11s                  | 1     | 1 new                                      | 2026-04-27 |
 | 01-foundation | 05   | 8m 18s + Railway deploy | 3     | 5 created (Dockerfile, .dockerignore, nixpacks.toml, railway.toml, docker-entrypoint.sh) + 7 modified | 2026-04-28 |
 | 02-design-system | 01 | 5m 07s | 3 | 5 new (vitest.setup.ts + 4 RED tests) + 3 modified (package.json, pnpm-lock.yaml, vitest.config.ts) | 2026-04-28 |
+| 02-design-system | 02 | 11m 16s | 4 | 3 new (components.json, src/lib/utils.ts, src/lib/format/index.ts) + 5 modified (package.json, pnpm-lock.yaml, src/app/globals.css, src/app/layout.tsx, .prettierignore) | 2026-04-28 |
 
 ## Accumulated Context
 
@@ -128,6 +129,18 @@ Progress: [██████████████░░░░░░] 67% (6/
 - Component tests use the parent-spy pattern for stopPropagation: render `<div onClick={parentSpy}><X .../></div>`, click X, assert parentSpy NOT called. More durable than spying on the synthetic event object.
 - Accepted RESEARCH.md Rule-3 corrections to be applied in Plan 02 (NOT modifying CONTEXT.md): D-05 `toast → sonner` (shadcn deprecation per issue #7120), and D-01 missing aliases (`--sidebar-*` 8 vars present-but-empty so a future `shadcn add sidebar` doesn't fail; `--destructive-foreground` dropped per Vega 4).
 
+### Decisions logged from Plan 02-02
+
+- shadcn CLI 4.5 dropped `--style`; uses `--preset` for the visual style. Init invocation: `pnpm dlx shadcn@latest init --yes --base base --preset vega`. Resulting `components.json` still emits `"style": "base-vega"` so plan grep checks pass without modification (Rule 3).
+- shadcn 4.5 init now bundles framework deps as runtime: `@base-ui/react@1.4.1`, `tw-animate-css@1.4.0`, `lucide-react@1.11.0` (in addition to `clsx`/`tailwind-merge`/`class-variance-authority`). Plan acceptance was authored against earlier behaviour ("package.json does NOT contain @base-ui/*"); kept all required framework deps at exact pins (T-2-02 mitigation). Removed `shadcn` from runtime deps — we use `pnpm dlx`.
+- All 7 deps shadcn init wrote with caret ranges manually re-pinned to exact versions; `pnpm install --frozen-lockfile` exits 0.
+- `globals.css` written verbatim from RESEARCH.md §3 4-layer skeleton: `@import "tailwindcss"` → Layer 1 prototype `:root` → Layer 2 shadcn alias `:root` (incl. 8 `--sidebar-*` aliases per RESEARCH.md correction to D-01) → Layer 3 `@theme inline` → Layer 4 scoped `.trust.*`/`.ask-btn-*`/`body`. No OKLCH (D-02), no `prefers-color-scheme` (D-14).
+- Hex case preserved verbatim from prototype (`#5E5A53`, `#4338CA`, `#5E8A6D`, `#A85050`). Prettier auto-lowercases hex; CSS-comment `/* prettier-ignore */` is not honoured for hex normalisation; added `src/app/globals.css` to `.prettierignore` so prototype parity is non-negotiable (Rule 3).
+- next/font Fraunces ships without explicit `weight` because Next.js rejects `axes:["opsz"]` + `weight:[…]` together (build error: "Axes can only be defined for variable fonts when the weight property is nonexistent or set to `variable`"). Variable-weight font covers the 300–600 range via the wght axis automatically; functionally equivalent (Rule 3).
+- `fmtPercent` is the only NEW helper vs prototype (per ROADMAP success criterion #3). Each helper constructs Intl.NumberFormat per call (V8 caches internally); no module-level state, no try/catch, no default export, no barrel object — tree-shakable named exports per D-12.
+- 12 fmt RED tests turn GREEN on first run. The 3 component test files (Icon/TrustBadge/AskButton) remain RED — Plan 03 owns. Phase 1 GREEN tests still GREEN.
+- Plan 04 (NOT this plan) owns the toast→sonner correction. This plan does NOT install sonner / @radix-ui/react-toast.
+
 ### Decisions logged from Plan 01-05
 
 - Verbatim adoption of RESEARCH.md Pattern 6+7 snippets (Dockerfile + nixpacks.toml + railway.toml). Grep-based acceptance criteria assert exact text fragments (`apk add --no-cache libc6-compat python3 make g++`, `corepack prepare pnpm@10.30.2`, `healthcheckPath = "/api/health"`); any drift would have failed the gate.
@@ -142,9 +155,8 @@ Progress: [██████████████░░░░░░] 67% (6/
 ### Open Todos
 
 - Run `gsd-verifier` for Phase 1 sign-off.
-- Execute Plan 02-02 (tokens + shadcn init + fonts + format helpers) — turns the 12 fmt RED tests GREEN; applies the toast→sonner Rule-3 correction.
-- Execute Plan 02-03 (Icon/TrustBadge/AskButton custom primitives) — turns the 3 component test files GREEN.
-- Execute Plan 02-04 (`/internal/design` page + remaining shadcn primitives + side-by-side token QA).
+- Execute Plan 02-03 (Icon/TrustBadge/AskButton custom primitives) — turns the 3 component test files GREEN; consumes `.trust.*`/`.ask-btn-*` classes shipped in Plan 02-02.
+- Execute Plan 02-04 (`/internal/design` page + remaining shadcn primitives via `shadcn add` — toast replaced by sonner per RESEARCH.md correction + side-by-side token QA).
 - Phase 7 OPS-03: connect Railway project to GitHub for auto-deploy (obsoletes the manual `RAILWAY_GIT_COMMIT_SHA` service variable).
 - Decide MCP server URL convention (env var name, default value) at Phase 4 planning.
 
@@ -159,16 +171,16 @@ None.
 
 ## Session Continuity
 
-**Last action:** Completed Plan 02-01 — Test infrastructure for design system (3 tasks; commits d5146b0 + baf287c + 2618605). Installed 5 dev deps (jsdom, RTL, jest-dom, user-event, plugin-react); extended vitest config for jsdom + globals + plugin-react + `*.test.tsx`; created vitest.setup.ts with jest-dom matchers + afterEach(cleanup); shipped 4 RED test files locking the contracts of fmt helpers (12 tests) + Icon/TrustBadge/AskButton (3 files). RED state confirmed: vitest exits 1 with "Failed to resolve import" for all 4 files. Phase 1 tests still GREEN (6 files / 18 tests). One Rule-3 deviation: `@vitejs/plugin-react` pinned at 5.2.0 instead of RESEARCH.md's 6.0.1 (6.x requires vite 8 which Phase 1's vitest 3.2.4 doesn't ship).
+**Last action:** Completed Plan 02-02 — Tokens, shadcn init, fonts, format helpers (4 tasks; commits 5b36a67 + 7db08f8 + 58cd7ab + 6624320). Ran `shadcn init --base base --preset vega` (writes components.json + cn() helper). Replaced shadcn's OKLCH globals.css with the 4-layer hybrid skeleton (prototype `:root` + shadcn aliases incl. 8 sidebar tokens + `@theme inline` + scoped `.trust.*`/`.ask-btn-*`). Wired `next/font` for Inter + Fraunces (opsz axis) + JetBrains Mono with latin-ext subsets. Shipped `src/lib/format/index.ts` with 4 named exports — 12 Wave-0 fmt RED tests now GREEN. Component tests (Icon/TrustBadge/AskButton) remain RED — Plan 03 owns. Build green; standalone bundle still emits. Four Rule-3 deviations documented (CLI flag drift, framework deps bundled by init, Prettier hex-case, Fraunces axes constraint).
 
-**Phase 2 status:** Plan 01 (Wave 0 test infra) complete. Plans 02 (tokens/shadcn/fonts/fmt), 03 (custom primitives), 04 (/internal/design + remaining shadcn) ahead.
+**Phase 2 status:** Plans 01 + 02 complete. Plans 03 (custom primitives — turns 3 component tests GREEN), 04 (/internal/design + 9 shadcn primitives via `shadcn add`) ahead.
 
-**Next action:** Execute Plan 02-02 (tokens + shadcn init + fonts + fmt helpers). Will turn the 12 fmt RED tests GREEN.
+**Next action:** Execute Plan 02-03 (Icon/TrustBadge/AskButton TS ports + barrel index.ts).
 
-**Resumption:** Read `.planning/phases/02-design-system/02-01-SUMMARY.md` for Wave 0 close-out. ROADMAP.md Phase 2 progress now shows 1/4 plans complete.
+**Resumption:** Read `.planning/phases/02-design-system/02-02-SUMMARY.md` for Wave 1 close-out. ROADMAP.md Phase 2 progress now shows 2/4 plans complete.
 
-**Last session:** 2026-04-28T10:28:05.579Z
+**Last session:** 2026-04-28T10:43:15Z
 
 ---
 
-_State initialized: 2026-04-26 · Updated 2026-04-28 after 02-01-PLAN.md (Phase 2 Wave 0 — test infrastructure complete)_
+_State initialized: 2026-04-26 · Updated 2026-04-28 after 02-02-PLAN.md (Phase 2 Wave 1 — tokens, shadcn init, fonts, format helpers complete)_

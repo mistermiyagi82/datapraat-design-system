@@ -10,7 +10,7 @@ Requirements for initial release. Each maps to roadmap phases.
 ### Foundation
 
 - [x] **FOUND-01**: App boots in dev (`pnpm dev`) and produces a successful production build (`pnpm build`) on Next.js 15 + React 19 + TypeScript 5 (strict)
-- [ ] **FOUND-02**: Tailwind 4 is configured with DataPraat design tokens (ink levels, brand indigo, chart PxQ semantics, status triads, spacing, radii, fonts) ported from prototype `styles.css` into `@theme` directives
+- [x] **FOUND-02**: Tailwind 4 is configured with DataPraat design tokens (ink levels, brand indigo, chart PxQ semantics, status triads, spacing, radii, fonts) ported from prototype `styles.css` into `@theme` directives
 - [ ] **FOUND-03**: shadcn 4 (`base-vega` style) + Base UI + Tabler Icons are installed and the shadcn CLI can add new components
 - [x] **FOUND-04**: ESLint, Prettier, and TypeScript strict mode are configured and pass on a clean checkout
 - [x] **FOUND-05**: Production build uses `output: 'standalone'`; a working Dockerfile + Nixpacks config builds and runs the app
@@ -19,7 +19,7 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Design system
 
-- [ ] **DS-01**: Design tokens from prototype `styles.css` (`:root` variables) are ported into Tailwind 4 `@theme` and consumable across the app
+- [x] **DS-01**: Design tokens from prototype `styles.css` (`:root` variables) are ported into Tailwind 4 `@theme` and consumable across the app
 - [ ] **DS-02**: Core shadcn primitives are installed and themed: button, card, input, dialog, dropdown-menu, tabs, tooltip, toast, separator
 - [ ] **DS-03**: DataPraat-specific primitives are ported as TypeScript components: `Icon`, `TrustBadge`, `AskButton`, NL-format helpers (currency, number, percent — Dutch locale)
 - [ ] **DS-04**: A `/internal/design` route documents tokens, typography, color usage, and primitive components for team reference
@@ -106,13 +106,13 @@ Which phases cover which requirements. Updated during roadmap creation.
 | Requirement | Phase   | Status   |
 | ----------- | ------- | -------- |
 | FOUND-01    | Phase 1 | Complete |
-| FOUND-02    | Phase 2 | Pending  |
+| FOUND-02    | Phase 2 | Complete |
 | FOUND-03    | Phase 2 | Pending  |
 | FOUND-04    | Phase 1 | Complete |
 | FOUND-05    | Phase 1 | Complete |
 | FOUND-06    | Phase 1 | Complete |
 | FOUND-07    | Phase 1 | Complete |
-| DS-01       | Phase 2 | Pending  |
+| DS-01       | Phase 2 | Complete |
 | DS-02       | Phase 2 | Pending  |
 | DS-03       | Phase 2 | Pending  |
 | DS-04       | Phase 2 | Pending  |
