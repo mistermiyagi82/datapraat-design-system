@@ -3,18 +3,18 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-last_updated: "2026-04-28T10:56:09.998Z"
+last_updated: "2026-04-28T11:11:25.567Z"
 progress:
   total_phases: 7
-  completed_phases: 1
+  completed_phases: 2
   total_plans: 9
-  completed_plans: 8
-  percent: 89
+  completed_plans: 9
+  percent: 100
 ---
 
 # State: DataPraat
 
-**Last updated:** 2026-04-28 (after Plan 02-02 — Phase 2 Wave 1 tokens + shadcn init + fonts + fmt helpers)
+**Last updated:** 2026-04-28 (after Plan 02-04 — Phase 2 Wave 3 shadcn primitives + /internal/design — Phase 2 complete)
 
 ## Project Reference
 
@@ -26,27 +26,27 @@ progress:
 
 ## Current Position
 
-Phase: 02 (design-system) — EXECUTING
-Plan: 4 of 4 (Plans 01 + 02 + 03 complete)
+Phase: 02 (design-system) — COMPLETE (4/4 plans done; awaiting verifier)
+Next: Phase 3 (marketing-landing) OR Phase 4 (chat-backbone) — parallel-eligible
 
 - **Milestone:** v1
-- **Phase:** 2
-- **Plan:** 02-04 next (`/internal/design` page + 9 shadcn primitives + Sonner Toaster)
-- **Status:** Executing Phase 02
+- **Phase:** 2 (complete)
+- **Plan:** all 4 plans done; FOUND-02/03, DS-01/02/03/04 all closed
+- **Status:** Phase 02 complete — awaiting `gsd-verifier` sign-off
 
 ```
-Progress: [█████████░] 89% (8/9 plans complete; Phase 2 Waves 0+1+2 done)
+Progress: [██████████] 100% (9/9 plans complete; Phase 1 + Phase 2 done)
 ```
 
 | Phase                         | Status                                                                                |
 | ----------------------------- | ------------------------------------------------------------------------------------- |
 | 1. Foundation                 | Complete (5/5 plans done; Railway deploy live; awaiting verifier)                     |
-| 2. Design System              | Eligible (depends on Phase 1)                                                         |
-| 3. Marketing Landing          | Eligible after Phase 2 (parallel with Phase 4)                                        |
-| 4. Chat Backbone              | Blocked on Phase 2                                                                    |
+| 2. Design System              | Complete (4/4 plans done; awaiting verifier)                                          |
+| 3. Marketing Landing          | Eligible (parallel with Phase 4)                                                      |
+| 4. Chat Backbone              | Eligible (parallel with Phase 3)                                                      |
 | 5. Generative Charts & Trust  | Blocked on Phase 4                                                                    |
 | 6. Overzicht (Live VVD)       | Blocked on Phase 5                                                                    |
-| 7. Stubs & Operability Polish | Blocked on Phase 1 (ops parts) and Phase 2 (stubs); parallel-eligible with Phase 6    |
+| 7. Stubs & Operability Polish | Parallel-eligible with Phase 6                                                        |
 
 ## Performance Metrics
 
@@ -65,6 +65,7 @@ Progress: [█████████░] 89% (8/9 plans complete; Phase 2 Wave
 | 02-design-system | 01 | 5m 07s | 3 | 5 new (vitest.setup.ts + 4 RED tests) + 3 modified (package.json, pnpm-lock.yaml, vitest.config.ts) | 2026-04-28 |
 | 02-design-system | 02 | 11m 16s | 4 | 3 new (components.json, src/lib/utils.ts, src/lib/format/index.ts) + 5 modified (package.json, pnpm-lock.yaml, src/app/globals.css, src/app/layout.tsx, .prettierignore) | 2026-04-28 |
 | 02-design-system | 03 | 3m 30s | 3 | 4 new (Icon.tsx, TrustBadge.tsx, AskButton.tsx, index.ts) | 2026-04-28 |
+| 02-design-system | 04 | 9m 26s | 3 | 12 new (9 shadcn primitives + page.tsx + client-preview.tsx + deferred-items.md) + 6 modified (package.json, pnpm-lock.yaml, layout.tsx, TrustBadge.tsx, AskButton.tsx, utils.ts) | 2026-04-28 |
 
 ## Accumulated Context
 
@@ -167,9 +168,10 @@ Progress: [█████████░] 89% (8/9 plans complete; Phase 2 Wave
 ### Open Todos
 
 - Run `gsd-verifier` for Phase 1 sign-off.
-- Execute Plan 02-04 (`/internal/design` page + remaining shadcn primitives via `shadcn add` — toast replaced by sonner per RESEARCH.md correction + side-by-side token QA).
+- Run `gsd-verifier` for Phase 2 sign-off.
 - Phase 7 OPS-03: connect Railway project to GitHub for auto-deploy (obsoletes the manual `RAILWAY_GIT_COMMIT_SHA` service variable).
 - Decide MCP server URL convention (env var name, default value) at Phase 4 planning.
+- Future cleanup: either reformat `.planning/*.md` with prettier or add `.planning/**/*.md` to `.prettierignore` (16 files currently non-compliant — logged in `.planning/phases/02-design-system/deferred-items.md`).
 
 ### Blockers
 
@@ -180,18 +182,30 @@ None.
 - VVD MCP and DataPraatFormaat MCP are both available in the working environment for live wiring during Phase 4–6.
 - Phases 2/3, 3/4, and 6/7 are eligible for parallel execution per ROADMAP.md "Parallelization" section.
 
+### Decisions logged from Plan 02-04
+
+- Single CLI invocation `pnpm dlx shadcn@latest add button card input dialog dropdown-menu tabs tooltip sonner separator --yes` wrote 9 base-vega primitives consuming `@base-ui/react/*` (already at exact pin from Plan 02). No `@radix-ui/react-toast` pulled — confirms CONTEXT.md D-05 toast→sonner correction at the dependency level.
+- Auto-pulled deps re-pinned to exact: `sonner@2.0.7`, `next-themes@0.4.6` (used by `sonner.tsx` for theme detection). `pnpm install --frozen-lockfile` exits 0.
+- `<Toaster />` mounted at root in `src/app/layout.tsx` after `{children}` — single canonical hook for app-wide `toast()` calls. Did NOT add `TooltipProvider` at layout level (kept narrow scope inside `client-preview.tsx`).
+- **Rule 1 prerender bug:** `TrustBadge` and `AskButton` (Plan 03) declare unconditional inline `onClick={(e) => { e.stopPropagation(); onClick?.() }}` regardless of caller. Importing them into the server-component `/internal/design/page.tsx` failed Next.js prerender with "Event handlers cannot be passed to Client Component props". Fix: added `"use client"` directive to both. Public API unchanged; Plan 03's 12 component tests continue passing.
+- `/internal/design/page.tsx` is server-rendered; `/internal/design/client-preview.tsx` is the only `"use client"` file in the page module. Pattern 2 from RESEARCH.md (single client island for all interactive primitives).
+- Used Base UI `render={<Component />}` pattern for `DialogTrigger` / `DropdownMenuTrigger` / `TooltipTrigger` (shadcn 4.5 base-vega convention; differs from Radix `asChild`). Verified by inspecting shadcn-installed `dialog.tsx`.
+- Hand-typed `TOKENS` array (31 swatches) duplicates `globals.css` `:root` per D-15 — server components can't read computed style anyway.
+- Phase gate clean: tsc + eslint + 45 tests + build (with `/internal/design` route prerendered as 76.5 kB / 188 kB First Load JS) + standalone all exit 0. `prettier --check .` flags 16 pre-existing `.planning/*.md` files (out of scope; logged); `src/lib/utils.ts` cleanup applied in passing.
+- FOUND-03, DS-02, DS-04 all close in this plan. **Phase 2 ships.**
+
 ## Session Continuity
 
-**Last action:** Completed Plan 02-03 — Custom primitives (Icon/TrustBadge/AskButton + barrel) (3 tasks; commits f17c4bf + 5fcbce4 + dbc3217). Verbatim TS ports of `shared.jsx:5-59` with two acknowledged deviations: AskButton `type="button"` Rule-3 fix (prevents accidental form submission), and prettier-alphabetised barrel export order (functional shape unchanged). 3 Wave-0 RED component test files (Icon 3 cases + TrustBadge 5 cases + AskButton 7 cases = 15 tests) all GREEN. Full phase gate green: tsc + eslint + prettier + test:ci (10 files / 45 tests) + build + standalone all exit 0. DS-03 closes.
+**Last action:** Completed Plan 02-04 — `/internal/design` living-reference page + 9 shadcn primitives + Sonner Toaster (3 tasks; commits 6d66c27 + 04ee519). 9 shadcn base-vega primitives installed at `src/components/ui/*.tsx` (all consuming `@base-ui/react/*`; no `@radix-ui/react-toast` pulled — toast→sonner correction confirmed at dep level). `<Toaster />` mounted at root in `src/app/layout.tsx`. `/internal/design` server-component shipped with 6 anchor sections (Tokens & Colors / Typography / Custom primitives / shadcn primitives / Trust mark legend / Format helpers); single `client-preview.tsx` island wraps Dialog/DropdownMenu/Tabs/Tooltip/Sonner. **Rule-1 fix:** added `"use client"` to TrustBadge and AskButton — both unconditionally declare inline event handlers, breaking server-component prerender without the directive. **Phase 2 complete:** all 6 requirements (FOUND-02, FOUND-03, DS-01, DS-02, DS-03, DS-04) closed.
 
-**Phase 2 status:** Plans 01 + 02 + 03 complete. Plan 04 (/internal/design page + 9 shadcn primitives via `shadcn add` + Sonner Toaster) is the only remaining plan.
+**Phase 2 status:** All 4 plans complete (Wave 0 + Wave 1 + Wave 2 + Wave 3). Awaiting `gsd-verifier` for sign-off.
 
-**Next action:** Execute Plan 02-04 (`/internal/design` living-reference page + shadcn primitives + DS-04 closure).
+**Next action:** Run `gsd-verifier` for Phase 1 sign-off (and Phase 2 sign-off). Then advance to Phase 3 (marketing-landing) OR Phase 4 (chat-backbone) — both eligible in parallel.
 
-**Resumption:** Read `.planning/phases/02-design-system/02-03-SUMMARY.md` for Wave 2 close-out. ROADMAP.md Phase 2 progress now shows 3/4 plans complete.
+**Resumption:** Read `.planning/phases/02-design-system/02-04-SUMMARY.md` for Wave 3 close-out. ROADMAP.md Phase 2 progress now shows 4/4 plans complete.
 
-**Last session:** 2026-04-28T10:56:09.996Z
+**Last session:** 2026-04-28T11:08:38Z
 
 ---
 
-_State initialized: 2026-04-26 · Updated 2026-04-28 after 02-03-PLAN.md (Phase 2 Wave 2 — custom primitives Icon/TrustBadge/AskButton + barrel complete; DS-03 closed)_
+_State initialized: 2026-04-26 · Updated 2026-04-28 after 02-04-PLAN.md (Phase 2 Wave 3 — shadcn primitives + /internal/design + Toaster — Phase 2 complete)_
