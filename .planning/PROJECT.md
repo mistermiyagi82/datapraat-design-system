@@ -22,19 +22,16 @@ This repo is the **fresh DataPraat product app**: a single Next.js 15 applicatio
 - [x] **FOUND-06**: Persistence via `better-sqlite3` mounted at `/data` (Railway volume), abstracted behind a storage interface so it can swap to managed Postgres on Azure later
 - [x] **FOUND-07**: Env-driven config (no hardcoded secrets, no Vercel-only APIs); `.env.example` documents required vars
 
+#### Foundation + Design System (validated in Phase 2)
+
+- [x] **FOUND-02**: Tailwind 4 configured with DataPraat design tokens ported from `styles.css` (4-layer cascade: prototype `:root` + shadcn alias + `@theme inline` + scoped classes)
+- [x] **FOUND-03**: shadcn 4 (`base-vega` style) + Base UI + Tabler Icons wired and installable via the shadcn CLI
+- [x] **DS-01**: Design tokens from current `styles.css` ported into Tailwind 4 `@theme` directives
+- [x] **DS-02**: Core shadcn primitives installed: button, card, input, dialog, dropdown-menu, tabs, tooltip, separator + sonner (replaces toast per shadcn deprecation)
+- [x] **DS-03**: DataPraat-specific primitives ported: `Icon`, `TrustBadge`, `AskButton`, NL-format helpers (`fmtEUR`, `fmtNum`, `fmtPercent`, `fmtCompact` — Dutch locale)
+- [x] **DS-04**: `/internal/design` living-reference page documents tokens, typography, color usage, custom + shadcn primitives, trust tiers, format helpers
+
 ### Active
-
-#### Foundation (remainder)
-
-- [ ] **FOUND-02**: Tailwind 4 configured with DataPraat design tokens ported from `styles.css` (`:root` variables: ink levels, brand indigo, chart PxQ semantics, status triads, spacing, radii, fonts)
-- [ ] **FOUND-03**: shadcn 4 (`base-vega` style) + Base UI + Tabler Icons wired and installable via the shadcn CLI
-
-#### Design system
-
-- [ ] **DS-01**: Design tokens from current `styles.css` ported into Tailwind 4 `@theme` directives
-- [ ] **DS-02**: Core shadcn primitives installed: button, card, input, dialog, dropdown-menu, tabs, tooltip, toast, separator
-- [ ] **DS-03**: DataPraat-specific primitives ported: `Icon`, `TrustBadge`, `AskButton`, NL-format helpers (currency, number, percent — Dutch locale)
-- [ ] **DS-04**: Typography + color usage documented inline (component stories or a `/internal/design` route)
 
 #### Marketing
 
@@ -145,4 +142,4 @@ This document evolves at phase transitions and milestone boundaries.
 
 ---
 
-_Last updated: 2026-04-28 after Phase 1 (Foundation) completion — Next.js 15 app live on Railway with persistent storage and `/api/health`._
+_Last updated: 2026-04-28 after Phase 2 (Design System) completion — Tailwind 4 tokens + shadcn base-vega + custom primitives + `/internal/design` reference live._
