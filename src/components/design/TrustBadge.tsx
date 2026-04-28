@@ -1,3 +1,5 @@
+"use client";
+
 import type { JSX } from "react";
 
 // Verbatim port of shared.jsx:TrustBadge (lines 40-47).

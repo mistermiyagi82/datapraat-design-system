@@ -1,3 +1,5 @@
+"use client";
+
 import type { JSX, MouseEvent } from "react";
 
 // Verbatim port of shared.jsx:AskButton (lines 51-59).
