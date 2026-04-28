@@ -1,26 +1,304 @@
 @import "tailwindcss";
 
+/* ---------- Layer 1: Prototype tokens (verbatim port from styles.css:3-79) ---------- */
+/* This file is in .prettierignore — hex values intentionally use prototype case (e.g. #5E5A53) for verbatim parity with styles.css. */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* neutrals — lichter, koeler (afwijking v1.1: minder warm papier, meer grijs/wit) */
+  --bg: #FCFBF8;
+  --bg-soft: #F3F2EE;
+  --surface: #FFFFFF;
+  --surface-raised: #FFFFFF;
+
+  /* ink — warm donker, geen pure black */
+  --ink: #2A2724;
+  --ink-soft: #5E5A53;
+  --ink-mute: #8F8A80;
+  --ink-faint: #B3ADA3;
+
+  /* lines — licht grijs met vleugje warmte */
+  --line: #E5E3DD;
+  --line-soft: #EEECE7;
+  --line-strong: #D4D1CB;
+
+  /* brand — indigo primary */
+  --primary: #4338CA;
+  --primary-soft: #6366F1;
+  --primary-tint: #EEF2FF;
+  --primary-ink: #3151B0;
+  --primary-foreground: #FAF7EF;
+
+  /* chart data colors (PxQ semantiek) */
+  --chart-cost: #3b82f6;
+  --chart-volume: #5E8A6D;
+  --chart-price: #ea580c;
+  --chart-1: #3151B0;
+  --chart-2: #3b82f6;
+  --chart-3: #60a5fa;
+  --chart-4: #93c5fd;
+  --chart-5: #bfdbfe;
+
+  /* gold (legacy insight callout — nu gemapped op warm amber) */
+  --gold: #A8702A;
+  --gold-tint: #F4ECD4;
+
+  /* status — gedempt en warm */
+  --success: #5E8A6D;
+  --success-tint: #E5EDDF;
+  --success-strong: #3D5C4A;
+
+  --warning: #A8702A;
+  --warning-tint: #F4ECD4;
+  --warning-strong: #8A5A26;
+
+  --destructive: #A85050;
+  --destructive-tint: #F2DDDA;
+  --destructive-strong: #7A2A2A;
+
+  /* radii */
+  --r-sm: 4px;
+  --r-md: 8px;
+  --r-lg: 14px;
+  --r-xl: 20px;
+
+  /* spacing */
+  --s-xs: 4px;
+  --s-sm: 8px;
+  --s-md: 12px;
+  --s-lg: 20px;
+  --s-xl: 32px;
+  --s-2xl: 48px;
+
+  /* shadows */
+  --shadow-sm: 0 1px 2px rgba(26, 24, 20, 0.04), 0 1px 0 rgba(26, 24, 20, 0.02);
+  --shadow-md: 0 2px 8px rgba(26, 24, 20, 0.06), 0 1px 2px rgba(26, 24, 20, 0.04);
+  --shadow-lg: 0 8px 32px rgba(26, 24, 20, 0.08), 0 4px 12px rgba(26, 24, 20, 0.04);
+  --shadow-drawer: -8px 0 40px rgba(26, 24, 20, 0.08), -2px 0 8px rgba(26, 24, 20, 0.04);
+
+  /* font-stack aliases (resolved by next/font in layout.tsx) */
+  --f-sans: var(--font-sans);
+  --f-serif: var(--font-display);
+  --f-mono: var(--font-mono);
 }
 
+/* ---------- Layer 2: shadcn alias layer (Vega style → prototype tokens) ---------- */
+:root {
+  --background: var(--bg);
+  --foreground: var(--ink);
+  --card: var(--surface);
+  --card-foreground: var(--ink);
+  --popover: var(--surface);
+  --popover-foreground: var(--ink);
+  --secondary: var(--bg-soft);
+  --secondary-foreground: var(--ink);
+  --muted: var(--bg-soft);
+  --muted-foreground: var(--ink-mute);
+  --accent: var(--primary-tint);
+  --accent-foreground: var(--primary-ink);
+  --border: var(--line);
+  --input: var(--line-strong);
+  --ring: var(--primary-soft);
+  --radius: var(--r-md);
+
+  /* Sidebar tokens (Vega ships them; we don't install Sidebar in Phase 2 but the alias must exist
+     so a later `shadcn add sidebar` doesn't fail theme resolution). */
+  --sidebar: var(--bg-soft);
+  --sidebar-foreground: var(--ink);
+  --sidebar-primary: var(--primary);
+  --sidebar-primary-foreground: var(--primary-foreground);
+  --sidebar-accent: var(--primary-tint);
+  --sidebar-accent-foreground: var(--primary-ink);
+  --sidebar-border: var(--line);
+  --sidebar-ring: var(--primary-soft);
+}
+
+/* ---------- Layer 3: Tailwind 4 utility token mapping ---------- */
 @theme inline {
+  /* Prototype color namespace → utility classes (bg-ink, text-ink-soft, border-line, …) */
+  --color-bg: var(--bg);
+  --color-bg-soft: var(--bg-soft);
+  --color-surface: var(--surface);
+  --color-surface-raised: var(--surface-raised);
+
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-ink-mute: var(--ink-mute);
+  --color-ink-faint: var(--ink-faint);
+
+  --color-line: var(--line);
+  --color-line-soft: var(--line-soft);
+  --color-line-strong: var(--line-strong);
+
+  --color-primary: var(--primary);
+  --color-primary-soft: var(--primary-soft);
+  --color-primary-tint: var(--primary-tint);
+  --color-primary-ink: var(--primary-ink);
+  --color-primary-foreground: var(--primary-foreground);
+
+  --color-chart-cost: var(--chart-cost);
+  --color-chart-volume: var(--chart-volume);
+  --color-chart-price: var(--chart-price);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+
+  --color-gold: var(--gold);
+  --color-gold-tint: var(--gold-tint);
+
+  --color-success: var(--success);
+  --color-success-tint: var(--success-tint);
+  --color-success-strong: var(--success-strong);
+  --color-warning: var(--warning);
+  --color-warning-tint: var(--warning-tint);
+  --color-warning-strong: var(--warning-strong);
+  --color-destructive: var(--destructive);
+  --color-destructive-tint: var(--destructive-tint);
+  --color-destructive-strong: var(--destructive-strong);
+
+  /* shadcn semantic aliases → utility classes (bg-background, text-muted-foreground, …) */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+
+  /* Radius — prototype names exposed as Tailwind radius scale */
+  --radius-sm: var(--r-sm);
+  --radius-md: var(--r-md);
+  --radius-lg: var(--r-lg);
+  --radius-xl: var(--r-xl);
+
+  /* Spacing — prototype names exposed as Tailwind spacing scale */
+  --spacing-xs: var(--s-xs);
+  --spacing-sm: var(--s-sm);
+  --spacing-md: var(--s-md);
+  --spacing-lg: var(--s-lg);
+  --spacing-xl: var(--s-xl);
+  --spacing-2xl: var(--s-2xl);
+
+  /* Fonts — chain through next/font CSS vars set in layout.tsx */
+  --font-sans: var(--font-sans);
+  --font-display: var(--font-display);
+  --font-mono: var(--font-mono);
+
+  /* Shadows */
+  --shadow-sm: var(--shadow-sm);
+  --shadow-md: var(--shadow-md);
+  --shadow-lg: var(--shadow-lg);
+  --shadow-drawer: var(--shadow-drawer);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* ---------- Layer 4: Scoped CSS classes ported from prototype (only what Phase 2 primitives need) ---------- */
+
+/* TrustBadge — port styles.css `.trust`, `.trust.good`, `.trust.warn`, `.trust.bad`, `.trust-dot` */
+.trust {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-xs);
+  padding: 2px var(--s-sm);
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+}
+.trust-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+.trust.good {
+  background: var(--success-tint);
+  color: var(--success-strong);
+}
+.trust.good .trust-dot {
+  background: var(--success);
+}
+.trust.warn {
+  background: var(--warning-tint);
+  color: var(--warning-strong);
+}
+.trust.warn .trust-dot {
+  background: var(--warning);
+}
+.trust.bad {
+  background: var(--destructive-tint);
+  color: var(--destructive-strong);
+}
+.trust.bad .trust-dot {
+  background: var(--destructive);
 }
 
+/* AskButton — port styles.css `.ask-btn`, `.ask-btn-sm/md/lg`, `.orb`, `.ask-btn-label` */
+.ask-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-sm);
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: var(--primary-tint);
+  color: var(--primary-ink);
+  font-weight: 500;
+  transition: background 120ms ease;
+}
+.ask-btn:hover {
+  background: var(--primary-soft);
+  color: var(--primary-foreground);
+}
+.ask-btn .orb {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--primary), var(--primary-soft));
+}
+.ask-btn-sm {
+  padding: 4px 10px;
+  font-size: 12px;
+}
+.ask-btn-md {
+  padding: 6px 12px;
+  font-size: 13px;
+}
+.ask-btn-lg {
+  padding: 8px 16px;
+  font-size: 14px;
+}
+.ask-btn-sm .orb {
+  width: 10px;
+  height: 10px;
+}
+.ask-btn-lg .orb {
+  width: 14px;
+  height: 14px;
+}
+
+/* Body baseline (port styles.css 81-92, scoped to body so we don't conflict with Tailwind's preflight) */
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--f-sans);
+  color: var(--ink);
+  background: var(--bg);
+  font-feature-settings: "ss01", "cv11";
+  font-size: 14px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }

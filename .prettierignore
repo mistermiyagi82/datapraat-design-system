@@ -7,3 +7,5 @@ pnpm-lock.yaml
 *.jsx
 styles.css
 data.js
+# Tokens file — preserve prototype hex case (e.g. #5E5A53) for verbatim parity with styles.css
+src/app/globals.css
