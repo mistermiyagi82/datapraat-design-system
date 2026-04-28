@@ -57,7 +57,7 @@ Foundation first (boots, builds, deploys), then design system in parallel with m
 
 - [x] 02-01-PLAN.md — Wave 0: jsdom + RTL test infra + RED test scaffolds for fmt helpers + 3 custom primitives
 - [x] 02-02-PLAN.md — Wave 1: shadcn init (base-vega) + globals.css 3-layer hybrid token cascade + next/font + fmtEUR/Num/Percent/Compact
-- [ ] 02-03-PLAN.md — Wave 2: Icon + TrustBadge + AskButton verbatim TS ports + barrel index.ts (turns Wave-0 component tests GREEN)
+- [x] 02-03-PLAN.md — Wave 2: Icon + TrustBadge + AskButton verbatim TS ports + barrel index.ts (turns Wave-0 component tests GREEN)
 - [ ] 02-04-PLAN.md — Wave 3: 9 shadcn primitives (sonner replaces toast) + Toaster + /internal/design server component + human-verify
 
 ### Phase 3: Marketing Landing

@@ -21,7 +21,7 @@ Requirements for initial release. Each maps to roadmap phases.
 
 - [x] **DS-01**: Design tokens from prototype `styles.css` (`:root` variables) are ported into Tailwind 4 `@theme` and consumable across the app
 - [ ] **DS-02**: Core shadcn primitives are installed and themed: button, card, input, dialog, dropdown-menu, tabs, tooltip, toast, separator
-- [ ] **DS-03**: DataPraat-specific primitives are ported as TypeScript components: `Icon`, `TrustBadge`, `AskButton`, NL-format helpers (currency, number, percent — Dutch locale)
+- [x] **DS-03**: DataPraat-specific primitives are ported as TypeScript components: `Icon`, `TrustBadge`, `AskButton`, NL-format helpers (currency, number, percent — Dutch locale)
 - [ ] **DS-04**: A `/internal/design` route documents tokens, typography, color usage, and primitive components for team reference
 
 ### Marketing
@@ -114,7 +114,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | FOUND-07    | Phase 1 | Complete |
 | DS-01       | Phase 2 | Complete |
 | DS-02       | Phase 2 | Pending  |
-| DS-03       | Phase 2 | Pending  |
+| DS-03       | Phase 2 | Complete |
 | DS-04       | Phase 2 | Pending  |
 | MKT-01      | Phase 3 | Pending  |
 | MKT-02      | Phase 3 | Pending  |

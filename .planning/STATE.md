@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-last_updated: "2026-04-28T10:45:44.431Z"
+last_updated: "2026-04-28T10:56:09.998Z"
 progress:
   total_phases: 7
   completed_phases: 1
   total_plans: 9
-  completed_plans: 7
-  percent: 78
+  completed_plans: 8
+  percent: 89
 ---
 
 # State: DataPraat
@@ -27,15 +27,15 @@ progress:
 ## Current Position
 
 Phase: 02 (design-system) — EXECUTING
-Plan: 3 of 4 (Plans 01 + 02 complete)
+Plan: 4 of 4 (Plans 01 + 02 + 03 complete)
 
 - **Milestone:** v1
 - **Phase:** 2
-- **Plan:** 02-03 next (custom primitives — Icon, TrustBadge, AskButton)
+- **Plan:** 02-04 next (`/internal/design` page + 9 shadcn primitives + Sonner Toaster)
 - **Status:** Executing Phase 02
 
 ```
-Progress: [████████░░] 78% (7/9 plans complete; Phase 2 Waves 0+1 done)
+Progress: [█████████░] 89% (8/9 plans complete; Phase 2 Waves 0+1+2 done)
 ```
 
 | Phase                         | Status                                                                                |
@@ -64,6 +64,7 @@ Progress: [████████░░] 78% (7/9 plans complete; Phase 2 Wave
 | 01-foundation | 05   | 8m 18s + Railway deploy | 3     | 5 created (Dockerfile, .dockerignore, nixpacks.toml, railway.toml, docker-entrypoint.sh) + 7 modified | 2026-04-28 |
 | 02-design-system | 01 | 5m 07s | 3 | 5 new (vitest.setup.ts + 4 RED tests) + 3 modified (package.json, pnpm-lock.yaml, vitest.config.ts) | 2026-04-28 |
 | 02-design-system | 02 | 11m 16s | 4 | 3 new (components.json, src/lib/utils.ts, src/lib/format/index.ts) + 5 modified (package.json, pnpm-lock.yaml, src/app/globals.css, src/app/layout.tsx, .prettierignore) | 2026-04-28 |
+| 02-design-system | 03 | 3m 30s | 3 | 4 new (Icon.tsx, TrustBadge.tsx, AskButton.tsx, index.ts) | 2026-04-28 |
 
 ## Accumulated Context
 
@@ -141,6 +142,17 @@ Progress: [████████░░] 78% (7/9 plans complete; Phase 2 Wave
 - 12 fmt RED tests turn GREEN on first run. The 3 component test files (Icon/TrustBadge/AskButton) remain RED — Plan 03 owns. Phase 1 GREEN tests still GREEN.
 - Plan 04 (NOT this plan) owns the toast→sonner correction. This plan does NOT install sonner / @radix-ui/react-toast.
 
+### Decisions logged from Plan 02-03
+
+- Icon `paths` map typed as `Record<IconName, JSX.Element>` (not `{[k:string]: JSX.Element}`) so tsc verifies all 24 keys at compile time. Eliminates the prototype's runtime `paths[name] || null` fallback — strictly stronger correctness.
+- Icon spreads `...rest` from `Omit<SVGProps<SVGSVGElement>, "children">` so callers pass `className`/`aria-hidden`/`data-*` without re-typing the SVG attribute surface.
+- TrustBadge tier formula extracted into a pure `tierFor(score)` helper; thresholds hard-coded (90/70) per D-08 — product semantics, not configurable.
+- TrustBadge sets `role="button"` only when `onClick` is provided; without onClick the badge is decorative and no role is added (a11y nicety beyond prototype). `data-size` attribute hooks future size variants without churning the className shape.
+- **AskButton Rule-3 correctness fix:** added explicit `type="button"` (prototype omitted, defaulting to submit when nested in `<form>`). Prevents accidental form submission in Phase 4/6 consumers.
+- AskButton orb decorated with `aria-hidden="true"` (purely visual gradient sphere — keeps it out of the AX tree). className composition uses `.trim()` to collapse double-space when no extra className is passed.
+- Barrel re-exports both runtime functions AND types via TS 5+ inline `type` modifier on a single export line per primitive. Prettier alphabetised the 3 export lines on save (AskButton, Icon, TrustBadge); accepted — functional shape unchanged, all acceptance greps still hit.
+- 3 Wave-0 RED component test files (15 cases total) turn GREEN on first run after each implementation lands. Full phase gate green: tsc + eslint + prettier + test:ci (10 files / 45 tests) + build + standalone all exit 0. DS-03 closes here.
+
 ### Decisions logged from Plan 01-05
 
 - Verbatim adoption of RESEARCH.md Pattern 6+7 snippets (Dockerfile + nixpacks.toml + railway.toml). Grep-based acceptance criteria assert exact text fragments (`apk add --no-cache libc6-compat python3 make g++`, `corepack prepare pnpm@10.30.2`, `healthcheckPath = "/api/health"`); any drift would have failed the gate.
@@ -155,7 +167,6 @@ Progress: [████████░░] 78% (7/9 plans complete; Phase 2 Wave
 ### Open Todos
 
 - Run `gsd-verifier` for Phase 1 sign-off.
-- Execute Plan 02-03 (Icon/TrustBadge/AskButton custom primitives) — turns the 3 component test files GREEN; consumes `.trust.*`/`.ask-btn-*` classes shipped in Plan 02-02.
 - Execute Plan 02-04 (`/internal/design` page + remaining shadcn primitives via `shadcn add` — toast replaced by sonner per RESEARCH.md correction + side-by-side token QA).
 - Phase 7 OPS-03: connect Railway project to GitHub for auto-deploy (obsoletes the manual `RAILWAY_GIT_COMMIT_SHA` service variable).
 - Decide MCP server URL convention (env var name, default value) at Phase 4 planning.
@@ -171,16 +182,16 @@ None.
 
 ## Session Continuity
 
-**Last action:** Completed Plan 02-02 — Tokens, shadcn init, fonts, format helpers (4 tasks; commits 5b36a67 + 7db08f8 + 58cd7ab + 6624320). Ran `shadcn init --base base --preset vega` (writes components.json + cn() helper). Replaced shadcn's OKLCH globals.css with the 4-layer hybrid skeleton (prototype `:root` + shadcn aliases incl. 8 sidebar tokens + `@theme inline` + scoped `.trust.*`/`.ask-btn-*`). Wired `next/font` for Inter + Fraunces (opsz axis) + JetBrains Mono with latin-ext subsets. Shipped `src/lib/format/index.ts` with 4 named exports — 12 Wave-0 fmt RED tests now GREEN. Component tests (Icon/TrustBadge/AskButton) remain RED — Plan 03 owns. Build green; standalone bundle still emits. Four Rule-3 deviations documented (CLI flag drift, framework deps bundled by init, Prettier hex-case, Fraunces axes constraint).
+**Last action:** Completed Plan 02-03 — Custom primitives (Icon/TrustBadge/AskButton + barrel) (3 tasks; commits f17c4bf + 5fcbce4 + dbc3217). Verbatim TS ports of `shared.jsx:5-59` with two acknowledged deviations: AskButton `type="button"` Rule-3 fix (prevents accidental form submission), and prettier-alphabetised barrel export order (functional shape unchanged). 3 Wave-0 RED component test files (Icon 3 cases + TrustBadge 5 cases + AskButton 7 cases = 15 tests) all GREEN. Full phase gate green: tsc + eslint + prettier + test:ci (10 files / 45 tests) + build + standalone all exit 0. DS-03 closes.
 
-**Phase 2 status:** Plans 01 + 02 complete. Plans 03 (custom primitives — turns 3 component tests GREEN), 04 (/internal/design + 9 shadcn primitives via `shadcn add`) ahead.
+**Phase 2 status:** Plans 01 + 02 + 03 complete. Plan 04 (/internal/design page + 9 shadcn primitives via `shadcn add` + Sonner Toaster) is the only remaining plan.
 
-**Next action:** Execute Plan 02-03 (Icon/TrustBadge/AskButton TS ports + barrel index.ts).
+**Next action:** Execute Plan 02-04 (`/internal/design` living-reference page + shadcn primitives + DS-04 closure).
 
-**Resumption:** Read `.planning/phases/02-design-system/02-02-SUMMARY.md` for Wave 1 close-out. ROADMAP.md Phase 2 progress now shows 2/4 plans complete.
+**Resumption:** Read `.planning/phases/02-design-system/02-03-SUMMARY.md` for Wave 2 close-out. ROADMAP.md Phase 2 progress now shows 3/4 plans complete.
 
-**Last session:** 2026-04-28T10:43:15Z
+**Last session:** 2026-04-28T10:56:09.996Z
 
 ---
 
-_State initialized: 2026-04-26 · Updated 2026-04-28 after 02-02-PLAN.md (Phase 2 Wave 1 — tokens, shadcn init, fonts, format helpers complete)_
+_State initialized: 2026-04-26 · Updated 2026-04-28 after 02-03-PLAN.md (Phase 2 Wave 2 — custom primitives Icon/TrustBadge/AskButton + barrel complete; DS-03 closed)_
