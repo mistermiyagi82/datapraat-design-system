@@ -2,40 +2,40 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: planning
-last_updated: "2026-04-28T07:53:05.219Z"
+status: executing
+last_updated: "2026-04-28T10:28:05.582Z"
 progress:
   total_phases: 7
   completed_phases: 1
-  total_plans: 5
-  completed_plans: 5
-  percent: 100
+  total_plans: 9
+  completed_plans: 6
+  percent: 67
 ---
 
 # State: DataPraat
 
-**Last updated:** 2026-04-28 (after Plan 01-05 — Phase 1 complete)
+**Last updated:** 2026-04-28 (after Plan 02-01 — Phase 2 Wave 0 test infrastructure)
 
 ## Project Reference
 
 **Core value:** A municipality user opens DataPraat, asks a question about their data in plain Dutch, and gets back a correct, trust-marked chart with conversation continuity.
 
-**Current focus:** Phase 01 — foundation
+**Current focus:** Phase 02 — design-system
 
 **Project mode:** yolo · **Granularity:** standard · **Parallelization:** enabled
 
 ## Current Position
 
-Phase: 01 (foundation) — COMPLETE (awaiting verifier)
-Plan: 5 of 5
+Phase: 02 (design-system) — EXECUTING
+Plan: 2 of 4 (Plan 01 complete)
 
 - **Milestone:** v1
 - **Phase:** 2
-- **Plan:** Not started
-- **Status:** Ready to plan
+- **Plan:** 02-02 next (tokens, shadcn init, fonts, format helpers)
+- **Status:** Executing Phase 02
 
 ```
-Progress: [████████████████████] 100% (5/5 plans in phase 01 · 1/7 phases ready for verify)
+Progress: [██████████████░░░░░░] 67% (6/9 plans complete; phase 02 wave 0 done)
 ```
 
 | Phase                         | Status                                                                                |
@@ -62,6 +62,7 @@ Progress: [████████████████████] 100% (5
 | 01-foundation | 03   | 4m 08s                  | 3     | 9 new + 1 modified (package.json)          | 2026-04-27 |
 | 01-foundation | 04   | 1m 11s                  | 1     | 1 new                                      | 2026-04-27 |
 | 01-foundation | 05   | 8m 18s + Railway deploy | 3     | 5 created (Dockerfile, .dockerignore, nixpacks.toml, railway.toml, docker-entrypoint.sh) + 7 modified | 2026-04-28 |
+| 02-design-system | 01 | 5m 07s | 3 | 5 new (vitest.setup.ts + 4 RED tests) + 3 modified (package.json, pnpm-lock.yaml, vitest.config.ts) | 2026-04-28 |
 
 ## Accumulated Context
 
@@ -118,6 +119,15 @@ Progress: [████████████████████] 100% (5
 - T-1-02 (info disclosure via /api/health response body) accepted for Phase 1 per CLAUDE.md "Auth v1: None / shared-link". No PII or auth material in the 6-field response. Future PII/auth introduction should split to `/api/health` (public liveness) + `/api/health/internal` (auth-gated).
 - No `POST`/`DELETE`/`PUT` handler, no `/api/ready`, no `/api/live` — D-10 explicit: single endpoint, GET-only. K8s-style split probes deferred until Azure Container Apps explicitly needs them.
 
+### Decisions logged from Plan 02-01
+
+- Pinned `@vitejs/plugin-react@5.2.0` (Rule 3 deviation from RESEARCH.md's 6.0.1). plugin-react@6.x imports `./internal` from `vite@^8`; Phase 1's vitest@3.2.4 ships `vite@7.3.2`, so 6.0.1 fails at config load with `ERR_PACKAGE_PATH_NOT_EXPORTED`. 5.2.0 supports vite 4|5|6|7|8. Re-bump when vitest goes to 4.x.
+- Other 4 dev deps pinned exactly per RESEARCH.md §1: `@testing-library/react@16.3.2`, `@testing-library/jest-dom@6.9.1`, `@testing-library/user-event@14.6.1`, `jsdom@29.1.0`. Lockfile validated with `pnpm install --frozen-lockfile`.
+- Wave 0 ships test infrastructure only — vitest extended for jsdom + globals + plugin-react + setupFiles + `*.test.tsx` include; vitest.setup.ts registers jest-dom matchers + afterEach(cleanup); 4 RED test files lock the contracts of `fmtEUR/fmtNum/fmtPercent/fmtCompact` (DS-03a) and `Icon/TrustBadge/AskButton` (DS-03b/c/d). No implementation files created — Plans 02+03 own them, demonstrated by RED→GREEN flips.
+- fmt tests use Intl-tolerant regex matchers (e.g. `/€\s*7\.200\.000/`) to absorb nl-NL non-breaking-space (U+00A0) variance across Node 22 patch versions.
+- Component tests use the parent-spy pattern for stopPropagation: render `<div onClick={parentSpy}><X .../></div>`, click X, assert parentSpy NOT called. More durable than spying on the synthetic event object.
+- Accepted RESEARCH.md Rule-3 corrections to be applied in Plan 02 (NOT modifying CONTEXT.md): D-05 `toast → sonner` (shadcn deprecation per issue #7120), and D-01 missing aliases (`--sidebar-*` 8 vars present-but-empty so a future `shadcn add sidebar` doesn't fail; `--destructive-foreground` dropped per Vega 4).
+
 ### Decisions logged from Plan 01-05
 
 - Verbatim adoption of RESEARCH.md Pattern 6+7 snippets (Dockerfile + nixpacks.toml + railway.toml). Grep-based acceptance criteria assert exact text fragments (`apk add --no-cache libc6-compat python3 make g++`, `corepack prepare pnpm@10.30.2`, `healthcheckPath = "/api/health"`); any drift would have failed the gate.
@@ -132,7 +142,9 @@ Progress: [████████████████████] 100% (5
 ### Open Todos
 
 - Run `gsd-verifier` for Phase 1 sign-off.
-- Plan Phase 2 (Design System) — Tailwind 4 `@theme` tokens, shadcn `base-vega` primitives, Icon/TrustBadge/AskButton + NL formatters, `/internal/design` reference page.
+- Execute Plan 02-02 (tokens + shadcn init + fonts + format helpers) — turns the 12 fmt RED tests GREEN; applies the toast→sonner Rule-3 correction.
+- Execute Plan 02-03 (Icon/TrustBadge/AskButton custom primitives) — turns the 3 component test files GREEN.
+- Execute Plan 02-04 (`/internal/design` page + remaining shadcn primitives + side-by-side token QA).
 - Phase 7 OPS-03: connect Railway project to GitHub for auto-deploy (obsoletes the manual `RAILWAY_GIT_COMMIT_SHA` service variable).
 - Decide MCP server URL convention (env var name, default value) at Phase 4 planning.
 
@@ -147,16 +159,16 @@ None.
 
 ## Session Continuity
 
-**Last action:** Completed Plan 01-05 — Deploy artifact (3 tasks; commits b249427 + d90f460 + c0b1f91 + 22e64a2). Multi-stage Alpine Dockerfile, nixpacks.toml, railway.toml shipped; full 8-command phase gate green; Railway deploy live at <https://datapraat-app-production.up.railway.app> with /api/health returning 200 + status:ok + db.ok:true. Two Rule-3 fixes applied during the checkpoint: (a) docker-entrypoint.sh + su-exec chown shim for Railway's root-owned volume bind-mounts (preserves D-15 — Node still runs as nextjs UID 1001); (b) manual `RAILWAY_GIT_COMMIT_SHA` service variable until Phase 7 OPS-03 connects GitHub auto-deploy. Volume persistence verified via redeploy.
+**Last action:** Completed Plan 02-01 — Test infrastructure for design system (3 tasks; commits d5146b0 + baf287c + 2618605). Installed 5 dev deps (jsdom, RTL, jest-dom, user-event, plugin-react); extended vitest config for jsdom + globals + plugin-react + `*.test.tsx`; created vitest.setup.ts with jest-dom matchers + afterEach(cleanup); shipped 4 RED test files locking the contracts of fmt helpers (12 tests) + Icon/TrustBadge/AskButton (3 files). RED state confirmed: vitest exits 1 with "Failed to resolve import" for all 4 files. Phase 1 tests still GREEN (6 files / 18 tests). One Rule-3 deviation: `@vitejs/plugin-react` pinned at 5.2.0 instead of RESEARCH.md's 6.0.1 (6.x requires vite 8 which Phase 1's vitest 3.2.4 doesn't ship).
 
-**Phase 1 status:** All 5 plans done. All 5 success criteria met. All 6 phase-1 requirements complete (FOUND-01, FOUND-04, FOUND-05, FOUND-06, FOUND-07, OPS-01). Awaiting `gsd-verifier` sign-off.
+**Phase 2 status:** Plan 01 (Wave 0 test infra) complete. Plans 02 (tokens/shadcn/fonts/fmt), 03 (custom primitives), 04 (/internal/design + remaining shadcn) ahead.
 
-**Next action:** Run `gsd-verifier` for Phase 1 verification. After verifier passes, plan Phase 2 (Design System).
+**Next action:** Execute Plan 02-02 (tokens + shadcn init + fonts + fmt helpers). Will turn the 12 fmt RED tests GREEN.
 
-**Resumption:** Read `.planning/phases/01-foundation/01-05-SUMMARY.md` for the Phase 1 close-out. ROADMAP.md shows Phase 1 at 5/5 plans complete; Phase 2 (Design System) is the next eligible phase.
+**Resumption:** Read `.planning/phases/02-design-system/02-01-SUMMARY.md` for Wave 0 close-out. ROADMAP.md Phase 2 progress now shows 1/4 plans complete.
 
-**Last session:** 2026-04-28T07:53:05.215Z
+**Last session:** 2026-04-28T10:28:05.579Z
 
 ---
 
-_State initialized: 2026-04-26 · Updated 2026-04-28 after 01-05-PLAN.md (Phase 1 complete)_
+_State initialized: 2026-04-26 · Updated 2026-04-28 after 02-01-PLAN.md (Phase 2 Wave 0 — test infrastructure complete)_

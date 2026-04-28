@@ -55,7 +55,7 @@ Foundation first (boots, builds, deploys), then design system in parallel with m
    **Plans**: 4 plans
    **UI hint**: yes
 
-- [ ] 02-01-PLAN.md — Wave 0: jsdom + RTL test infra + RED test scaffolds for fmt helpers + 3 custom primitives
+- [x] 02-01-PLAN.md — Wave 0: jsdom + RTL test infra + RED test scaffolds for fmt helpers + 3 custom primitives
 - [ ] 02-02-PLAN.md — Wave 1: shadcn init (base-vega) + globals.css 3-layer hybrid token cascade + next/font + fmtEUR/Num/Percent/Compact
 - [ ] 02-03-PLAN.md — Wave 2: Icon + TrustBadge + AskButton verbatim TS ports + barrel index.ts (turns Wave-0 component tests GREEN)
 - [ ] 02-04-PLAN.md — Wave 3: 9 shadcn primitives (sonner replaces toast) + Toaster + /internal/design server component + human-verify
@@ -140,7 +140,7 @@ The following phases can run concurrently once their dependencies are satisfied:
 | Phase                         | Plans Complete | Status      | Completed |
 | ----------------------------- | -------------- | ----------- | --------- |
 | 1. Foundation                 | 5/5            | Complete (awaiting verifier) | 2026-04-28 |
-| 2. Design System              | 0/4            | Planned     | -         |
+| 2. Design System              | 1/4            | In Progress | -         |
 | 3. Marketing Landing          | 0/0            | Not started | -         |
 | 4. Chat Backbone              | 0/0            | Not started | -         |
 | 5. Generative Charts & Trust  | 0/0            | Not started | -         |
