@@ -36,8 +36,10 @@ ENV NODE_ENV=production
 ENV PORT=3000
 ENV HOSTNAME=0.0.0.0
 
-# better-sqlite3 native binding needs libc6-compat at runtime on Alpine
-RUN apk add --no-cache libc6-compat
+# better-sqlite3 native binding needs libc6-compat at runtime on Alpine.
+# su-exec drops privileges in the entrypoint so we can chown the volume mount as root
+# and then run the app as a non-root user (Railway bind-mounts are root-owned by default).
+RUN apk add --no-cache libc6-compat su-exec
 
 # Non-root user (CONTEXT.md D-15)
 RUN addgroup --system --gid 1001 nodejs && adduser --system --uid 1001 nextjs
@@ -51,11 +53,17 @@ COPY --from=builder --chown=nextjs:nodejs /app/public ./public
 # non-imported files, and runMigrations reads them via fs.readFileSync.
 COPY --from=builder --chown=nextjs:nodejs /app/src/lib/storage/sqlite/migrations ./src/lib/storage/sqlite/migrations
 
-USER nextjs
+# Entrypoint: chown the data volume as root, then drop to nextjs.
+# Railway mounts volumes at the configured mount path with root ownership, so the
+# non-root app user cannot write to /data without this shim. The local docker-compose
+# scenario (host-bound /data dir) doesn't hit this because the host owns the directory.
+COPY --chmod=755 docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+
 EXPOSE 3000
 
 # Healthcheck per CONTEXT.md D-15 (consumed by Docker, Azure Container Apps, etc.)
 HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
   CMD wget --quiet --tries=1 --spider http://127.0.0.1:3000/api/health || exit 1
 
+ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
 CMD ["node", "server.js"]
