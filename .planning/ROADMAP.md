@@ -39,7 +39,7 @@ Foundation first (boots, builds, deploys), then design system in parallel with m
 - [x] 01-02-PLAN.md — Toolchain + scaffold trim (pin Node/pnpm, ESLint 9, Prettier, strict TS, next.config.ts standalone)
 - [x] 01-03-PLAN.md — Env + logger + storage seam (Zod env, pino, sqlite repo + migrations)
 - [x] 01-04-PLAN.md — /api/health Route Handler (6-field contract, 200/503)
-- [ ] 01-05-PLAN.md — Deploy artifacts (Dockerfile, .dockerignore, nixpacks.toml, railway.toml) + Railway human-verify
+- [x] 01-05-PLAN.md — Deploy artifacts (Dockerfile, .dockerignore, nixpacks.toml, railway.toml) + Railway human-verify
 
 ### Phase 2: Design System
 
@@ -134,7 +134,7 @@ The following phases can run concurrently once their dependencies are satisfied:
 
 | Phase                         | Plans Complete | Status      | Completed |
 | ----------------------------- | -------------- | ----------- | --------- |
-| 1. Foundation                 | 2/5            | In Progress |           |
+| 1. Foundation                 | 5/5            | Complete (awaiting verifier) | 2026-04-28 |
 | 2. Design System              | 0/0            | Not started | -         |
 | 3. Marketing Landing          | 0/0            | Not started | -         |
 | 4. Chat Backbone              | 0/0            | Not started | -         |

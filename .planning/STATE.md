@@ -3,18 +3,18 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-last_updated: "2026-04-27T18:32:09.547Z"
+last_updated: "2026-04-28T07:14:28.254Z"
 progress:
   total_phases: 7
-  completed_phases: 0
+  completed_phases: 1
   total_plans: 5
-  completed_plans: 4
-  percent: 80
+  completed_plans: 5
+  percent: 100
 ---
 
 # State: DataPraat
 
-**Last updated:** 2026-04-27 (after Plan 01-04)
+**Last updated:** 2026-04-28 (after Plan 01-05 — Phase 1 complete)
 
 ## Project Reference
 
@@ -26,41 +26,42 @@ progress:
 
 ## Current Position
 
-Phase: 01 (foundation) — EXECUTING
+Phase: 01 (foundation) — COMPLETE (awaiting verifier)
 Plan: 5 of 5
 
 - **Milestone:** v1
-- **Phase:** Phase 1 (Foundation) — Waves 0 + 1 + 2 + 3 complete (all 6 Wave-0 vitest files GREEN)
-- **Plan:** Plan 04 (`/api/health` Route Handler) — DONE; Plan 05 (Deploy artifact: nixpacks + Dockerfile + railway.toml + smoke) is next
-- **Status:** Executing Phase 01
+- **Phase:** Phase 1 (Foundation) — All 5 plans done; Railway deploy live; ready for `gsd-verifier`
+- **Plan:** Plan 05 (Deploy artifact: Dockerfile + Nixpacks + railway.toml + Railway human-verify) — DONE
+- **Status:** Phase 01 ready for verification; Phase 02 (Design System) and Phase 03 (Marketing) become eligible next
 
 ```
-Progress: [████████████████░░░░] 80% (4/5 plans in phase 01 · 0/7 phases overall)
+Progress: [████████████████████] 100% (5/5 plans in phase 01 · 1/7 phases ready for verify)
 ```
 
-| Phase                         | Status                                          |
-| ----------------------------- | ----------------------------------------------- |
-| 1. Foundation                 | In progress (4/5 plans complete — Wave 3 GREEN) |
-| 2. Design System              | Not started                                     |
-| 3. Marketing Landing          | Not started                                     |
-| 4. Chat Backbone              | Not started                                     |
-| 5. Generative Charts & Trust  | Not started                                     |
-| 6. Overzicht (Live VVD)       | Not started                                     |
-| 7. Stubs & Operability Polish | Not started                                     |
+| Phase                         | Status                                                                                |
+| ----------------------------- | ------------------------------------------------------------------------------------- |
+| 1. Foundation                 | Complete (5/5 plans done; Railway deploy live; awaiting verifier)                     |
+| 2. Design System              | Eligible (depends on Phase 1)                                                         |
+| 3. Marketing Landing          | Eligible after Phase 2 (parallel with Phase 4)                                        |
+| 4. Chat Backbone              | Blocked on Phase 2                                                                    |
+| 5. Generative Charts & Trust  | Blocked on Phase 4                                                                    |
+| 6. Overzicht (Live VVD)       | Blocked on Phase 5                                                                    |
+| 7. Stubs & Operability Polish | Blocked on Phase 1 (ops parts) and Phase 2 (stubs); parallel-eligible with Phase 6    |
 
 ## Performance Metrics
 
-- Phases complete: 0/7
-- Plans complete: 4/5 in phase 01 (0 plans complete in other phases)
-- Requirements covered: 29/29 (mapped; FOUND-01 / FOUND-04 / FOUND-06 / FOUND-07 / OPS-01 implemented as of Plan 04; FOUND-07 no-Vercel audit closes in Plan 05)
-- Time-in-phase: 17m 28s (Plan 01: 5m21s + Plan 02: 6m48s + Plan 03: 4m08s + Plan 04: 1m11s)
+- Phases complete: 1/7 (Phase 1 awaiting verifier sign-off)
+- Plans complete: 5/5 in phase 01 (0 plans complete in other phases)
+- Requirements covered: 29/29 (mapped; FOUND-01 / FOUND-04 / FOUND-05 / FOUND-06 / FOUND-07 / OPS-01 implemented — all 6 Phase 1 requirements complete)
+- Time-in-phase: 25m 46s automated + Railway deploy (Plan 01: 5m21s + Plan 02: 6m48s + Plan 03: 4m08s + Plan 04: 1m11s + Plan 05: 8m18s automated + manual deploy)
 
-| Phase         | Plan | Duration | Tasks | Files                             | Date       |
-| ------------- | ---- | -------- | ----- | --------------------------------- | ---------- |
-| 01-foundation | 01   | 5m 21s   | 3     | 12 new + 1 modified (.gitignore)  | 2026-04-27 |
-| 01-foundation | 02   | 6m 48s   | 3     | 3 new + 7 modified                | 2026-04-27 |
-| 01-foundation | 03   | 4m 08s   | 3     | 9 new + 1 modified (package.json) | 2026-04-27 |
-| 01-foundation | 04   | 1m 11s   | 1     | 1 new                             | 2026-04-27 |
+| Phase         | Plan | Duration                | Tasks | Files                                      | Date       |
+| ------------- | ---- | ----------------------- | ----- | ------------------------------------------ | ---------- |
+| 01-foundation | 01   | 5m 21s                  | 3     | 12 new + 1 modified (.gitignore)           | 2026-04-27 |
+| 01-foundation | 02   | 6m 48s                  | 3     | 3 new + 7 modified                         | 2026-04-27 |
+| 01-foundation | 03   | 4m 08s                  | 3     | 9 new + 1 modified (package.json)          | 2026-04-27 |
+| 01-foundation | 04   | 1m 11s                  | 1     | 1 new                                      | 2026-04-27 |
+| 01-foundation | 05   | 8m 18s + Railway deploy | 3     | 5 created (Dockerfile, .dockerignore, nixpacks.toml, railway.toml, docker-entrypoint.sh) + 7 modified | 2026-04-28 |
 
 ## Accumulated Context
 
@@ -117,9 +118,22 @@ Progress: [████████████████░░░░] 80% (4/
 - T-1-02 (info disclosure via /api/health response body) accepted for Phase 1 per CLAUDE.md "Auth v1: None / shared-link". No PII or auth material in the 6-field response. Future PII/auth introduction should split to `/api/health` (public liveness) + `/api/health/internal` (auth-gated).
 - No `POST`/`DELETE`/`PUT` handler, no `/api/ready`, no `/api/live` — D-10 explicit: single endpoint, GET-only. K8s-style split probes deferred until Azure Container Apps explicitly needs them.
 
+### Decisions logged from Plan 01-05
+
+- Verbatim adoption of RESEARCH.md Pattern 6+7 snippets (Dockerfile + nixpacks.toml + railway.toml). Grep-based acceptance criteria assert exact text fragments (`apk add --no-cache libc6-compat python3 make g++`, `corepack prepare pnpm@10.30.2`, `healthcheckPath = "/api/health"`); any drift would have failed the gate.
+- All three better-sqlite3 native-binding gotchas resolved in the multi-stage Alpine Dockerfile: deps `apk add python3 make g++`, runner `apk add libc6-compat`, explicit `COPY` of `src/lib/storage/sqlite/migrations` into the runner. Docker e2e green locally before Railway push.
+- Container hardening: `addgroup --gid 1001 nodejs && adduser --uid 1001 nextjs`. After the Rule-3 entrypoint fix, the long-running Node process still runs as `nextjs` UID 1001 (verified `docker run id -u` returns 1001) — only a single `chown` shell command runs as root in the entrypoint, then `su-exec` drops privileges before exec'ing `node server.js`. T-1-04 mitigation intact.
+- `nixpacks.toml` pins `pnpm-9_x` even with `packageManager: pnpm@10.30.2` — Nixpacks needs SOME pnpm to launch the install phase before Corepack downloads the pinned version. RESEARCH.md Caveats documents this bridge.
+- `railway.toml` differs from vibathon on one line: `healthcheckPath = "/api/health"` (vibathon used `/`). Otherwise identical (NIXPACKS, /data volume, ON_FAILURE restart with 3 retries).
+- **Rule-3 fix during checkpoint:** `docker-entrypoint.sh` + Dockerfile chown shim added after first Railway deploy hit `SQLITE_CANTOPEN`. Railway bind-mounts volumes as root-owned by default; the local docker-health smoke didn't catch this because host bind-mounts inherit host UID. Entrypoint chowns `$DATA_DIR` as root, then `su-exec nextjs:nodejs "$@"` to drop privileges. Preserves CONTEXT.md D-15 (non-root app process). Will be unnecessary if Railway later supports volume UID/GID configuration.
+- **Rule-3 mitigation during checkpoint:** `RAILWAY_GIT_COMMIT_SHA` set as a manual Railway service variable because `railway up` (CLI upload) doesn't carry git context the way GitHub-tracked deploys do. Once Phase 7 OPS-03 wires the project to GitHub auto-deploy, Railway will inject the SHA automatically and the manual var becomes redundant but harmless.
+- **Railway deploy verified live** at <https://datapraat-app-production.up.railway.app> on 2026-04-28. /api/health returns 200 with `status:"ok"`, `commitSha:"22e64a2"`, `nodeEnv:"production"`, `db.ok:true`, `db.probeMs:0`. Volume persistence confirmed via redeploy (uptime drop 25→3, db still reachable).
+
 ### Open Todos
 
-- Execute Plan 05: Deploy artifact (nixpacks.toml + Dockerfile + railway.toml + docker-health.sh smoke). Closes Phase 1.
+- Run `gsd-verifier` for Phase 1 sign-off.
+- Plan Phase 2 (Design System) — Tailwind 4 `@theme` tokens, shadcn `base-vega` primitives, Icon/TrustBadge/AskButton + NL formatters, `/internal/design` reference page.
+- Phase 7 OPS-03: connect Railway project to GitHub for auto-deploy (obsoletes the manual `RAILWAY_GIT_COMMIT_SHA` service variable).
 - Decide MCP server URL convention (env var name, default value) at Phase 4 planning.
 
 ### Blockers
@@ -133,14 +147,16 @@ None.
 
 ## Session Continuity
 
-**Last action:** Completed Plan 01-04 — `/api/health` Route Handler (1 task: 242bf51). OPS-01 implemented (6-field JSON contract on 200 happy, 503 degraded on storage probe failure, runtime='nodejs', dynamic='force-dynamic'). All 6 Wave-0 vitest files GREEN (18 tests passing). `pnpm build` succeeds with `/api/health` marked Dynamic and emitted into `.next/standalone/.next/server/app/api/health/route.js`.
+**Last action:** Completed Plan 01-05 — Deploy artifact (3 tasks; commits b249427 + d90f460 + c0b1f91 + 22e64a2). Multi-stage Alpine Dockerfile, nixpacks.toml, railway.toml shipped; full 8-command phase gate green; Railway deploy live at <https://datapraat-app-production.up.railway.app> with /api/health returning 200 + status:ok + db.ok:true. Two Rule-3 fixes applied during the checkpoint: (a) docker-entrypoint.sh + su-exec chown shim for Railway's root-owned volume bind-mounts (preserves D-15 — Node still runs as nextjs UID 1001); (b) manual `RAILWAY_GIT_COMMIT_SHA` service variable until Phase 7 OPS-03 connects GitHub auto-deploy. Volume persistence verified via redeploy.
 
-**Next action:** Execute Plan 01-05 (Deploy artifact — nixpacks.toml + Dockerfile + railway.toml + docker-health.sh smoke).
+**Phase 1 status:** All 5 plans done. All 5 success criteria met. All 6 phase-1 requirements complete (FOUND-01, FOUND-04, FOUND-05, FOUND-06, FOUND-07, OPS-01). Awaiting `gsd-verifier` sign-off.
 
-**Resumption:** Read `.planning/phases/01-foundation/01-04-SUMMARY.md` for what landed, then `.planning/phases/01-foundation/01-05-PLAN.md` for what's next. `/api/health` is alive; Plan 05 wraps it in the deploy contract (Railway healthcheckPath, Docker HEALTHCHECK directive, multi-stage Dockerfile with `output: 'standalone'` + non-root user).
+**Next action:** Run `gsd-verifier` for Phase 1 verification. After verifier passes, plan Phase 2 (Design System).
 
-**Last session:** 2026-04-27T18:32:09.544Z
+**Resumption:** Read `.planning/phases/01-foundation/01-05-SUMMARY.md` for the Phase 1 close-out. ROADMAP.md shows Phase 1 at 5/5 plans complete; Phase 2 (Design System) is the next eligible phase.
+
+**Last session:** 2026-04-28T07:14:28.250Z (Plan 05 completion)
 
 ---
 
-_State initialized: 2026-04-26 · Updated 2026-04-27 after 01-04-PLAN.md_
+_State initialized: 2026-04-26 · Updated 2026-04-28 after 01-05-PLAN.md (Phase 1 complete)_
