@@ -14,19 +14,20 @@ This repo is the **fresh DataPraat product app**: a single Next.js 15 applicatio
 
 ### Validated
 
-(None yet — ship to validate)
+#### Foundation (validated in Phase 1)
+
+- [x] **FOUND-01**: Next.js 15 + React 19 + TypeScript 5 app boots in dev and production builds
+- [x] **FOUND-04**: ESLint + Prettier + TypeScript strict mode configured
+- [x] **FOUND-05**: `output: 'standalone'` Next.js build + Dockerfile + Nixpacks config so the app runs on Railway today and Azure Container Apps later
+- [x] **FOUND-06**: Persistence via `better-sqlite3` mounted at `/data` (Railway volume), abstracted behind a storage interface so it can swap to managed Postgres on Azure later
+- [x] **FOUND-07**: Env-driven config (no hardcoded secrets, no Vercel-only APIs); `.env.example` documents required vars
 
 ### Active
 
-#### Foundation
+#### Foundation (remainder)
 
-- [ ] **FOUND-01**: Next.js 15 + React 19 + TypeScript 5 app boots in dev and production builds
 - [ ] **FOUND-02**: Tailwind 4 configured with DataPraat design tokens ported from `styles.css` (`:root` variables: ink levels, brand indigo, chart PxQ semantics, status triads, spacing, radii, fonts)
 - [ ] **FOUND-03**: shadcn 4 (`base-vega` style) + Base UI + Tabler Icons wired and installable via the shadcn CLI
-- [ ] **FOUND-04**: ESLint + Prettier + TypeScript strict mode configured
-- [ ] **FOUND-05**: `output: 'standalone'` Next.js build + Dockerfile + Nixpacks config so the app runs on Railway today and Azure Container Apps later
-- [ ] **FOUND-06**: Persistence via `better-sqlite3` mounted at `/data` (Railway volume), abstracted behind a storage interface so it can swap to managed Postgres on Azure later
-- [ ] **FOUND-07**: Env-driven config (no hardcoded secrets, no Vercel-only APIs); `.env.example` documents required vars
 
 #### Design system
 
@@ -63,7 +64,7 @@ This repo is the **fresh DataPraat product app**: a single Next.js 15 applicatio
 
 #### Operability
 
-- [ ] **OPS-01**: Health check endpoint at `/api/health` (used by Railway healthcheckPath)
+- [x] **OPS-01**: Health check endpoint at `/api/health` (used by Railway healthcheckPath) — validated in Phase 1
 - [ ] **OPS-02**: Structured logging (request id, route, latency) in API routes
 - [ ] **OPS-03**: README documents local dev, env setup, deploy to Railway, and the path to Azure
 - [ ] **OPS-04**: One-command setup (`pnpm i && pnpm dev`) works on a fresh clone
@@ -144,4 +145,4 @@ This document evolves at phase transitions and milestone boundaries.
 
 ---
 
-_Last updated: 2026-04-26 after initialization_
+_Last updated: 2026-04-28 after Phase 1 (Foundation) completion — Next.js 15 app live on Railway with persistent storage and `/api/health`._
